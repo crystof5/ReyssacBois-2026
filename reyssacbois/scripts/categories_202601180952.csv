@@ -1,0 +1,217 @@
+"id"|"name"|"description"|"image"|"slug"|"parentId"|"type"|"specifications"|"createdAt"|"updatedAt"
+1|Bois de menuiserie de pays|Bois massifs Français secs - Avivés ou plots - Différentes épaisseurs disponibles||bois-de-menuiserie-de-pays|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+2|Charpente|"Bois massif traditionnel - Epicéa du Jura - Brut - Traité CL2 - Stocké à l'abri 
+"||charpente|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+3|Lame de terrasse|"Pin Sylvestre traité CL4 - Exotique - Bambou 
+"||lame-de-terrasse|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+4|Bardage et clin|Aménagement extérieur - Revetement de façade de maison - D'Abri de jardin - Pose verticale ou horizontale ||bardage-clin|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+5|Bois de menuiserie exotique|"Bois Massif d'origine Afrique - Asie - Amérique du Nord - Amérique du Sud - Avivés - Différentes épaisseurs disponibles 
+"||bois-de-menuiserie-exotique|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+6|Parquet|"Massif ou contrecollé - Pose à clouer, visser ou coller 
+"||parquet|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+7|Lambris|"Usage intérieur ou extérieur sous abri 
+"||lambris|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+8|Bois autoclavé|"Traités par imprégnation à cœur pour usage extérieur - Garantis de 10 à 20ans 
+"||bois-autoclave|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+9|Plinthe et Surplinthe|"En Pin, Sapin Nord blanc ou MDF prépeint blanc 
+"||plinthe|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+10|Planches|"Coffrage, usages divers
+"||planches|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+11|Moulures - Tasseaux|"Pin sans nœuds ou chêne - Non aboutés 
+"||moulures-tasseaux|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+12|Portes / blocs portes|"Portes seules et blocs-portes - Usage intérieur - Alvéolaire/Ame pleine/Coupe-feu 30min ou 60min - De nombreuses références en stock, nous consulter
+"||portes-blocs-portes|0|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+13|Colles et produits de traitement|"Colle à bois - bois et matériaux / Insecticides et fongicides / Saturateur
+"||colles-et-produits-de-traitement|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+14|Quincaillerie|"Visserie Zinguée/ Inox/ Equerres/ Sabots de charpente/ Pieds de poteaux
+"||quincaillerie|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+15|Sapin du nord|"Provenance Pays du Nord de l'Europe - Menuiserie intérieure/extérieure 
+"||sapin-du-nord|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+16|Volets|"Lame à volets - Barres et écharpes - Battement 
+Lame à volets - Barres et écharpes - Battement 
+"||volets|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+17|Panneaux|""||panneaux|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+18|Jalons|""||jalons|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+19|Fabrication sur mesure|"Plateaux de table - Bureau - Meuble Vasque - Comptoir - Petit mobilier - Projet à deviser sur place
+"||fabrication-sur-mesure|0|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+20|Chêne|"Chêne de Bourgogne - Plot - Séchage naturel - Epaisseurs 20-27-34-41-54mm 
+"||bois-menuiserie-chene|1|product|"{""type"": ""BME""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+21|Chataigner|"Châtaignier de Dordogne - Plots ou avivés - Séchage naturel ou séchoir - Epaisseurs 20-27-34-45-54mm
+"||chataigner|1|product|"{""section"": ""Epaisseur: 20-27-34-45-54""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+22|Pin sans nœud|"Pin trié sans nœud des Landes - Avivés - Séchage naturel - Epaisseurs 27-32-41-52mm
+"||pin-sans-nœud|1|product|"{""section"": ""27x215, 32x diverses, 41x215, 52x215"", ""longueur"": ""2.4m"", ""essence"": ""Pin""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+23|Frêne|"Frêne blanc de Bourgogne/ Franche comté - Avivés - Séchage naturel - Epaisseurs 27-41-54mm
+"||frene|1|product|"{""section"": ""Epaisseur: 27-41-54"", ""essence"": ""Frêne""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+24|Hêtre|"Hêtre de Bourgogne/ Franche comté - Avivés - Séchage naturel - Epaisseurs 27-41-54mm
+"||hetre|1|product|"{""section"": ""Epaisseur: 27-41-54"", ""essence"": ""Hêtre""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+25|Tilleul|"Tilleul de Bourgogne/ Franche comté - Plots - Séchage naturel - Epaisseurs 27-45mm
+"||tilleul|1|product|"{""section"": ""Epaisseur: 27-45"", ""essence"": ""Tilleul""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+26|Erable  Sycomore|"Sycomore de Bourgogne/ Franche comté - Plot - Séchage naturel - Epaisseurs 27mm ou autre selon arrivage
+"||erable-sycomore|1|product|"{""section"": ""Epaisseur: 27-34"", ""essence"": ""Erable/Sycomore""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+27|Merisier|"Merisier de Bourgogne - Plot - Séchage naturel - Epaisseur 34mm ou autre selon arrivage
+"||merisier|1|product|"{""section"": ""Epaisseur: 27-34"", ""essence"": ""Merisier""}"|"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+28|Liteaux et contre-liteaux|"27x40mm - Longueur 4m / 14x38mm- Longueur 3m 
+"||liteaux-contre-liteaux|2|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+29|Chevrons|"Section:
+- 6x8cm - Longueur 3m, 3,5m, 4m et 5m / 
+
+Section 
+- 11x10cm - Longueur 2,5m, 3m, 3,5m 
+
+- Autres longueurs sur commande"||chevrons|2|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+30|Solivettes|"Section 15x5cm - Longueur 3m, 3,5m, 4m, 5m / Section 22x4cm - Longueur 3,5m, 4m, 5m - Autres longueurs sur commande
+"||solivettes|2|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+31|Madriers|"Section 18x8cm - Longueur 3m, 3,5m, 4m, 5m / Section 22x8cm - Longueur 4m, 5m, 6m / Section 22x10cm - Longueur 4m, 5m, 6m / Section 25x10cm - Longueur 7m -Autres longueurs sur commande
+"||madriers|2|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+32|Planches d'échafaudage|"Section 25x5cm - Longueur 4m (1e choix) 
+"||planches-echafaudage|2|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+33|Voliges|"Section 15x200mm - Longueur 3m - Autres longueurs sur commande)
+"||voliges|2|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+34|Poteaux|"Section 20x20cm - Longueur 2,5m, 3,5m, 5m, 6,5m - Autres longueurs sur commande
+"||poteaux|2|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+35|Débit sur liste|"Toute sections sur mesure sur commande (Epicéa / Douglas / chêne) 
+"||debit-sur-liste|2|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+36|Pin sylvestre|"Traitées CL4 - Lisses ou rainurées - Choix sans nœud/ petits noeuds - Section 145x22mm - Longueur 3m, 4m 
+"||pin-sylvestre|3|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+37|Macaranduba|"Rouge foncé - Origine Amérique du Sud - Naturellement CL5 - Section 145x22mm - Longueurs en fonction des arrivages 
+"||mame-terrasse-macaranduba|3|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+38|Gamme Vivre en bois|"Gamme disponible sur commande - Catalogue sur place ou a consulter sur internet : https://www.vivreenbois.com/produits/bardage-bois
+"||gamme-vivre-en-bois|3|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+39|Epicéa|"Volige section 15x200mm - Longueur 3m - Traitée CL2 / Volige section 18x150mm - Longueur 3m - Traitée CL3 Marron
+"||epicea|4|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+40|Pin Sylvestre|"Clin Section 135x22mm - Traité CL4 - Profil élégie - Lames bouvetées, rabotées, longueurs selon arrivage / Planches pour claire-voie section 90x22mm - Traitées CL4 Rabotées - Longueur 3m
+"||bardage-pin-sylvestre|4|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+41|Pin|"Planches brutes en Pin des Landes sans traitement - Toutes largeurs - Longueur 2m 
+"||pin|4|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+42|Gamme Vivre en bois|"Gamme disponible sur commande - Catalogue sur place ou a consulter sur internet : https://www.vivreenbois.com/produits/bardage-bois
+"||bardage-gamme-vivre-en-bois|4|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+43|Badi|"Bois brut - Origine côte d'Ivoire - Jaune/orangé - Naturellement CL4 - Menuiserie extérieure/intérieure - Largeurs 155 ou 205mm - Epaisseurs 27-34-41-54mm - Longueurs selon arrivage
+"||badi|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+44|Mérandi|"Bois brut - Variété Dark Red - Origine Asie - Rosé - Menuiserie extérieure/intérieure - Largeur 205mm - Epaisseurs 27-34-41-54mm - Longueurs selon arrivage
+"||merandi|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+45|Niangon|"Bois brut - Origine Afrique - Rouge foncé - Menuiserie extérieure/intérieure - Toutes largeurs - Epaisseurs 34-54-80mm - Longueurs selon arrivage 
+"||niangon|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+46|Iroko|"Bois brut - Origine Afrique - Brun/Jaune - Menuiserie extérieure/intérieure - Toutes largeurs - Epaisseurs 27-45-80mm / Chevrons 105x105mm / Poteaux 205x205mm - Longueurs selon arrivage
+"||iroko|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+47|Danéba|"Bois brut - Origine Afrique - Brun/jaune - Menuiserie extérieure/intérieure - Largeurs 205/230mm - Epaisseur 54mm - Longueurs selon arrivage
+"||daneba|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+48|Fraké|"Bois brut (Noyer africain) - Jaune clair - Menuiserie intérieure - Toutes largeurs - Epaisseur 45mm - Longueurs selon arrivage
+"||frake|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+49|Framiré|"Bois brut - Origine Afrique - Jaune - menuiserie extérieure/intérieure - Toutes largeurs - Epaisseur 41mm - Longueurs selon arrivage
+"||framire|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+50|Ormeau (USA)|"Bois brut - Américain - Brun/Jaune - Menuiserie intérieure  - Toutes largeurs - epaisseur 27mm - Longueur 4,20m
+"||ormeau-usa|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+51|Macaranduba|"Bois raboté - Naturellement CL5  - Origine Afrique - Section 145x22mm (lame de terrasse) - Longueurs selon arrivage
+"||macaranduba|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+52|Kering|"Bois brut - Origine Asie - Brun rouge - Menuiserie intérieure - Largeurs 230mm Epaisseur 41 et 54mm - Longueurs selon arrivage
+"||kering|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+53|Hévéa|"Origine Amérique du Sud ou Asie - Blanc crème - Menuiserie intérieure - Panneaux - Epaisseur 22-33-44-55mm - Format 4500x1100mm / Plan de travail - Epaisseur 36mm - Format 3000x650mm
+"||hevea|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+54|Palapi|"Bois brut - Origine Asie - Brun - Menuiserie intérieure/extérieure - Lame de parquet/volet - Section 95x28mm - Longueur 2,70m  
+"||palapi|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+55|Muiracatiara|"Bois brut - Naturellement CL4 - Origine Afrique - Brun foncé à rouge  
+"||muiracatiara|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+56|Bambou|"Lame de terrasse - Origine Asie - Brun foncé - Section 137x20mm - Longueur 1,85mm - Sur commande 
+"||bambou|5|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+57|Red cédar |"Bois brut - Origine Canada - Brun rouge - Largeurs 155/205mm - Longueurs selon arrivage - Epaisseurs 27-34-41-54mm / Bardeaux de toiture sur commande
+"||red-cedar|6|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+58|Pin|"Massif des landes - Sections 23x100mm, 23x140mm, 23x180mm - Longueur 2m - Choix rustique ou petits nœuds
+"||parquet-pin|6|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+59|Châtaigner|"Massif de Dordogne - Section 23x140mm - Longueur 2m - Longueurs panachées - Choix rustique
+"||parquet-chataigner|6|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+60|Sapin|"Massif - Section 28x105mm - Longueur 1,8m, 2,1m, 2,4m, 2,7m - Autre longueurs sur commande
+"||sapin|6|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+61|Palapi|"Massif exotique - Section 28x95mm - Longueur 2,70m 
+"||parquet-palapi|6|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+62|Chêne|"Massif ou contrecollé - Pose simple, Bâton rompu, Point de hongrie - Sur commande, nous consulter 
+"||chene|6|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+63|Pin|"Profil mouchette - Section 10x70mm - Longueur 2m - Choix rustique, petits nœuds, sans nœud
+"||lambris-pin|7|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+64|Sapin du nord blanc|"Profil grain-d'orge - Section 10x90mm - Longueur 2,55m  / Section 13x135mm disponible en profil grain d'orge, jointif ou brut -  Longueur 2,70m 
+"||sapin-du-nord-blanc|7|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+65|Madriers pin sylvestre|"Bois raboté - Origine France - Traité CL4 - Section 145x45mm - Longueurs 3m, 4m / Section 190x68mm - Longueurs 3m, 4m / Section 220x68mm - Longueurs 4m - Garantis 15ans
+"||madriers-pin-sylvestre|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+66|Planches de rive|"Sapin Nord Blanc - Section 170x22mm - Traitées CL3 - Longueur 4,8m - garanties 10 ans
+"||planches-de-rive|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+67|Piquets ronds|"Pin Sylvestre - Traités CL4 - Apointés -  Diamètres 6 et 8cm longueur 2m - Garantis 15 ans
+"||piquets|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+68|Clain pin sylvestre|"Profil Elégie - Traité CL4 - Section 135x22mm - Longueur 4,2m ou autre selon arrivage - Garanti 15 ans
+"||clain-pin-sylvestre|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+69|Demi-rond|"Pin Sylvestre - Traités CL4 - Diamètres 8cm - Longueurs 2,5m - Garantis 15 ans
+"||demi-rond|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+70|Aménagements extérieur|"Traverses paysagères - Section 20x10cm - Longueur 2,60m / Table de pique-nique 2000x800mm / Rondins pré-percés diamètre 140mm 1 ou 2 trous - Longueurs 1m, 1,5m, 2m 
+"||amenagements-exterieur|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+71|Bardage|"Pin Sylvestre CLIN - Traité CL4 - Profil Elégie - Section 135x22mm - Longueur 4,2m / Volige Epicéa - Traitée CL3 - Section 18x150mm - Longueur 3m 
+"||bois-autoclave-bardage|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+72|Gamme Vivre en bois|"Gamme disponible sur commande - Catalogue sur place ou a consulter sur internet : https://www.vivreenbois.com/produits
+"||bois-autoclave-gamme-vivre-en-bois|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+73|Chevrons pin sylvestre|"Bois raboté - Traités CL4 - Section 68x68mm - Longueur 3m / Section 90x90mm - Longueur 3m - Autres longueurs sur commande
+"||chevrons-pin-sylvestre|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+74|Demi-chevrons pin Sylvestre|"Bois raboté - Traité CL4 - Section 45x68mm - Longueur 3 et 4m - Autres longueurs sur commande
+"||demi-chevrons-pin-ylvestre|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+75|Rondins Pin Sylvestre|"Traités CL4 - non apointés - Diamètres en stock 8-10-12cm - longueurs de 2 à 4m - au delà sur commande - garantis 15ans / Pré-percés diamètre 140mm 1 ou 2 trous Long 1m - 1,5m - 2m 
+"||rondins|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+76|Lames terrasses|"Pin Sylvestre - Traitées CL4 - Section 145x22mm - Lisses ou rainurées - Choix sans nœud / Petits nœuds - Longueurs 3 ou 4m - Garanties 15ans
+"||lames-terrasses|8|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+77|MDF pré-peint blanc|"Pré peinte blanc - 10x70mm - Longueur 2,44m - 1 bord arrondi / 10x100mm Longueur 2,44m - 1 bord arrondi ou bord droit - 16x150mm - Moulure Stylobate - Longueur 2,44m / Surplinthe 22x133mm - Longueur 2,44m
+"||mdf-pre-peint-blanc|9|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+78|Sapin du nord blanc|" 13x110mm - Moulure Stylobate - Longueur 3,90m / 16x140mm - Moulure Stylobate - Longueur 3,90m  
+"||plinthe-sapin-du-nord-blanc|9|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+79|Pin|"10x70mm - Longueur 2m - 1 bord arrondi / 10x100mm - Longueur 2m - 1 bord arrondi 
+"||plinthe-pin|9|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+80|Pin|"Pin des landes - ep 27mm - Largueurs 105/215/250x2400mm - Largueurs 155/215x2000mm 
+"||planche-pin|10|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+81|Sapin|"Sapin charpente CL2 - ep 27mm 120/250mm - Longueur 4m / Planche Lorraine 27mm - Largeur 305mm - Longueur 3m
+"||planche-sapin|10|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+82|Moulures|"Quart de ronds - Chants plats - Baguettes d'angle - Encadrements - Tourillon -Crémaillères - Nez de cloison - Cimaises - Corniches  
+"||moulures-baguettes|11|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+83|Tasseau|"Sapin Nord Blanc - 18x18mm/ 21x21mm/ 28x28mm/ 34x34mm /45x45mm/ 45x15mm -Autres sections sur mesure
+"||tasseau|11|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+84|Colles|"Vinylique : UR (D2) biberon 750g ou seau de 5kg - R41 (D3) biberon 750g ou seau de 5kg / Polyurétane : PU (D4) biberon 500g / Neoprène Liquide ou gel pot de 1L  / Mastic-colle Polyurétane : Soudaflex 45FC Cartouche pistolable de 300ml 
+"||colles|13|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+85|Saturateurs|"Produit d'entretien des bois à l'extérieur - Evite la dégradation de l'aspect face au soleil - Bouteille de 1L ou 5L
+"||saturateurs|13|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+86|Xylophène|"Produit de traitement insécticide du bois - Type d'application préventif ou curatif - A diluer - Disponible au litre ou en vrac 
+"||xylophene|13|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+87|Fongicide|"Produit de traitement fongicide du bois contre la mérule et autres champignons - Type d'application préventif ou curatif - A diluer - Disponible en bouteille de 1L
+"||fongicide|15|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+88|Blanc|origine Scandinavie - Largeur 200/225mm - Epaisseurs 25-32-38-50-75mm - Longueurs de 3900 à 5100mm selon arrivage||blanc|15|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+89|Rouge|"Pin sylvestre - origine Scandinavie -  Largeur 200/225mm - Epaisseurs 25-32-38-50-75mm - Longueurs de 3900 à 5100mm selon arrivage
+"||rouge|15|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+90|Sapin nord blanc|""||sapin-nord-blanc|16|category||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+93|Lames Palapi|"Essence Palapi - origine Asie - Section 95x28mm - Longueur 2,70m 
+"||lames-palapi|16|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+94|Contreplaqué|"Essence : Peuplier - Epaisseurs : 5,8,10,12,15,18,22mm - Collage WBP - Usage intérieur/extérieur - Format : 2500x1220mm / Essence Okoumé - Epaisseurs :  5,8,10,12,15,18mm - Collage CTBX - Usage intérieur/extérieur - Format : 3100x1530mm / Bakélisé Anti-dérapant tout bouleau - Epaisseurs : 12,15,18,27,35,45mm - Format : 2500x1530mm - Usage extérieur, plancher de remorque,camion,scène... / Bakélisé Lisse Eucalyptus - Usage coffrage - Format : 2500x1250mm / Speciaux : Cintrable fromager - Fil long et fil travers - Epaisseur 9mm - Format : 2500x1220mm / Tout bouleau/Tout hêtre/ Okoumé construction marine  
+"||contreplaque|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+95|Contreplaqué replaqué|"Essences : Ormeau,Eyong,Pin,Chêne,Frêne,Merisier,Hêtre - Formats : 2500x1220mm ou 2500x1530mm - Epaisseurs 5 et 10mm selon essence  
+"||contreplaque-replaque|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+96|Agglo|"Panneau de particules Standard, Hydro ou Ignifugé - Menuiserie générale - Aménagements divers - Formats 2800x2070mm / 2500x1250mm / 3050x1850mm ou 3050x610mm - Epaisseurs : 12,18,19,22,28,30,35,38mm selon format 
+"||agglo|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+97|Agglo replaqué|"Hêtre,Chêne,Frêne,Merisier,Sapelli - Epaisseur 19mm - Formats 3050x1530mm - 2500x1530mm - Autres essences sur commande
+"||agglo-replaque|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+98|Agglo mélaminé blanc|Format 2800x2070mm - Epaisseurs 8,10,12,16,19,22mm ||agglo-mélamine-blanc|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+99|Gamme EGGER - PFLEIDERER - POLYREY|"Nous distribuons sur commande les panneaux mélaminés - Plan de travail - Stratifié des marques EGGER, PFLEIDERER et POLYREY - Nuancier disponible sur place
+"||egger-pfleiderer-polyrey|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+100|MDF / Fibre|"Panneau de MDF - Menuiserie générale - Usage intérieur -  Format : 2440x1220mm - Epaisseurs : 3,6mm / Format : 2800x2070mm - Epaisseurs : 10,12,16,19mm 
+"||medium-fibre|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+101|OSB 3|"Format dalle : 2500x675mm - Epaisseurs : 12,18,22mm / Format panneau : 2800x1196mm - Epaisseur 9mm et 2500x1250mm - Epaisseur 18mm
+"||osb|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+102|Isolants|"Isolants en Fibre de Bois : STEICO : 1220x575mm - Epaisseurs 40,80,100,120mm / ISONAT : 1220x580mm - Epaisseurs 40,60,100,120,145,200mm
+"||isolants|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+103|Latté|"Panneaux lattés Épicéa, Chêne, Mélèze, Peuplier - Sur commande
+"||latte|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+104|Lamellé collé|"Panneaux Hévéa exotique - Origine Asie -  Epaisseurs 22,33,44,55mm - Format : 4500x1100mm - / Chêne  Epaisseurs 22,33,44mm - Format : 4500x1100mm / Pin -  Epaisseur 34mm - Format 2000x800mm  / Epaisseur 22mm - Format 2400x300-400-500-600mm 
+"||lamelle-colle|17|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+105|Jalons de chantiers|"Jalons de chantier 27x27mm - Disponible par paquets de 25 ou à la palette - Longueur standard 1m - Autres longueurs et sections sur commande
+"||jalons-chantier|18|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+106|Portes|""||portes|12|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+107|Blocs portes|""||blocs-portes|12|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+108|Vis|""||vis|14|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+109|Pointes|""||pointes|14|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+110|Sabots|""||sabots|14|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+111|Equerres|""||equerres|14|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+112|Pied de poteaux|""||pieds-poteaux|14|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+113|Plateaux de table|""||plateaux-de-table|19|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+114|Bureau|""||bureau|19|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+115|Comptoir|""||comptoir|19|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"
+116|Petit mobilier|""||petit-mobilier|19|product||"2025-04-02 07:42:46"|"2025-04-02 07:42:46"

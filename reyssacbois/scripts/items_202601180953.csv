@@ -1,0 +1,28 @@
+"id"|"nom"|"path_img"|"section"|"longueur"|"essence"|"type"|"norme"|"descriptif"|"id_category"|"slug"|"createdAt"|"updatedAt"
+18|Pin 15m|img/images/bois.jpg|Toutes largeurs|Longueur: 2m/2.4m|Pin||||33|volige-pin|"2023-07-04 19:26:34"|
+19|Epicéa CL2|img/images/bois.jpg|Section: 15*200|Longueur: 3m|Epicéa||||33|volige-epicea-cl2|"2023-07-04 19:26:40"|
+20|Epicéa CL3|img/images/bois.jpg|Section: 18*150|Longueur: 3m/4m|||||33|volige-epicea-cl3|"2023-07-04 19:26:44"|
+21|"1/2 Liteaux"|img/images/bois.jpg|Section: 14*38|Longueur: 3m|||||28|demi-liteaux|"2023-07-04 19:26:47"|
+22|Liteaux|img/images/bois.jpg|"Section: 
+- 27x40mm - Longueur 4m 
+- 14x38mm- Longueur 3m "|||||"Section: 
+- 27x40mm - Longueur 4m 
+- 14x38mm- Longueur 3m "|28|liteaux|"2023-07-04 19:26:48"|
+24|Poteaux|img/images/bois.jpg|Section: 200*200|Longueur: 2.5m/3.5m/5m/6.5m|||||34|poteaux|"2023-07-04 19:26:49"|
+25|Poteaux Chêne|img/images/bois.jpg|Section: 180*180|Lonueur: 3m|Chêne||||34|poteaux-chene|"2023-07-04 19:26:49"|
+26|Poteaux Iroko|img/images/bois.jpg|Section: 200*200|Lonueur: 2.8m|Iroko||||34|poteaux-iroko|"2023-07-04 19:26:50"|
+27|Planche Echaffaudage|img/images/bois.jpg|Section: 250*50|Longueur: 4m|||||32|planche-echaffaudage|"2023-07-04 19:26:51"|
+28|Planche Coffrage|img/images/bois.jpg|Section: 27*120 - 27*250|Longueur: 4m|||||32|planche-coffrage|"2023-07-04 19:26:51"|
+33|Pin Sylvestre traité CL4, Rustique|img/images/bois.jpg|Section: 145*22|Longueur: 3m/4M|Pin|Rustique||""|36|pin-rustique|"2023-07-04 19:26:54"|
+34|Pin Sylvestre traité CL4, petit Nœud|img/images/bois.jpg|Section: 145*22|Longueur: 2.9m/3.9m||Petit Noeud|||36|pin-petit-noeud|"2023-07-04 19:26:55"|
+35|Pin Sylvestre traité CL4, Sans nœud|img/images/bois.jpg|Section: 145*22|Longueur: 2.9m/3.9m||Sans noeud|||36|pin-sans-noeud|"2023-07-04 19:26:56"|
+38|Epicéa CL3|img/images/bois.jpg|Section: 18*150|Longueur: 3m/4m|Epicéa|||Brut traité CL3|39|bardage-epicea-cl3|"2023-07-04 19:26:57"|
+39|Epicé CL2|img/images/bois.jpg|Section: 15*200|Longueur: 3m|Epicéa|||Brut traité CL2|39|bardage-epicea-cl2|"2023-07-04 19:27:00"|
+40|Lames à volets|||||||"Essence : Sapin nord blanc, sans chanfreins - section 28x105mm - Longueurs disponibles 1800, 2100, 2400, 2700mm
+"|90|lames-volet-sapin|"2023-07-04 19:27:04"|
+41|Echarpes à volets|||||||"Echarpes et barres - Sapin nord blanc, section 28x95mm - Longueur 2400mm
+"|90|echarpes|"2023-07-04 19:27:05"|
+42|Battements à volets|||||||"Battement ou couvre-joint - Sapin nord blanc, section 70x22mm - Longueur 2700mm
+"|90|battements|"2023-07-04 19:27:06"|
+43|Lames à volets Palapi|||||||"Essence Palapi - origine Asie - Section 95x28mm - Longueur 2,70m 
+"|93|palapi|"2023-07-04 19:27:06"|
