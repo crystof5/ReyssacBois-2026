@@ -1,14 +1,21 @@
-import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
-import SidebarCategories from "@/components/SidebarCategories"
-import { getCategoriesTree } from "@/lib/categories"
+import { notFound } from "next/navigation"
+import Breadcrumb from "@/components/Breadcrumb"
+import { getCategoryBreadcrumb } from "@/lib/breadcrumbs"
+import CategoryCard from "@/components/CategoryCard"
+import ProductCard from "@/components/ProductCard"
+import Link from "next/link"
 
 export default async function CategoryPage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug?: string }>
 }) {
-  const { slug } = params
+  const { slug } = await params
+
+  if (!slug) {
+    notFound()
+  }
 
   const category = await prisma.category.findUnique({
     where: { slug },
@@ -26,61 +33,78 @@ export default async function CategoryPage({
     notFound()
   }
 
-  const categories = await getCategoriesTree()
+  const breadcrumb = (await getCategoryBreadcrumb(slug)) ?? []
 
   return (
-    <div className="flex">
-      <SidebarCategories
-        categories={categories}
-        activeSlug={slug}
+    <div>
+      {/* ✅ BREADCRUMB ICI */}
+      <Breadcrumb
+        items={[
+          { id: "produits", name: "Produits", href: "/produits" },
+          ...breadcrumb.map((c) => ({
+            id: c.id,
+            name: c.name,
+            href: `/categories/${c.slug}`,
+          })),
+        ]}
       />
 
-      <div className="flex-1">
-        <h1 className="text-2xl font-bold mb-4">
-          {category.name}
-        </h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            {category.name}
+          </h1>
 
-        {category.description && (
-          <p className="text-gray-600 mb-6">
-            {category.description}
-          </p>
-        )}
+          {category.description && (
+            <p className="mt-2 text-gray-600 max-w-3xl">
+              {category.description}
+            </p>
+          )}
+        </div>
 
-        {/* Sous-catégories */}
-        {category.children.length > 0 && (
-          <>
-            <h2 className="text-lg font-semibold mb-2">
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+        >
+          Nous contacter
+        </Link>
+      </div>
+
+      {/* SOUS-CATÉGORIES CLIQUABLES */}
+      {category.children.length > 0 && (
+        <div className="mt-10">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
               Sous-catégories
             </h2>
-            <ul className="mb-6 list-disc list-inside">
-              {category.children.map((child) => (
-                <li key={child.id}>
-                  {child.name}
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+          </div>
 
-        {/* Produits */}
-        {category.products.length > 0 && (
-          <>
-            <h2 className="text-lg font-semibold mb-2">
-              Produits
-            </h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {category.products.map(({ product }) => (
-                <li
-                  key={product.id}
-                  className="border rounded p-4"
-                >
-                  {product.name}
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
+          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {category.children.map((child) => (
+              <li key={child.id}>
+                <CategoryCard category={child} showDescription />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* PRODUITS CLIQUABLES */}
+      {category.products.length > 0 && (
+        <div className="mt-10">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Produits
+          </h2>
+
+          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {category.products.map(({ product }) => (
+              <li key={product.id}>
+                <ProductCard product={product} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

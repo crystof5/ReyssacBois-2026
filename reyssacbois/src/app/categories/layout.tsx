@@ -9,11 +9,13 @@ export default async function CategoriesLayout({
   const categories = await getCategoriesTree()
 
   return (
-    <div className="flex">
-      <SidebarCategories categories={categories} />
-      <main className="flex-1 px-6 py-6">
-        {children}
-      </main>
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <div className="flex gap-8">
+        <SidebarCategories categories={categories} />
+        <main className="min-w-0 flex-1">
+          <div className="mx-auto w-full max-w-5xl">{children}</div>
+        </main>
+      </div>
     </div>
   )
 }

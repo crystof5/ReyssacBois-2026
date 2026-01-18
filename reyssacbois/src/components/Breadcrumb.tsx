@@ -1,9 +1,15 @@
 import Link from "next/link"
 
+type BreadcrumbItem = {
+  id: string
+  name: string
+  href: string
+}
+
 export default function Breadcrumb({
   items,
 }: {
-  items: { id: string; name: string; slug: string }[]
+  items: BreadcrumbItem[]
 }) {
   return (
     <nav className="text-sm text-gray-500 mb-6">
@@ -14,10 +20,7 @@ export default function Breadcrumb({
       {items.map((item) => (
         <span key={item.id}>
           {" > "}
-          <Link
-            href={`/categories/${item.slug}`}
-            className="hover:underline"
-          >
+          <Link href={item.href} className="hover:underline">
             {item.name}
           </Link>
         </span>

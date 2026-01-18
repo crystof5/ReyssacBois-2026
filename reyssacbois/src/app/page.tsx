@@ -1,9 +1,159 @@
+import Link from "next/link"
+import HomeCarousel from "@/components/HomeCarousel"
+import Media from "@/components/ui/Media"
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <h1 className="text-3xl font-bold">
-      ReyssacBois TEST
-      </h1>
-    </main>
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+      {/* HERO */}
+      <section className="relative h-[60vh] min-h-[420px] overflow-hidden">
+        <HomeCarousel
+          className="h-full w-full"
+          slides={[
+            { src: "/images/caroussel/atelier.jpg", alt: "Atelier Reyssac Bois" },
+            { src: "/images/caroussel/bois-1.jpg", alt: "Bois - sélection" },
+            { src: "/images/caroussel/bois-2.jpg", alt: "Bois - stock" },
+          ]}
+        />
+
+        <div className="absolute inset-0 z-10 flex items-center justify-center text-center">
+          <div className="mx-auto w-full max-w-4xl px-4">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 transition-transform duration-700 hover:scale-[1.02]">
+              Reyssac Bois
+            </h1>
+            <p className="text-xl md:text-2xl text-white/95 mb-8">
+              Votre expert en bois depuis 1850
+            </p>
+            <Link
+              href="/produits"
+              className="inline-flex items-center justify-center rounded-full bg-white px-8 py-3 font-medium text-green-800 shadow-lg transition hover:bg-green-50"
+            >
+              Découvrir nos produits
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* PRÉSENTATION */}
+      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="relative">
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <div className="aspect-[4/3] w-full">
+                <Media src="/images/logo2.jpg" alt="Reyssac Bois Logo" className="h-full w-full" />
+              </div>
+            </div>
+            <div className="absolute -bottom-5 -right-5 bg-green-700 text-white p-4 rounded-2xl shadow-lg">
+              <p className="text-2xl font-bold leading-none">1850</p>
+              <p className="text-xs mt-1">Années d&apos;expertise</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              Une histoire de famille
+            </h2>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Implantée à Boé et Bon-Encontre, proche d&apos;Agen, l&apos;entreprise Reyssac Bois a vu le jour en 1850. Depuis, notre passion et notre expertise du bois se sont transmises de père en fils sur cinq générations.
+            </p>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Nos équipes sont prêtes à accueillir aussi bien les professionnels que les particuliers. Avec un stock important à disposition, nous nous efforçons de répondre à chaque demande avec précision.
+            </p>
+
+            <div className="flex flex-wrap gap-4 text-sm">
+              <Badge>Expertise professionnelle</Badge>
+              <Badge>Stock important</Badge>
+              <Badge>Service personnalisé</Badge>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-lg bg-green-700 px-5 py-3 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+              >
+                Nous contacter
+              </Link>
+              <Link
+                href="/produits"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-5 py-3 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20"
+              >
+                Voir les catégories
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PROJETS (slider simple) */}
+      <section className="bg-white py-14 sm:py-20 border-y border-gray-100">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Nos Projets
+            </h2>
+            <div className="w-24 h-1 bg-green-600 mx-auto rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {[
+              { src: "/images/projets/projet-1.jpg", alt: "Projet 1" },
+              { src: "/images/projets/projet-2.jpg", alt: "Projet 2" },
+              { src: "/images/projets/projet-3.jpg", alt: "Projet 3" },
+            ].map((p) => (
+              <div key={p.src} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+                <div className="aspect-[16/10] w-full">
+                  <Media src={p.src} alt={p.alt} className="h-full w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRODUITS (teasers) */}
+      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            Découvrez nos produits
+          </h2>
+          <div className="w-24 h-1 bg-green-600 mx-auto rounded-full" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <TeaserCard title="Bois de construction" desc="Des matériaux de qualité pour vos projets de construction." />
+          <TeaserCard title="Menuiserie" desc="Des solutions personnalisées pour vos aménagements." />
+          <TeaserCard title="Rénovation" desc="Tout pour vos projets de rénovation et décoration." />
+        </div>
+
+        <div className="text-center mt-10">
+          <Link
+            href="/produits"
+            className="inline-flex items-center justify-center rounded-full bg-green-700 text-white px-8 py-3 font-medium hover:bg-green-800 transition shadow-lg"
+          >
+            Voir tous nos produits
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-800">
+      {children}
+    </span>
+  )
+}
+
+function TeaserCard({ title, desc }: { title: string; desc: string }) {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+      <div className="h-10 w-10 rounded-xl bg-green-50 flex items-center justify-center text-green-800 font-bold">
+        ✦
+      </div>
+      <h3 className="mt-4 text-xl font-semibold text-gray-900">{title}</h3>
+      <p className="mt-2 text-gray-600">{desc}</p>
+    </div>
   )
 }

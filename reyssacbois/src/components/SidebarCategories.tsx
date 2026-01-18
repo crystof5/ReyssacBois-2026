@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { usePathname } from "next/navigation"
 
 type Category = {
   id: string
@@ -29,12 +30,22 @@ function CategoryItem({
   const [open, setOpen] = useState(shouldBeOpen)
   const children = category.children ?? []
 
+  // Si on navigue (activeSlug change), on synchronise l’état d’ouverture
+  // pour que l’arbre s’ouvre automatiquement sur la catégorie active.
+  useEffect(() => {
+    setOpen(shouldBeOpen)
+  }, [shouldBeOpen])
+
   return (
     <li>
       <div className="flex items-center justify-between">
         <Link
           href={`/categories/${category.slug}`}
           className="font-semibold hover:text-green-700"
+          onClick={() => {
+            // Si la catégorie a des enfants, on ouvre aussi au clic sur le nom.
+            if (children.length > 0) setOpen(true)
+          }}
         >
           {category.name}
         </Link>
@@ -74,14 +85,58 @@ function CategoryItem({
 
 export default function SidebarCategories({
   categories,
-  activeSlug,
 }: {
   categories: Category[]
-  activeSlug?: string
 }) {
+  const pathname = usePathname()
+  const [compact, setCompact] = useState(false)
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem("sidebarCompact")
+      if (stored === "1") setCompact(true)
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("sidebarCompact", compact ? "1" : "0")
+    } catch {
+      // ignore
+    }
+  }, [compact])
+
+  const activeSlug = useMemo(() => {
+    // /categories/[slug]
+    if (pathname.startsWith("/categories/")) {
+      const slug = pathname.split("/")[2]
+      return slug || undefined
+    }
+    return undefined
+  }, [pathname])
+
   return (
-    <aside className="hidden md:block w-64 border-r pr-4">
-      <h2 className="font-semibold mb-4">Catégories</h2>
+    <aside
+      className={`hidden md:block border-r pr-4 ${
+        compact ? "w-48" : "w-64"
+      }`}
+    >
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <h2 className={`font-semibold ${compact ? "text-sm" : ""}`}>
+          Catégories
+        </h2>
+        <button
+          type="button"
+          onClick={() => setCompact((v) => !v)}
+          className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+          aria-label={compact ? "Agrandir la sidebar" : "Réduire la sidebar"}
+          title={compact ? "Agrandir" : "Réduire"}
+        >
+          {compact ? "›" : "‹"}
+        </button>
+      </div>
 
       <ul className="space-y-4">
         {categories.map((category) => (

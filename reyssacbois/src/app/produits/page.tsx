@@ -1,36 +1,38 @@
 import Link from "next/link"
 import { getCategoriesTree } from "@/lib/categories"
+import Breadcrumb from "@/components/Breadcrumb"
+import CategoryCard from "@/components/CategoryCard"
 
 export default async function ProduitsPage() {
   const categories = await getCategoriesTree()
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">
-        Produits
-      </h1>
+      <Breadcrumb
+        items={[{ id: "produits", name: "Produits", href: "/produits" }]}
+      />
 
-      <p className="text-gray-600 mb-8">
-        Sélectionnez une catégorie pour découvrir nos produits bois.
-      </p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Produits
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Sélectionnez une catégorie pour découvrir nos produits bois.
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+        >
+          Demander un devis
+        </Link>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={`/categories/${category.slug}`}
-            className="block border rounded-lg p-6 hover:shadow hover:border-green-600 transition"
-          >
-            <h2 className="text-lg font-semibold mb-2">
-              {category.name}
-            </h2>
-
-            {category.description && (
-              <p className="text-sm text-gray-600">
-                {category.description}
-              </p>
-            )}
-          </Link>
+          <CategoryCard key={category.id} category={category} />
         ))}
       </div>
     </div>
