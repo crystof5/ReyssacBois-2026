@@ -1,20 +1,41 @@
 import { prisma } from "@/lib/prisma"
 
-export async function getCategoryBreadcrumb(slug: string) {
-  const path = []
-
-  let current = await prisma.category.findUnique({
-    where: { slug },
+export async function getProductBreadcrumb(productSlug: string) {
+  const product = await prisma.product.findUnique({
+    where: { slug: productSlug },
+    include: {
+      categories: {
+        include: {
+          category: true,
+        },
+      },
+    },
   })
 
-  while (current) {
-    path.unshift(current)
-    if (!current.parentId) break
-
-    current = await prisma.category.findUnique({
-      where: { id: current.parentId },
-    })
+  if (!product || product.categories.length === 0) {
+    return null
   }
 
-  return path
+  const categoriesPath = []
+
+  let currentCategory = product.categories[0].category
+
+  while (currentCategory) {
+    categoriesPath.unshift(currentCategory)
+
+    if (!currentCategory.parentId) break
+
+    const parent = await prisma.category.findUnique({
+      where: { id: currentCategory.parentId },
+    })
+
+    if (!parent) break
+
+    currentCategory = parent
+  }
+
+  return {
+    product,
+    categories: categoriesPath,
+  }
 }
