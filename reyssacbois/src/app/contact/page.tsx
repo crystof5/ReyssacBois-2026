@@ -27,7 +27,7 @@ export default function ContactPage() {
               </li>
               <li>
                 <span className="font-medium text-gray-900">Téléphone :</span>{" "}
-                05 00 00 00 00
+                05 53 96 15 97
               </li>
               <li>
                 <span className="font-medium text-gray-900">Horaires :</span>{" "}

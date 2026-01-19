@@ -6,6 +6,9 @@ import CategoryCard from "@/components/CategoryCard"
 import ProductCard from "@/components/ProductCard"
 import Link from "next/link"
 
+export const runtime = "nodejs"
+export const preferredRegion = ["fra1"]
+
 export default async function CategoryPage({
   params,
 }: {

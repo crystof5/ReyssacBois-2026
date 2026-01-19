@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma"
 import type { Category } from "@prisma/client"
+import { unstable_cache } from "next/cache"
 
-export async function getProductBreadcrumb(productSlug: string) {
+const getProductBreadcrumbCached = unstable_cache(
+  async (productSlug: string) => {
   const product = await prisma.product.findUnique({
     where: { slug: productSlug },
     include: {
@@ -47,33 +49,48 @@ export async function getProductBreadcrumb(productSlug: string) {
     product,
     categories: categoriesPath,
   }
+  },
+  ["productBreadcrumb"],
+  { revalidate: 300 }
+)
+
+export async function getProductBreadcrumb(productSlug: string) {
+  return await getProductBreadcrumbCached(productSlug)
 }
 
-export async function getCategoryBreadcrumb(categorySlug: string) {
-  const category = await prisma.category.findUnique({
-    where: { slug: categorySlug },
-  })
-
-  if (!category) {
-    return null
-  }
-
-  const categoriesPath: Category[] = []
-  let currentCategory: Category | null = category
-
-  while (currentCategory) {
-    categoriesPath.unshift(currentCategory)
-
-    if (!currentCategory.parentId) break
-
-    const parent: Category | null = await prisma.category.findUnique({
-      where: { id: currentCategory.parentId },
+const getCategoryBreadcrumbCached = unstable_cache(
+  async (categorySlug: string) => {
+    const category = await prisma.category.findUnique({
+      where: { slug: categorySlug },
     })
 
-    if (!parent) break
+    if (!category) {
+      return null
+    }
 
-    currentCategory = parent
-  }
+    const categoriesPath: Category[] = []
+    let currentCategory: Category | null = category
 
-  return categoriesPath
+    while (currentCategory) {
+      categoriesPath.unshift(currentCategory)
+
+      if (!currentCategory.parentId) break
+
+      const parent: Category | null = await prisma.category.findUnique({
+        where: { id: currentCategory.parentId },
+      })
+
+      if (!parent) break
+
+      currentCategory = parent
+    }
+
+    return categoriesPath
+  },
+  ["categoryBreadcrumb"],
+  { revalidate: 300 }
+)
+
+export async function getCategoryBreadcrumb(categorySlug: string) {
+  return await getCategoryBreadcrumbCached(categorySlug)
 }

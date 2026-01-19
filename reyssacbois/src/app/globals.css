@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf3e0;
+  /* Blanc cassé / beige très clair (plus premium que blanc pur) */
+  --background: #f6f1e7;
   --foreground: #171717;
 }
 

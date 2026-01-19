@@ -31,7 +31,7 @@ export default function Navbar() {
             <img
               src="/img/android-chrome-192x192.png"
               alt="Reyssac Bois"
-              className="h-12 w-12 rounded-full bg-white shadow-sm"
+              className="h-12 w-12 rounded-full bg-white shadow-sm transition-transform duration-200 hover:scale-105"
             />
           </Link>
 
@@ -46,22 +46,22 @@ export default function Navbar() {
 
           <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-white">
             <li>
-              <Link href="/" className="hover:text-white/90">Accueil</Link>
+              <Link href="/" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">Accueil</Link>
             </li>
             <li>
-              <Link href="/qui-sommes-nous" className="hover:text-white/90">
+              <Link href="/qui-sommes-nous" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
                 Qui sommes-nous ?
               </Link>
             </li>
             <li>
-              <Link href="/produits" className="hover:text-white/90">Produits</Link>
+              <Link href="/produits" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">Produits</Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:text-white/90">Contact</Link>
+              <Link href="/contact" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">Contact</Link>
             </li>
             {isAuthed && (
               <li>
-                <Link href="/admin" className="hover:text-white/90">
+                <Link href="/admin" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
                   Administration
                 </Link>
               </li>

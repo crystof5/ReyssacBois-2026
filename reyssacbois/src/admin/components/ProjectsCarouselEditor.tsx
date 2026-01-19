@@ -18,6 +18,7 @@ export default function ProjectsCarouselEditor({
   )
 
   const slidesJson = useMemo(() => JSON.stringify(items), [items])
+  const addPhoto = () => setItems((arr) => [...arr, { src: "", alt: "" }])
 
   return (
     <div className="space-y-6">
@@ -47,7 +48,7 @@ export default function ProjectsCarouselEditor({
         <button
           type="button"
           className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
-          onClick={() => setItems((arr) => [...arr, { src: "", alt: "" }])}
+          onClick={addPhoto}
         >
           + Ajouter une photo
         </button>
@@ -96,6 +97,19 @@ export default function ProjectsCarouselEditor({
             </label>
           </div>
         ))}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-gray-500">
+          Astuce: tu peux ajouter autant de photos que tu veux (on garde un garde-fou à 50 en base).
+        </p>
+        <button
+          type="button"
+          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+          onClick={addPhoto}
+        >
+          + Ajouter une photo
+        </button>
       </div>
     </div>
   )

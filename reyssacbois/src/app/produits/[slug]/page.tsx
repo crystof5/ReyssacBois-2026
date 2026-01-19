@@ -4,6 +4,9 @@ import { getProductBreadcrumb } from "@/lib/breadcrumbs"
 import Media from "@/components/ui/Media"
 import Link from "next/link"
 
+export const runtime = "nodejs"
+export const preferredRegion = ["fra1"]
+
 export default async function ProduitPage({
   params,
 }: {
