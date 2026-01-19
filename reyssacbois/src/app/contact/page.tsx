@@ -22,10 +22,6 @@ export default function ContactPage() {
             </h2>
             <ul className="mt-3 space-y-2 text-sm text-gray-600">
               <li>
-                <span className="font-medium text-gray-900">Email :</span>{" "}
-                contact@reyssacbois.fr
-              </li>
-              <li>
                 <span className="font-medium text-gray-900">Téléphone :</span>{" "}
                 05 53 96 15 97
               </li>
@@ -34,9 +30,6 @@ export default function ContactPage() {
                 Lun–Ven, 8h–18h
               </li>
             </ul>
-            <p className="mt-4 text-xs text-gray-500">
-              (Tu pourras remplacer ces infos par les vraies coordonnées.)
-            </p>
           </div>
         </div>
 

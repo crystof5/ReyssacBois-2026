@@ -63,8 +63,8 @@ export default async function Home() {
               </div>
             </div>
             <div className="absolute -bottom-5 -right-5 bg-green-700 text-white p-4 rounded-2xl shadow-lg">
-              <p className="text-2xl font-bold leading-none">1850</p>
-              <p className="text-xs mt-1">Années d&apos;expertise</p>
+              <p className="text-2xl font-bold leading-none">Depuis 1850</p>
+              <p className="text-xs mt-1 text-white/90">Entreprise familiale</p>
             </div>
           </div>
 

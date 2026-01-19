@@ -8,6 +8,7 @@ type ContactPayload = {
   subject?: string
   message?: string
   website?: string // honeypot
+  recaptchaToken?: string
 }
 
 function isValidEmail(email: string) {
@@ -27,6 +28,44 @@ export async function POST(req: Request) {
   if (website) {
     // Honeypot rempli => bot
     return NextResponse.json({ ok: true }, { status: 200 })
+  }
+
+  const secret = process.env.RECAPTCHA_SECRET_KEY
+  const token = (data.recaptchaToken ?? "").trim()
+  if (!secret) {
+    return NextResponse.json(
+      { ok: false, error: "reCAPTCHA non configuré côté serveur." },
+      { status: 500 }
+    )
+  }
+  if (!token) {
+    return NextResponse.json(
+      { ok: false, error: "Validation reCAPTCHA manquante." },
+      { status: 400 }
+    )
+  }
+
+  // Vérification reCAPTCHA (v3)
+  const verifyRes = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      secret,
+      response: token,
+    }),
+  })
+  const verifyJson = (await verifyRes.json()) as {
+    success?: boolean
+    score?: number
+    action?: string
+    "error-codes"?: string[]
+  }
+
+  if (!verifyJson.success) {
+    return NextResponse.json(
+      { ok: false, error: "Validation reCAPTCHA refusée." },
+      { status: 400 }
+    )
   }
 
   const name = (data.name ?? "").trim()
