@@ -18,7 +18,7 @@ export default async function AdminProduitEditPage({
       where: { id },
       include: { categories: true },
     }),
-    prisma.category.findMany({ orderBy: [{ name: "asc" }] }),
+    prisma.category.findMany({ orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
   ])
 
   if (!product) notFound()
@@ -58,6 +58,28 @@ export default async function AdminProduitEditPage({
           </Field>
 
           <SlugField defaultValue={product.slug} />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Visible">
+            <select
+              name="isVisible"
+              defaultValue={product.isVisible ? "1" : "0"}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            >
+              <option value="1">Visible</option>
+              <option value="0">Caché</option>
+            </select>
+          </Field>
+
+          <Field label="Ordre d’affichage">
+            <input
+              type="number"
+              name="sortOrder"
+              defaultValue={product.sortOrder}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            />
+          </Field>
         </div>
 
         <Field label="Description">

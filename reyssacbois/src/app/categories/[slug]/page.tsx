@@ -9,6 +9,26 @@ import Link from "next/link"
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
 
+async function isCategoryEffectivelyVisible(categoryId: string) {
+  let currentId: string | null = categoryId
+  // garde-fou anti-boucle
+  const visited = new Set<string>()
+  while (currentId) {
+    if (visited.has(currentId)) return false
+    visited.add(currentId)
+
+    const cat: { id: string; parentId: string | null; isVisible: boolean } | null =
+      await prisma.category.findUnique({
+      where: { id: currentId },
+      select: { id: true, parentId: true, isVisible: true },
+    })
+    if (!cat) return false
+    if (!cat.isVisible) return false
+    currentId = cat.parentId
+  }
+  return true
+}
+
 export default async function CategoryPage({
   params,
 }: {
@@ -24,17 +44,36 @@ export default async function CategoryPage({
     where: { slug },
     include: {
       children: true,
-      products: {
-        include: {
-          product: true,
-        },
-      },
     },
   })
 
   if (!category) {
     notFound()
   }
+
+  // Si la catégorie (ou un parent) est caché => 404 côté public
+  if (!(await isCategoryEffectivelyVisible(category.id))) {
+    notFound()
+  }
+
+  // Enfants / produits: filtrage + tri (ordre puis nom)
+  const [children, products] = await Promise.all([
+    prisma.category.findMany({
+      where: { parentId: category.id, isVisible: true },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    }),
+    prisma.product.findMany({
+      where: {
+        isVisible: true,
+        categories: {
+          some: {
+            categoryId: category.id,
+          },
+        },
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    }),
+  ])
 
   const breadcrumb = (await getCategoryBreadcrumb(slug)) ?? []
 
@@ -74,7 +113,7 @@ export default async function CategoryPage({
       </div>
 
       {/* SOUS-CATÉGORIES CLIQUABLES */}
-      {category.children.length > 0 && (
+      {children.length > 0 && (
         <div className="mt-10">
           <div className="flex items-baseline justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -83,7 +122,7 @@ export default async function CategoryPage({
           </div>
 
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {category.children.map((child) => (
+            {children.map((child) => (
               <li key={child.id}>
                 <CategoryCard category={child} showDescription />
               </li>
@@ -93,14 +132,14 @@ export default async function CategoryPage({
       )}
 
       {/* PRODUITS CLIQUABLES */}
-      {category.products.length > 0 && (
+      {products.length > 0 && (
         <div className="mt-10">
           <h2 className="text-lg font-semibold text-gray-900">
             Produits
           </h2>
 
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {category.products.map(({ product }) => (
+            {products.map((product) => (
               <li key={product.id}>
                 <ProductCard product={product} />
               </li>

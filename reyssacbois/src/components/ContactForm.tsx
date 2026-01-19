@@ -11,7 +11,6 @@ type FormState = {
   subject: string
   message: string
   website: string // honeypot
-  recaptchaToken: string
 }
 
 const initialState: FormState = {
@@ -22,7 +21,6 @@ const initialState: FormState = {
   subject: "",
   message: "",
   website: "",
-  recaptchaToken: "",
 }
 
 function isValidEmail(email: string) {
@@ -42,9 +40,28 @@ export default function ContactForm() {
     if (!isValidEmail(form.email.trim())) return false
     if (form.message.trim().length < 10) return false
     if (!recaptchaSiteKey) return false
-    if (!form.recaptchaToken) return false
     return true
   }, [form, recaptchaSiteKey, status])
+
+  async function executeRecaptchaV3(siteKey: string) {
+    const grecaptcha = (window as unknown as {
+      grecaptcha?: {
+        ready?: (cb: () => void) => void
+        execute?: (siteKey: string, opts: { action: string }) => Promise<string>
+      }
+    }).grecaptcha
+
+    if (!grecaptcha?.execute) {
+      throw new Error("reCAPTCHA n’est pas chargé.")
+    }
+
+    // Recommandé par Google pour s’assurer que la lib est prête
+    if (grecaptcha.ready) {
+      await new Promise<void>((resolve) => grecaptcha.ready?.(resolve))
+    }
+
+    return grecaptcha.execute(siteKey, { action: "contact" })
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -52,36 +69,64 @@ export default function ContactForm() {
     setError(null)
 
     try {
+      const isHoneypot = Boolean(form.website.trim())
+      if (!isHoneypot && !recaptchaSiteKey) {
+        setStatus("error")
+        setError("Anti-spam non configuré (reCAPTCHA).")
+        return
+      }
+
+      const token =
+        !isHoneypot && recaptchaSiteKey ? await executeRecaptchaV3(recaptchaSiteKey) : ""
+
+      const controller = new AbortController()
+      const timeoutId = window.setTimeout(() => controller.abort(), 20000)
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recaptchaToken: token }),
+        signal: controller.signal,
       })
-      const json = (await res.json()) as { ok: boolean; error?: string }
+      window.clearTimeout(timeoutId)
 
-      if (!res.ok || !json.ok) {
+      const raw = await res.text()
+      let json: { ok?: boolean; error?: string } | null = null
+      try {
+        json = raw ? (JSON.parse(raw) as { ok?: boolean; error?: string }) : null
+      } catch {
+        json = null
+      }
+
+      if (!res.ok || !json?.ok) {
         setStatus("error")
-        setError(json.error ?? "Erreur lors de l’envoi.")
+        const fallback =
+          raw && raw.length < 300
+            ? raw
+            : `Erreur lors de l’envoi (HTTP ${res.status}).`
+        setError(json?.error ?? fallback)
         return
       }
 
       setStatus("success")
       setForm(initialState)
-    } catch {
+    } catch (err) {
       setStatus("error")
-      setError("Impossible d’envoyer le message (réseau).")
+      if (err instanceof DOMException && err.name === "AbortError") {
+        setError("L’envoi a expiré. Réessaie dans quelques instants.")
+        return
+      }
+      setError(err instanceof Error ? err.message : "Impossible d’envoyer le message.")
     }
   }
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
       {recaptchaSiteKey ? (
-        <>
-          <Script
-            src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}
-            strategy="afterInteractive"
-          />
-        </>
+        <Script
+          src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}
+          strategy="afterInteractive"
+        />
       ) : (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
           reCAPTCHA n&apos;est pas configuré. Ajoute{" "}
@@ -183,13 +228,6 @@ export default function ContactForm() {
         />
       </Field>
 
-      {recaptchaSiteKey && (
-        <RecaptchaV3
-          siteKey={recaptchaSiteKey}
-          onToken={(token) => setForm((f) => ({ ...f, recaptchaToken: token }))}
-        />
-      )}
-
       <button
         type="submit"
         disabled={!canSubmit}
@@ -200,6 +238,27 @@ export default function ContactForm() {
 
       <p className="text-xs text-gray-500">
         En envoyant ce formulaire, vous acceptez d’être recontacté(e) au sujet de votre demande.
+      </p>
+      <p className="text-xs text-gray-500">
+        Ce site est protégé par reCAPTCHA et la{" "}
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noreferrer"
+          className="underline hover:no-underline"
+        >
+          Politique de confidentialité
+        </a>{" "}
+        et les{" "}
+        <a
+          href="https://policies.google.com/terms"
+          target="_blank"
+          rel="noreferrer"
+          className="underline hover:no-underline"
+        >
+          Conditions d&apos;utilisation
+        </a>{" "}
+        de Google s&apos;appliquent.
       </p>
     </form>
   )
@@ -223,52 +282,3 @@ function Field({
     </label>
   )
 }
-
-function RecaptchaV3({
-  siteKey,
-  onToken,
-}: {
-  siteKey: string
-  onToken: (token: string) => void
-}) {
-  const [err, setErr] = useState<string | null>(null)
-
-  async function execute() {
-    setErr(null)
-    const grecaptcha = (window as any).grecaptcha as any
-    if (!grecaptcha) {
-      setErr("reCAPTCHA n’est pas chargé.")
-      return
-    }
-
-    try {
-      const token = await grecaptcha.execute(siteKey, { action: "contact" })
-      onToken(token)
-    } catch {
-      setErr("Impossible de valider reCAPTCHA.")
-    }
-  }
-
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-gray-700">
-          Validation anti-spam (reCAPTCHA)
-        </p>
-        <button
-          type="button"
-          onClick={() => void execute()}
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
-        >
-          Valider
-        </button>
-      </div>
-      {err && <p className="mt-2 text-sm text-red-700">{err}</p>}
-      <p className="mt-2 text-xs text-gray-500">
-        Google reCAPTCHA protège ce site (v3).
-      </p>
-    </div>
-  )
-}
-
-

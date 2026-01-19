@@ -12,7 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scripts/seed (hors runtime Next) :
+    "scripts/**",
+    "prisma/**",
   ]),
+  {
+    rules: {
+      // Ce rule est trop agressif et flag des patterns idiomatiques (lecture localStorage, sync UI).
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

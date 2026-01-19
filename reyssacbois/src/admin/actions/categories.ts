@@ -8,7 +8,6 @@ import { slugify } from "./slug"
 async function ensureUniqueCategorySlug(slugBase: string, id: string) {
   let candidate = slugBase
   let i = 2
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const existing = await prisma.category.findFirst({
       where: {
@@ -31,6 +30,9 @@ export async function updateCategoryAction(formData: FormData) {
   const description = String(formData.get("description") ?? "").trim()
   const imageUrl = String(formData.get("imageUrl") ?? "").trim()
   const parentIdRaw = String(formData.get("parentId") ?? "").trim()
+  const isVisible = String(formData.get("isVisible") ?? "") === "1"
+  const sortOrderRaw = String(formData.get("sortOrder") ?? "").trim()
+  const sortOrder = Number.isFinite(Number(sortOrderRaw)) ? Number(sortOrderRaw) : 0
 
   if (!id) throw new Error("ID manquant")
   if (name.length < 2) throw new Error("Nom trop court")
@@ -59,11 +61,16 @@ export async function updateCategoryAction(formData: FormData) {
       description: description || null,
       imageUrl: imageUrl || null,
       parentId,
+      isVisible,
+      sortOrder,
     },
   })
 
   revalidatePath("/admin/categories")
   revalidatePath(`/admin/categories/${id}`)
+  revalidatePath("/categories", "layout")
+  revalidatePath("/produits", "layout")
+  revalidatePath(`/categories/${slug}`)
   redirect("/admin/categories")
 }
 
