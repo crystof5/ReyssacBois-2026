@@ -34,7 +34,7 @@ export async function getProductBreadcrumb(productSlug: string) {
 
     if (!currentCategory.parentId) break
 
-    const parent = await prisma.category.findUnique({
+    const parent: Category | null = await prisma.category.findUnique({
       where: { id: currentCategory.parentId },
     })
 
@@ -66,7 +66,7 @@ export async function getCategoryBreadcrumb(categorySlug: string) {
 
     if (!currentCategory.parentId) break
 
-    const parent = await prisma.category.findUnique({
+    const parent: Category | null = await prisma.category.findUnique({
       where: { id: currentCategory.parentId },
     })
 
