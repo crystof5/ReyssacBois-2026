@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Breadcrumb from "@/components/Breadcrumb"
 import Container from "@/components/ui/Container"
 import Media from "@/components/ui/Media"
-import { getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
+import { getAboutTexts, getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
 
 export const metadata: Metadata = {
   title: "Reyssac Bois - Qui sommes-nous ?",
@@ -16,11 +16,36 @@ export const metadata: Metadata = {
 }
 
 export default async function QuiSommesNousPage() {
+  const aboutTexts = await getAboutTexts()
   const aboutHistory =
     (await getSiteImage(SITE_KEYS.aboutHistory)) ?? {
       src: "/images/caroussel/histoire.jpg",
       alt: "Histoire Reyssac Bois",
     }
+
+  const pageTitle = aboutTexts?.pageTitle?.trim() ? aboutTexts.pageTitle.trim() : "Qui sommes-nous ?"
+  const historyTitle = aboutTexts?.historyTitle?.trim() ? aboutTexts.historyTitle.trim() : "Notre Histoire"
+  const historyText =
+    aboutTexts?.historyText?.trim()
+      ? aboutTexts.historyText.trim()
+      : "L'histoire débute il y a plus de 170 ans. Jean Reyssac, l'arrière-arrière grand-père de Benoît, l'actuel gérant, crée la société Reyssac Bois en 1850. Maraicher à l'époque, il commercialise désormais les bois du Nord et de Pays. La propriété étendue jusqu'au canal, permettait la livraison des bois par péniche en provenance de Bordeaux."
+  const missionTitle = aboutTexts?.missionTitle?.trim() ? aboutTexts.missionTitle.trim() : "Notre Mission"
+  const missionText =
+    aboutTexts?.missionText?.trim()
+      ? aboutTexts.missionText.trim()
+      : "Notre mission est principalement la satisfaction du client et sa fidélisation. Nous favorisons des produits d'origine française et certifiés PEFC. Du professionnel au particulier, de la baguette à la palette, nous oeuvrons à trouver la bonne solution à chacun de nos clients."
+  const locationTitle =
+    aboutTexts?.locationTitle?.trim()
+      ? aboutTexts.locationTitle.trim()
+      : "Notre Localisation & Projets Futurs"
+  const locationText =
+    aboutTexts?.locationText?.trim()
+      ? aboutTexts.locationText.trim()
+      : "Notre connaissance du bois transmise de générations en générations nous permet de conseiller, guider et accompagner chaque personne dans ses projets. Notre localisation est une force, aux portes d'Agen et à mi-chemin entre Bordeaux et Toulouse, nous sommes au coeur du Sud-Ouest. Aujourd'hui, nous sommes fiers d'être indépendants et sommes excités pour nos futurs projets, notamment la rénovation de nos bâtiments historiques."
+  const conclusionText =
+    aboutTexts?.conclusionText?.trim()
+      ? aboutTexts.conclusionText.trim()
+      : "173 années d'existence font de l'entreprise familiale le plus vieux commerce d'Agen. Hâte de vous recevoir dans nos locaux !"
 
   return (
     <div className="bg-gradient-to-b from-amber-50 to-white">
@@ -38,7 +63,7 @@ export default async function QuiSommesNousPage() {
         {/* Titre */}
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900">
-            Qui sommes-nous ?
+            {pageTitle}
           </h1>
           <div className="mt-4 w-24 h-1 bg-green-600 mx-auto rounded-full" />
         </div>
@@ -47,15 +72,10 @@ export default async function QuiSommesNousPage() {
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
           <div className="flex flex-col justify-center">
             <h2 className="text-2xl font-bold text-gray-900">
-              Notre Histoire
+              {historyTitle}
             </h2>
             <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
-              L&apos;histoire débute il y a plus de 170 ans. Jean Reyssac,
-              l&apos;arrière-arrière grand-père de Benoît, l&apos;actuel gérant,
-              crée la société Reyssac Bois en 1850. Maraicher à l&apos;époque,
-              il commercialise désormais les bois du Nord et de Pays. La
-              propriété étendue jusqu&apos;au canal, permettait la livraison des
-              bois par péniche en provenance de Bordeaux.
+              {historyText}
             </p>
           </div>
 
@@ -72,13 +92,9 @@ export default async function QuiSommesNousPage() {
 
         {/* Mission */}
         <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-          <h2 className="text-2xl font-bold text-gray-900">Notre Mission</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{missionTitle}</h2>
           <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
-            Notre mission est principalement la satisfaction du client et sa
-            fidélisation. Nous favorisons des produits d&apos;origine française
-            et certifiés PEFC. Du professionnel au particulier, de la baguette à
-            la palette, nous oeuvrons à trouver la bonne solution à chacun de
-            nos clients.
+            {missionText}
           </p>
         </section>
 
@@ -100,16 +116,10 @@ export default async function QuiSommesNousPage() {
 
           <div className="flex flex-col justify-center">
             <h2 className="text-2xl font-bold text-gray-900">
-              Notre Localisation &amp; Projets Futurs
+              {locationTitle}
             </h2>
             <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
-              Notre connaissance du bois transmise de générations en générations
-              nous permet de conseiller, guider et accompagner chaque personne
-              dans ses projets. Notre localisation est une force, aux portes
-              d&apos;Agen et à mi-chemin entre Bordeaux et Toulouse, nous sommes
-              au coeur du Sud-Ouest. Aujourd&apos;hui, nous sommes fiers
-              d&apos;être indépendants et sommes excités pour nos futurs projets,
-              notamment la rénovation de nos bâtiments historiques.
+              {locationText}
             </p>
           </div>
         </section>
@@ -117,9 +127,7 @@ export default async function QuiSommesNousPage() {
         {/* Conclusion */}
         <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
           <p className="text-gray-700 text-base sm:text-lg text-center">
-            173 années d&apos;existence font de l&apos;entreprise familiale le
-            plus vieux commerce d&apos;Agen. Hâte de vous recevoir dans nos
-            locaux !
+            {conclusionText}
           </p>
         </section>
       </Container>

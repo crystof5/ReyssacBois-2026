@@ -99,7 +99,12 @@ export default function ImageUploadField({
       })
       let json: { ok?: boolean; error?: string } | null = null
       try {
-        json = (await res.json()) as any
+        const raw: unknown = await res.json()
+        if (raw && typeof raw === "object") {
+          json = raw as { ok?: boolean; error?: string }
+        } else {
+          json = null
+        }
       } catch {
         json = null
       }

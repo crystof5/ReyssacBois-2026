@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Category" ADD COLUMN     "isVisible" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "sortOrder" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Product" ADD COLUMN     "isVisible" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN     "sortOrder" INTEGER NOT NULL DEFAULT 0;

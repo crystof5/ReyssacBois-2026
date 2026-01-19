@@ -2,20 +2,33 @@ import Link from "next/link"
 import Media from "@/components/ui/Media"
 import ProjectsCarousel from "@/components/ProjectsCarousel"
 import {
+  getHomeTexts,
   getProjectsCarouselSettings,
   getSiteImage,
   SITE_KEYS,
 } from "@/admin/queries/siteSettings"
 
 export default async function Home() {
-  const [hero, family, projects] = await Promise.all([
+  const [hero, family, projects, homeTexts] = await Promise.all([
     getSiteImage(SITE_KEYS.homeHero),
     getSiteImage(SITE_KEYS.homeFamily),
     getProjectsCarouselSettings(),
+    getHomeTexts(),
   ])
-//test
+
   const heroImage = hero ?? { src: "/images/caroussel/atelier.jpg", alt: "Atelier Reyssac Bois" }
   const familyImage = family ?? { src: "/images/logo2.jpg", alt: "Reyssac Bois" }
+  const heroTitle = homeTexts?.heroTitle?.trim() ? homeTexts.heroTitle.trim() : "Reyssac Bois"
+  const heroSubtitle = homeTexts?.heroSubtitle?.trim() ? homeTexts.heroSubtitle.trim() : "Votre expert en bois depuis 1850"
+  const familyTitle = homeTexts?.familyTitle?.trim() ? homeTexts.familyTitle.trim() : "Une histoire de famille"
+  const familyP1 =
+    homeTexts?.familyP1?.trim()
+      ? homeTexts.familyP1.trim()
+      : "Implantée à Boé et Bon-Encontre, proche d'Agen, l'entreprise Reyssac Bois a vu le jour en 1850. Depuis, notre passion et notre expertise du bois se sont transmises de père en fils sur cinq générations."
+  const familyP2 =
+    homeTexts?.familyP2?.trim()
+      ? homeTexts.familyP2.trim()
+      : "Nos équipes sont prêtes à accueillir aussi bien les professionnels que les particuliers. Avec un stock important à disposition, nous nous efforçons de répondre à chaque demande avec précision."
   const projectsSlides =
     projects?.slides?.length
       ? projects.slides
@@ -38,10 +51,10 @@ export default async function Home() {
         <div className="absolute inset-0 z-10 flex items-center justify-center text-center">
           <div className="mx-auto w-full max-w-4xl px-4">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 transition-transform duration-700 hover:scale-[1.02]">
-              Reyssac Bois
+              {heroTitle}
             </h1>
             <p className="text-xl md:text-2xl text-white/95 mb-8">
-              Votre expert en bois depuis 1850
+              {heroSubtitle}
             </p>
             <Link
               href="/produits"
@@ -70,13 +83,13 @@ export default async function Home() {
 
           <div className="space-y-6">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Une histoire de famille
+              {familyTitle}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Implantée à Boé et Bon-Encontre, proche d&apos;Agen, l&apos;entreprise Reyssac Bois a vu le jour en 1850. Depuis, notre passion et notre expertise du bois se sont transmises de père en fils sur cinq générations.
+              {familyP1}
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Nos équipes sont prêtes à accueillir aussi bien les professionnels que les particuliers. Avec un stock important à disposition, nous nous efforçons de répondre à chaque demande avec précision.
+              {familyP2}
             </p>
 
             <div className="flex flex-wrap gap-4 text-sm">

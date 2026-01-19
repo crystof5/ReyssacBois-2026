@@ -4,8 +4,8 @@ import CategoryCard from "@/components/CategoryCard"
 
 export default async function CategoriesIndexPage() {
   const categories = await prisma.category.findMany({
-    where: { parentId: null },
-    orderBy: { name: "asc" },
+    where: { parentId: null, isVisible: true },
+    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
   })
 
   return (

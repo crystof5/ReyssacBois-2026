@@ -1,17 +1,25 @@
 import Link from "next/link"
 import {
+  getConstructionBannerSettings,
   getProjectsCarouselSettings,
+  getPromoModalSettings,
   getSiteImage,
+  ensureAboutTexts,
+  ensureHomeTexts,
   SITE_KEYS,
 } from "@/admin/queries/siteSettings"
 import AdminSiteContentForm from "./AdminSiteContentForm"
 
 export default async function AdminHomePage() {
-  const [hero, family, aboutHistory, projects] = await Promise.all([
+  const [hero, family, aboutHistory, projects, homeTexts, aboutTexts, banner, promo] = await Promise.all([
     getSiteImage(SITE_KEYS.homeHero),
     getSiteImage(SITE_KEYS.homeFamily),
     getSiteImage(SITE_KEYS.aboutHistory),
     getProjectsCarouselSettings(),
+    ensureHomeTexts(),
+    ensureAboutTexts(),
+    getConstructionBannerSettings(),
+    getPromoModalSettings(),
   ])
 
   const projectsSpeed: "slow" | "normal" | "fast" =
@@ -25,7 +33,7 @@ export default async function AdminHomePage() {
             Contenu du site
           </h2>
           <p className="mt-1 text-sm text-gray-600">
-            Images de la home, carrousel “Nos Projets”, et photo “Notre Histoire”.
+            Images, textes, promo, et bannière “site en construction”.
           </p>
         </div>
         <Link href="/admin" className="text-sm text-gray-700 hover:underline">
@@ -38,6 +46,14 @@ export default async function AdminHomePage() {
         family={family ?? { src: "", alt: "" }}
         aboutHistory={aboutHistory ?? { src: "", alt: "" }}
         projects={{ speed: projectsSpeed, slides: projects?.slides ?? [] }}
+        homeTexts={homeTexts}
+        aboutTexts={aboutTexts}
+        banner={banner ?? { isVisible: false, text: "" }}
+        promo={
+          promo
+            ? { ...promo, image: promo.image ?? { src: "", alt: "" } }
+            : { isVisible: false, title: "", text: "", image: { src: "", alt: "" } }
+        }
       />
     </div>
   )

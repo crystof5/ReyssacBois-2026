@@ -8,7 +8,6 @@ import { slugify } from "./slug"
 async function ensureUniqueProductSlug(slugBase: string, id: string) {
   let candidate = slugBase
   let i = 2
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const existing = await prisma.product.findFirst({
       where: {
@@ -30,6 +29,9 @@ export async function updateProduitAction(formData: FormData) {
   const slugInput = String(formData.get("slug") ?? "").trim()
   const description = String(formData.get("description") ?? "").trim()
   const imageUrl = String(formData.get("imageUrl") ?? "").trim()
+  const isVisible = String(formData.get("isVisible") ?? "") === "1"
+  const sortOrderRaw = String(formData.get("sortOrder") ?? "").trim()
+  const sortOrder = Number.isFinite(Number(sortOrderRaw)) ? Number(sortOrderRaw) : 0
 
   const section = String(formData.get("section") ?? "").trim()
   const length = String(formData.get("length") ?? "").trim()
@@ -59,6 +61,8 @@ export async function updateProduitAction(formData: FormData) {
       slug,
       description: description || null,
       imageUrl: imageUrl || null,
+      isVisible,
+      sortOrder,
       section: section || null,
       length: length || null,
       species: species || null,
@@ -75,6 +79,9 @@ export async function updateProduitAction(formData: FormData) {
 
   revalidatePath("/admin/produits")
   revalidatePath(`/admin/produits/${id}`)
+  revalidatePath("/produits", "layout")
+  revalidatePath(`/produits/${slug}`)
+  revalidatePath("/categories", "layout")
   redirect("/admin/produits")
 }
 

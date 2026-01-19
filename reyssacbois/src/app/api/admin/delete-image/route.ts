@@ -45,7 +45,11 @@ export async function POST(req: NextRequest) {
 
     let body: { publicUrl?: string; bucket?: string }
     try {
-      body = (await req.json()) as any
+      const raw: unknown = await req.json()
+      if (!raw || typeof raw !== "object") {
+        return NextResponse.json({ ok: false, error: "JSON invalide" }, { status: 400 })
+      }
+      body = raw as { publicUrl?: string; bucket?: string }
     } catch {
       return NextResponse.json({ ok: false, error: "JSON invalide" }, { status: 400 })
     }
@@ -71,14 +75,12 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ ok: true })
-  } catch (e: any) {
+  } catch (e: unknown) {
     return NextResponse.json(
       {
         ok: false,
         error:
-          typeof e?.message === "string"
-            ? e.message
-            : "Erreur serveur lors de la suppression.",
+          e instanceof Error ? e.message : "Erreur serveur lors de la suppression.",
       },
       { status: 500 }
     )

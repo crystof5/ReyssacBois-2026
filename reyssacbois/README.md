@@ -38,6 +38,13 @@ L’admin est accessible via `/admin` et protégée par **Supabase Auth** + une 
 - **`NEXT_PUBLIC_SUPABASE_ANON_KEY`**: clé anon publique
 - **`ADMIN_EMAILS`**: emails autorisés (séparés par des virgules), ex: `admin@reyssacbois.fr, autre@reyssacbois.fr`
 
+## Formulaire de contact — SMTP + reCAPTCHA v3
+
+- **Copie le fichier `env.example` vers `.env.local`** puis renseigne les valeurs.
+- **Crée un reCAPTCHA v3** dans la console Google, ajoute les domaines autorisés, puis récupère:
+  - **`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`** (clé site)
+  - **`RECAPTCHA_SECRET_KEY`** (clé secrète)
+
 ### Dépendances
 
 L’admin utilise:

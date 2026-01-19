@@ -13,6 +13,8 @@ model Category {
   slug        String   @unique
   description String?
   imageUrl    String?
+  isVisible   Boolean  @default(true)
+  sortOrder   Int      @default(0)
 
   parentId   String?
   parent     Category? @relation("CategoryTree", fields: [parentId], references: [id])
@@ -30,6 +32,8 @@ model Product {
   slug        String   @unique
   description String?
   imageUrl    String?
+  isVisible   Boolean  @default(true)
+  sortOrder   Int      @default(0)
 
   categories  ProductCategory[]
 
@@ -59,4 +63,28 @@ model SiteSetting {
   key       String   @id
   value     Json
   updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  name    String
+  email   String
+  company String?
+  phone   String?
+  subject String?
+  message String
+
+  ip        String?
+  userAgent String?
+
+  recaptchaScore    Float?
+  recaptchaAction   String?
+  recaptchaHostname String?
+
+  emailSentAt DateTime?
+  emailError  String?
+
+  @@index([createdAt])
 }

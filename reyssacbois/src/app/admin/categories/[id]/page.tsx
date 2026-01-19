@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { updateCategoryAction } from "@/admin/actions/categories"
 import ImageUploadField from "@/admin/components/ImageUploadField"
 import SlugField from "@/admin/components/SlugField"
+import SortableList from "@/admin/components/SortableList"
 
 export default async function AdminCategoryEditPage({
   params,
@@ -23,7 +24,7 @@ export default async function AdminCategoryEditPage({
         },
       },
     }),
-    prisma.category.findMany({ orderBy: [{ name: "asc" }] }),
+    prisma.category.findMany({ orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
   ])
 
   if (!category) notFound()
@@ -63,6 +64,28 @@ export default async function AdminCategoryEditPage({
           <SlugField defaultValue={category.slug} />
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label="Visible">
+            <select
+              name="isVisible"
+              defaultValue={category.isVisible ? "1" : "0"}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            >
+              <option value="1">Visible</option>
+              <option value="0">Cachée</option>
+            </select>
+          </Field>
+
+          <Field label="Ordre d’affichage">
+            <input
+              type="number"
+              name="sortOrder"
+              defaultValue={category.sortOrder}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            />
+          </Field>
+        </div>
+
         <Field label="Description">
           <textarea
             name="description"
@@ -96,56 +119,50 @@ export default async function AdminCategoryEditPage({
         </Field>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-          <div className="rounded-2xl border border-gray-200 bg-white p-4">
-            <h3 className="text-sm font-semibold text-gray-900">
-              Sous-catégories ({category.children.length})
-            </h3>
-            {category.children.length === 0 ? (
-              <p className="mt-2 text-sm text-gray-600">Aucune.</p>
-            ) : (
-              <ul className="mt-3 space-y-2 text-sm">
-                {category.children
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((child) => (
-                    <li key={child.id} className="flex items-center justify-between gap-3">
-                      <span className="text-gray-900">{child.name}</span>
-                      <Link
-                        href={`/admin/categories/${child.id}`}
-                        className="text-gray-900 hover:underline"
-                      >
-                        Éditer →
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
+          <SortableList
+            title={`Sous-catégories (${category.children.length})`}
+            description="Glisse-dépose pour définir l’ordre d’affichage sous ce parent."
+            items={category.children
+              .slice()
+              .sort((a, b) => {
+                const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+                if (byOrder !== 0) return byOrder
+                return a.name.localeCompare(b.name, "fr")
+              })
+              .map((child) => ({
+                id: child.id,
+                title: child.name,
+                subtitle: `/${child.slug}`,
+                isVisible: child.isVisible,
+                editHref: `/admin/categories/${child.id}`,
+                viewHref: `/categories/${child.slug}`,
+              }))}
+            saveKind="categoryChildren"
+            scopeId={category.id}
+          />
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-4">
-            <h3 className="text-sm font-semibold text-gray-900">
-              Produits ({category.products.length})
-            </h3>
-            {category.products.length === 0 ? (
-              <p className="mt-2 text-sm text-gray-600">Aucun.</p>
-            ) : (
-              <ul className="mt-3 space-y-2 text-sm">
-                {category.products
-                  .map((p) => p.product)
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((p) => (
-                    <li key={p.id} className="flex items-center justify-between gap-3">
-                      <span className="text-gray-900">{p.name}</span>
-                      <Link
-                        href={`/admin/produits/${p.id}`}
-                        className="text-gray-900 hover:underline"
-                      >
-                        Éditer →
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
+          <SortableList
+            title={`Produits (${category.products.length})`}
+            description="Glisse-dépose pour définir l’ordre d’affichage des produits dans cette catégorie."
+            items={category.products
+              .map((p) => p.product)
+              .slice()
+              .sort((a, b) => {
+                const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+                if (byOrder !== 0) return byOrder
+                return a.name.localeCompare(b.name, "fr")
+              })
+              .map((p) => ({
+                id: p.id,
+                title: p.name,
+                subtitle: `/${p.slug}`,
+                isVisible: p.isVisible,
+                editHref: `/admin/produits/${p.id}`,
+                viewHref: `/produits/${p.slug}`,
+              }))}
+            saveKind="categoryProducts"
+            scopeId={category.id}
+          />
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
