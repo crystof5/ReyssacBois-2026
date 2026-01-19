@@ -13,7 +13,7 @@ export default async function Home() {
     getSiteImage(SITE_KEYS.homeFamily),
     getProjectsCarouselSettings(),
   ])
-
+//test
   const heroImage = hero ?? { src: "/images/caroussel/atelier.jpg", alt: "Atelier Reyssac Bois" }
   const familyImage = family ?? { src: "/images/logo2.jpg", alt: "Reyssac Bois" }
   const projectsSlides =
