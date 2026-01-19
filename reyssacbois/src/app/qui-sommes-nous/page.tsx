@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Breadcrumb from "@/components/Breadcrumb"
 import Container from "@/components/ui/Container"
 import Media from "@/components/ui/Media"
+import { getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
 
 export const metadata: Metadata = {
   title: "Reyssac Bois - Qui sommes-nous ?",
@@ -14,7 +15,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function QuiSommesNousPage() {
+export default async function QuiSommesNousPage() {
+  const aboutHistory =
+    (await getSiteImage(SITE_KEYS.aboutHistory)) ?? {
+      src: "/images/caroussel/histoire.jpg",
+      alt: "Histoire Reyssac Bois",
+    }
+
   return (
     <div className="bg-gradient-to-b from-amber-50 to-white">
       <Container className="py-10 sm:py-14 space-y-10">
@@ -55,8 +62,8 @@ export default function QuiSommesNousPage() {
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
             <div className="aspect-[4/3] w-full">
               <Media
-                src="/images/caroussel/histoire.jpg"
-                alt="Histoire Reyssac Bois"
+                src={aboutHistory.src}
+                alt={aboutHistory.alt}
                 className="h-full w-full"
               />
             </div>

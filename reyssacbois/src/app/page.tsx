@@ -1,20 +1,39 @@
 import Link from "next/link"
-import HomeCarousel from "@/components/HomeCarousel"
 import Media from "@/components/ui/Media"
+import ProjectsCarousel from "@/components/ProjectsCarousel"
+import {
+  getProjectsCarouselSettings,
+  getSiteImage,
+  SITE_KEYS,
+} from "@/admin/queries/siteSettings"
 
-export default function Home() {
+export default async function Home() {
+  const [hero, family, projects] = await Promise.all([
+    getSiteImage(SITE_KEYS.homeHero),
+    getSiteImage(SITE_KEYS.homeFamily),
+    getProjectsCarouselSettings(),
+  ])
+
+  const heroImage = hero ?? { src: "/images/caroussel/atelier.jpg", alt: "Atelier Reyssac Bois" }
+  const familyImage = family ?? { src: "/images/logo2.jpg", alt: "Reyssac Bois" }
+  const projectsSlides =
+    projects?.slides?.length
+      ? projects.slides
+      : [
+          { src: "/images/projets/projet-1.jpg", alt: "Projet 1" },
+          { src: "/images/projets/projet-2.jpg", alt: "Projet 2" },
+          { src: "/images/projets/projet-3.jpg", alt: "Projet 3" },
+        ]
+  const projectsIntervalMs = projects?.intervalMs ?? 5000
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
       {/* HERO */}
       <section className="relative h-[60vh] min-h-[420px] overflow-hidden">
-        <HomeCarousel
-          className="h-full w-full"
-          slides={[
-            { src: "/images/caroussel/atelier.jpg", alt: "Atelier Reyssac Bois" },
-            { src: "/images/caroussel/bois-1.jpg", alt: "Bois - sélection" },
-            { src: "/images/caroussel/bois-2.jpg", alt: "Bois - stock" },
-          ]}
-        />
+        <div className="absolute inset-0">
+          <Media src={heroImage.src} alt={heroImage.alt} className="h-full w-full" />
+        </div>
+        <div className="absolute inset-0 bg-black/40" />
 
         <div className="absolute inset-0 z-10 flex items-center justify-center text-center">
           <div className="mx-auto w-full max-w-4xl px-4">
@@ -40,7 +59,7 @@ export default function Home() {
           <div className="relative">
             <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
               <div className="aspect-[4/3] w-full">
-                <Media src="/images/logo2.jpg" alt="Reyssac Bois Logo" className="h-full w-full" />
+                <Media src={familyImage.src} alt={familyImage.alt} className="h-full w-full" />
               </div>
             </div>
             <div className="absolute -bottom-5 -right-5 bg-green-700 text-white p-4 rounded-2xl shadow-lg">
@@ -94,19 +113,7 @@ export default function Home() {
             <div className="w-24 h-1 bg-green-600 mx-auto rounded-full" />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {[
-              { src: "/images/projets/projet-1.jpg", alt: "Projet 1" },
-              { src: "/images/projets/projet-2.jpg", alt: "Projet 2" },
-              { src: "/images/projets/projet-3.jpg", alt: "Projet 3" },
-            ].map((p) => (
-              <div key={p.src} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-                <div className="aspect-[16/10] w-full">
-                  <Media src={p.src} alt={p.alt} className="h-full w-full" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProjectsCarousel slides={projectsSlides} intervalMs={projectsIntervalMs} />
         </div>
       </section>
 
