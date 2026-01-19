@@ -34,7 +34,7 @@ export default function ImageUploadField({
   helpText?: string
 }) {
   const [internalUrl, setInternalUrl] = useState(initialUrl)
-  const [status, setStatus] = useState<"idle" | "uploading" | "error">("idle")
+  const [status, setStatus] = useState<"idle" | "uploading" | "deleting" | "error">("idle")
   const [error, setError] = useState<string | null>(null)
 
   const url = value !== undefined ? value : internalUrl
@@ -82,6 +82,45 @@ export default function ImageUploadField({
     }
   }
 
+  async function deleteFromStorage() {
+    if (!previewUrl) return
+    if (!window.confirm("Supprimer cette image ? (le fichier sera aussi supprimé du stockage)")) {
+      return
+    }
+
+    setStatus("deleting")
+    setError(null)
+
+    try {
+      const res = await fetch("/api/admin/delete-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publicUrl: previewUrl, bucket }),
+      })
+      let json: { ok?: boolean; error?: string } | null = null
+      try {
+        json = (await res.json()) as any
+      } catch {
+        json = null
+      }
+
+      if (!res.ok || !json?.ok) {
+        const fallback =
+          json?.error ??
+          `Suppression impossible (HTTP ${res.status}). Vérifie SUPABASE_SERVICE_ROLE_KEY sur Vercel.`
+        setStatus("error")
+        setError(fallback)
+        return
+      }
+
+      setUrl("")
+      setStatus("idle")
+    } catch {
+      setStatus("error")
+      setError("Suppression impossible (réseau).")
+    }
+  }
+
   return (
     <div>
       <label className="block">
@@ -103,7 +142,7 @@ export default function ImageUploadField({
               type="file"
               accept="image/*"
               className="hidden"
-              disabled={status === "uploading"}
+              disabled={status === "uploading" || status === "deleting"}
               onChange={(e) => {
                 const file = e.target.files?.[0]
                 if (!file) return
@@ -114,6 +153,17 @@ export default function ImageUploadField({
             />
             {status === "uploading" ? "Upload…" : "Uploader"}
           </label>
+
+          {previewUrl && (
+            <button
+              type="button"
+              onClick={() => void deleteFromStorage()}
+              disabled={status === "uploading" || status === "deleting"}
+              className="inline-flex shrink-0 items-center justify-center rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+            >
+              {status === "deleting" ? "Suppression…" : "Supprimer"}
+            </button>
+          )}
         </div>
       </label>
 
