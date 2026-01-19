@@ -19,6 +19,18 @@ export default function ProjectsCarousel({
   const ref = useRef<HTMLDivElement | null>(null)
   const [active, setActive] = useState(0)
 
+  function scrollToIndex(idx: number) {
+    const el = ref.current
+    if (!el) return
+    const child = el.children[idx] as HTMLElement | undefined
+    if (!child) return
+
+    // Scroll horizontal uniquement (ne doit pas déplacer la page verticalement)
+    const target =
+      child.offsetLeft + child.offsetWidth / 2 - el.clientWidth / 2
+    el.scrollTo({ left: Math.max(0, target), behavior: "smooth" })
+  }
+
   // Détermine l’item le plus proche du centre (pour agrandir celui du milieu)
   useEffect(() => {
     const el = ref.current
@@ -56,14 +68,7 @@ export default function ProjectsCarousel({
 
     const id = window.setInterval(() => {
       const next = (active + 1) % items.length
-      const child = el.children[next] as HTMLElement | undefined
-      if (!child) return
-
-      child.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      })
+      scrollToIndex(next)
     }, intervalMs)
 
     return () => window.clearInterval(id)
@@ -111,14 +116,8 @@ export default function ProjectsCarousel({
             aria-label="Projet précédent"
             className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/80 border border-gray-200 shadow-sm hover:bg-white"
             onClick={() => {
-              const el = ref.current
-              if (!el) return
               const prev = (active - 1 + items.length) % items.length
-              ;(el.children[prev] as HTMLElement | undefined)?.scrollIntoView({
-                behavior: "smooth",
-                inline: "center",
-                block: "nearest",
-              })
+              scrollToIndex(prev)
             }}
           >
             ‹
@@ -128,14 +127,8 @@ export default function ProjectsCarousel({
             aria-label="Projet suivant"
             className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/80 border border-gray-200 shadow-sm hover:bg-white"
             onClick={() => {
-              const el = ref.current
-              if (!el) return
               const next = (active + 1) % items.length
-              ;(el.children[next] as HTMLElement | undefined)?.scrollIntoView({
-                behavior: "smooth",
-                inline: "center",
-                block: "nearest",
-              })
+              scrollToIndex(next)
             }}
           >
             ›

@@ -71,37 +71,53 @@ export default function Navbar() {
         </div>
 
         {open && (
-          <div id="mobile-menu" className="md:hidden pb-4">
-            <ul className="space-y-2 text-sm font-medium text-white">
-              <li>
-                <Link href="/" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
-                  Accueil
-                </Link>
-              </li>
-              <li>
-                <Link href="/qui-sommes-nous" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
-                  Qui sommes-nous ?
-                </Link>
-              </li>
-              <li>
-                <Link href="/produits" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
-                  Produits
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
-                  Contact
-                </Link>
-              </li>
-              {isAuthed && (
-                <li>
-                  <Link href="/admin" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
-                    Administration
-                  </Link>
-                </li>
-              )}
-            </ul>
-          </div>
+          <>
+            {/* overlay click => close */}
+            <button
+              type="button"
+              className="md:hidden fixed inset-0 z-30 bg-black/30"
+              aria-label="Fermer le menu"
+              onClick={() => setOpen(false)}
+            />
+
+            <div
+              id="mobile-menu"
+              className="md:hidden absolute left-0 right-0 top-full z-40 px-4 pb-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="rounded-xl border border-white/20 bg-white/10 backdrop-blur p-2">
+                <ul className="space-y-1 text-sm font-medium text-white">
+                  <li>
+                    <Link href="/" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Accueil
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/qui-sommes-nous" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Qui sommes-nous ?
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/produits" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Produits
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/contact" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Contact
+                    </Link>
+                  </li>
+                  {isAuthed && (
+                    <li>
+                      <Link href="/admin" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                        Administration
+                      </Link>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </nav>
