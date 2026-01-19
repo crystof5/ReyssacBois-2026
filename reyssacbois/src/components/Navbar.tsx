@@ -40,8 +40,9 @@ export default function Navbar() {
             onClick={() => setOpen(!open)}
             aria-expanded={open}
             aria-controls="mobile-menu"
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           >
-            Menu
+            <span className="text-xl leading-none">☰</span>
           </button>
 
           <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-white">

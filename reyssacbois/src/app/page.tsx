@@ -62,8 +62,8 @@ export default async function Home() {
                 <Media src={familyImage.src} alt={familyImage.alt} className="h-full w-full" />
               </div>
             </div>
-            <div className="absolute -bottom-5 -right-5 bg-green-700 text-white p-4 rounded-2xl shadow-lg">
-              <p className="text-2xl font-bold leading-none">Depuis 1850</p>
+            <div className="absolute bottom-3 right-3 sm:-bottom-5 sm:-right-5 bg-green-700 text-white px-4 py-3 sm:p-4 rounded-2xl shadow-lg">
+              <p className="text-xl sm:text-2xl font-bold leading-none">Depuis 1850</p>
               <p className="text-xs mt-1 text-white/90">Entreprise familiale</p>
             </div>
           </div>

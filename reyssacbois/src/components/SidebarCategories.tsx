@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 
 type Category = {
@@ -90,6 +90,10 @@ export default function SidebarCategories({
 }) {
   const pathname = usePathname()
   const [compact, setCompact] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [dragX, setDragX] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const dragStartX = useRef<number | null>(null)
 
   useEffect(() => {
     try {
@@ -108,6 +112,18 @@ export default function SidebarCategories({
     }
   }, [compact])
 
+  // Quand on navigue, on ferme le drawer mobile
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
+
+  // Reset drag state when opening/closing
+  useEffect(() => {
+    setDragX(0)
+    setDragging(false)
+    dragStartX.current = null
+  }, [mobileOpen])
+
   const activeSlug = useMemo(() => {
     // /categories/[slug]
     if (pathname.startsWith("/categories/")) {
@@ -118,35 +134,155 @@ export default function SidebarCategories({
   }, [pathname])
 
   return (
-    <aside
-      className={`hidden md:block border-r pr-4 ${
-        compact ? "w-48" : "w-64"
-      }`}
-    >
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <h2 className={`font-semibold ${compact ? "text-sm" : ""}`}>
-          Catégories
-        </h2>
+    <>
+      {/* Mobile: bouton pour ouvrir le drawer */}
+      <div className="md:hidden">
         <button
           type="button"
-          onClick={() => setCompact((v) => !v)}
-          className="rounded-md border border-gray-200 bg-white px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
-          aria-label={compact ? "Agrandir la sidebar" : "Réduire la sidebar"}
-          title={compact ? "Agrandir" : "Réduire"}
+          onClick={() => setMobileOpen(true)}
+          className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50"
         >
-          {compact ? "›" : "‹"}
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-green-50 text-green-800">
+            ☰
+          </span>
+          Catégories
         </button>
       </div>
 
-      <ul className="space-y-4">
-        {categories.map((category) => (
-          <CategoryItem
-            key={category.id}
-            category={category}
-            activeSlug={activeSlug}
+      {/* Desktop: sidebar (réductible en rail) */}
+      <aside
+        className={`hidden md:flex shrink-0 flex-col border-r pr-4 ${
+          compact ? "w-14" : "w-64"
+        }`}
+      >
+        <div className="mb-4 flex items-center justify-between gap-2">
+          {!compact ? (
+            <h2 className="font-semibold">Catégories</h2>
+          ) : (
+            <span className="sr-only">Catégories</span>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setCompact((v) => !v)}
+            className="rounded-lg border border-gray-200 bg-white px-2 py-2 text-xs text-gray-700 hover:bg-gray-50"
+            aria-label={compact ? "Ouvrir le menu catégories" : "Réduire le menu catégories"}
+            title={compact ? "Ouvrir" : "Réduire"}
+          >
+            {compact ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/img/android-chrome-192x192.png"
+                alt="Menu"
+                className="h-6 w-6 rounded-full"
+              />
+            ) : (
+              "‹"
+            )}
+          </button>
+        </div>
+
+        {compact ? (
+          <div className="mt-2 flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCompact(false)}
+              className="rounded-xl border border-gray-200 bg-white p-2 text-gray-900 hover:bg-gray-50"
+              aria-label="Ouvrir le menu catégories"
+              title="Ouvrir"
+            >
+              ☰
+            </button>
+          </div>
+        ) : (
+          <ul className="space-y-4">
+            {categories.map((category) => (
+              <CategoryItem
+                key={category.id}
+                category={category}
+                activeSlug={activeSlug}
+              />
+            ))}
+          </ul>
+        )}
+      </aside>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/40"
+            aria-label="Fermer le menu"
+            onClick={() => setMobileOpen(false)}
           />
-        ))}
-      </ul>
-    </aside>
+          <div
+            className={`absolute left-0 top-0 h-full w-[85vw] max-w-sm bg-white shadow-xl ${
+              dragging ? "" : "transition-transform duration-200"
+            }`}
+            style={{ transform: `translateX(${Math.min(0, dragX)}px)` }}
+            onPointerDown={(e) => {
+              // swipe-to-close: start tracking
+              dragStartX.current = e.clientX
+              setDragging(true)
+              ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+            }}
+            onPointerMove={(e) => {
+              if (dragStartX.current == null) return
+              const dx = e.clientX - dragStartX.current
+              // only allow left drag (negative)
+              if (dx < 0) setDragX(dx)
+              else setDragX(0)
+            }}
+            onPointerUp={() => {
+              const threshold = -80
+              if (dragX <= threshold) {
+                setMobileOpen(false)
+              } else {
+                setDragX(0)
+              }
+              setDragging(false)
+              dragStartX.current = null
+            }}
+            onPointerCancel={() => {
+              setDragX(0)
+              setDragging(false)
+              dragStartX.current = null
+            }}
+          >
+            <div className="flex items-center justify-between border-b border-gray-200 p-4">
+              <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/img/android-chrome-192x192.png"
+                  alt="Reyssac Bois"
+                  className="h-8 w-8 rounded-full"
+                />
+                <p className="font-semibold text-gray-900">Catégories</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+              >
+                Fermer
+              </button>
+            </div>
+
+            <div className="h-full overflow-y-auto p-4">
+              <ul className="space-y-4">
+                {categories.map((category) => (
+                  <CategoryItem
+                    key={category.id}
+                    category={category}
+                    activeSlug={activeSlug}
+                  />
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
