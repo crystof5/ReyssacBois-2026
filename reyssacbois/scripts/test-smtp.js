@@ -6,6 +6,19 @@ function required(name) {
   return v
 }
 
+function normalizeSmtpName(raw) {
+  const v = String(raw || "").trim()
+  if (!v) return ""
+  if (/^https?:\/\//i.test(v)) {
+    try {
+      return new URL(v).hostname
+    } catch {
+      return v.replace(/^https?:\/\//i, "").split("/")[0] || v
+    }
+  }
+  return v.split("/")[0] || v
+}
+
 async function main() {
   const host = required("SMTP_HOST")
   const port = Number(process.env.SMTP_PORT ?? "465")
@@ -15,6 +28,10 @@ async function main() {
   const pass = required("SMTP_PASS")
   const tlsRejectUnauthorized =
     (process.env.SMTP_TLS_REJECT_UNAUTHORIZED ?? "true").toLowerCase() !== "false"
+  const name =
+    normalizeSmtpName(process.env.SMTP_NAME || "") ||
+    normalizeSmtpName(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "") ||
+    "localhost"
 
   if (port === 587 && secure) {
     throw new Error("Config SMTP invalide: SMTP_PORT=587 => SMTP_SECURE=false (STARTTLS).")
@@ -27,6 +44,7 @@ async function main() {
     host,
     port,
     secure,
+    name,
     auth: { user, pass },
     requireTLS: !secure && port === 587,
     tls: { servername: host, rejectUnauthorized: tlsRejectUnauthorized },

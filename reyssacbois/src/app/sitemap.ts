@@ -5,8 +5,8 @@ import { unstable_cache } from "next/cache"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+// Route "SEO" très crawlée: on autorise le cache Next (en plus du `unstable_cache` interne).
+export const revalidate = 60 * 60 * 6 // 6h
 
 type CategoryLite = {
   id: string

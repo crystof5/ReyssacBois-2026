@@ -7,9 +7,84 @@ import ProductCard from "@/components/ProductCard"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { buildDescription } from "@/lib/meta"
+import { getCategoriesTree } from "@/lib/categories"
+import { unstable_cache } from "next/cache"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
+
+type CategoryNode = {
+  id: string
+  name: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  children?: CategoryNode[]
+}
+
+function findCategoryInTree(nodes: CategoryNode[], id: string): CategoryNode | null {
+  for (const n of nodes) {
+    if (n.id === id) return n
+    const child = n.children?.length ? findCategoryInTree(n.children, id) : null
+    if (child) return child
+  }
+  return null
+}
+
+const getProductsForCategoryCached = unstable_cache(
+  async (categoryId: string) => {
+    return await prisma.product.findMany({
+      where: {
+        isVisible: true,
+        categories: { some: { categoryId } },
+      },
+      // `ProductCard` consomme un sous-ensemble: on évite de surcharger le payload.
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+        section: true,
+        species: true,
+        sortOrder: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    })
+  },
+  ["categoryProducts"],
+  {
+    // Tag volontairement commun pour bénéficier des invalidations déjà en place (admin produits/catégories).
+    // - `updateProduitAction` revalidateTag("sitemap")
+    // - `updateCategoryAction` revalidateTag("sitemap")
+    revalidate: 60 * 30,
+    tags: ["sitemap"],
+  },
+)
+
+async function getProductsForCategory(categoryId: string) {
+  // En dev: reflète immédiatement (Neon SQL editor, etc.).
+  if (process.env.NODE_ENV !== "production") {
+    return await prisma.product.findMany({
+      where: {
+        isVisible: true,
+        categories: { some: { categoryId } },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+        section: true,
+        species: true,
+        sortOrder: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    })
+  }
+  return await getProductsForCategoryCached(categoryId)
+}
 
 export async function generateMetadata({
   params,
@@ -62,24 +137,17 @@ export default async function CategoryPage({
   if (breadcrumb.length === 0) notFound()
   const category = breadcrumb[breadcrumb.length - 1]
 
-  // Enfants / produits: filtrage + tri (ordre puis nom)
-  const [children, products] = await Promise.all([
-    prisma.category.findMany({
-      where: { parentId: category.id, isVisible: true },
-      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-    }),
-    prisma.product.findMany({
-      where: {
-        isVisible: true,
-        categories: {
-          some: {
-            categoryId: category.id,
-          },
-        },
-      },
-      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-    }),
+  // IMPORTANT (SEO + perf):
+  // - Sous-catégories: on les prend depuis `categoriesTree` (cache serveur) -> 0 requête DB ici
+  // - Produits: 1 requête DB, mais cachée + invalidée via tags admin
+  const [categoriesTreeRaw, products] = await Promise.all([
+    getCategoriesTree(),
+    getProductsForCategory(category.id),
   ])
+
+  const categoriesTree = categoriesTreeRaw as unknown as CategoryNode[]
+  const currentNode = findCategoryInTree(categoriesTree, category.id)
+  const children = currentNode?.children ?? []
 
   return (
     <div>

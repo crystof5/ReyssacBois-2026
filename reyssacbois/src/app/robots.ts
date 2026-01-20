@@ -3,8 +3,8 @@ import { absoluteUrl } from "@/lib/seo"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+// Route "SEO" très crawlée: on autorise le cache Next.
+export const revalidate = 60 * 60 * 24 // 24h
 
 export default function robots(): MetadataRoute.Robots {
   return {

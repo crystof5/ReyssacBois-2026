@@ -7,6 +7,7 @@ import type { Metadata } from "next"
 import { buildDescription } from "@/lib/meta"
 import { prisma } from "@/lib/prisma"
 import { unstable_cache } from "next/cache"
+import { getCategoriesTree } from "@/lib/categories"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
@@ -45,6 +46,21 @@ const getCanonicalProductSlugCached = unstable_cache(
   type?: string | null
   standard?: string | null
 }) => {
+  // Catégories "effectivement visibles" (visibilité + chaîne d'ancêtres)
+  // via le cache serveur `categoriesTree`.
+  const categoriesTree = await getCategoriesTree()
+  const visibleCategoryIds = new Set<string>()
+  const walk = (nodes: unknown[]) => {
+    for (const n of nodes) {
+      if (!n || typeof n !== "object") continue
+      const id = (n as { id?: unknown }).id
+      if (typeof id === "string") visibleCategoryIds.add(id)
+      const children = (n as { children?: unknown }).children
+      if (Array.isArray(children)) walk(children)
+    }
+  }
+  if (Array.isArray(categoriesTree)) walk(categoriesTree)
+
   // Cherche les “doublons” stricts (même nom + mêmes champs techniques)
   // puis choisit une URL canonique stable.
   const candidates = await prisma.product.findMany({
@@ -61,6 +77,7 @@ const getCanonicalProductSlugCached = unstable_cache(
       slug: true,
       sortOrder: true,
       createdAt: true,
+      categories: { select: { categoryId: true } },
     },
   })
 
@@ -82,14 +99,15 @@ const getCanonicalProductSlugCached = unstable_cache(
     return a.slug.localeCompare(b.slug, "fr")
   })
 
-  // Très important : le canonique doit être une page réellement “publique” (catégories visibles)
-  // On s'appuie sur getProductBreadcrumb qui retourne null si le produit n'est pas publiable.
-  for (const c of sorted) {
-    const ok = await getProductBreadcrumb(c.slug)
-    if (ok) return c.slug
-  }
+  // Très important : le canonique doit être une page réellement “publique”.
+  // On évite de rappeler `getProductBreadcrumb()` N fois (trop coûteux) en testant juste
+  // si au moins une catégorie rattachée est "effectivement visible" (ou zéro catégorie).
+  const canonical = sorted.find((c) => {
+    if (!c.categories?.length) return true
+    return c.categories.some((rel) => visibleCategoryIds.has(rel.categoryId))
+  })
 
-  return current.slug
+  return canonical?.slug ?? current.slug
   },
   ["productCanonical"],
   {
