@@ -258,7 +258,10 @@ export async function POST(req: Request) {
     const to = splitEmails(process.env.CONTACT_TO).length
       ? splitEmails(process.env.CONTACT_TO)
       : [smtpUser]
-    const cc = splitEmails(process.env.CONTACT_CC)
+    // CCI (blind carbon copy)
+    // - variable demandée: CONTACT_CCI
+    // - fallback: CONTACT_CC (compat rétro si déjà configuré)
+    const bcc = splitEmails(process.env.CONTACT_CCI || process.env.CONTACT_CC)
 
     const fromName = process.env.CONTACT_FROM_NAME || "Site ReyssacBois"
     const fromEmail =
@@ -368,7 +371,7 @@ export async function POST(req: Request) {
       await transport.sendMail({
         from: { name: fromName, address: fromEmail },
         to,
-        cc: cc.length ? cc : undefined,
+        bcc: bcc.length ? bcc : undefined,
         replyTo: { name, address: email },
         subject: emailSubject,
         text,
