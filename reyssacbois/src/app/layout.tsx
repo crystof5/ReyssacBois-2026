@@ -4,7 +4,7 @@ import ConstructionBanner from "@/components/ConstructionBanner"
 import PromoModal from "@/components/PromoModal"
 import type { Metadata } from "next"
 import { getConstructionBannerSettings, getPromoModalSettings } from "@/admin/queries/siteSettings"
-import { getBaseUrl } from "@/lib/seo"
+import { getMetadataBaseUrl } from "@/lib/seo"
 
 // Les réglages (promo/bannière) viennent de la DB et doivent refléter
 // immédiatement les changements admin (sans rebuild). On force donc du SSR.
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getBaseUrl()),
+  metadataBase: getMetadataBaseUrl(),
   title: {
     default: "Reyssac Bois",
     template: "%s | Reyssac Bois",
