@@ -5,13 +5,15 @@ import Media from "@/components/ui/Media"
 import { getAboutTexts, getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
 
 export const metadata: Metadata = {
-  title: "Reyssac Bois - Qui sommes-nous ?",
+  title: "Qui sommes-nous ?",
   description:
     "Découvrez l'histoire de Reyssac Bois, une entreprise familiale depuis 1850. Notre expertise du bois et notre engagement pour la qualité vous accompagnent dans tous vos projets.",
+  alternates: { canonical: "/qui-sommes-nous" },
   openGraph: {
-    title: "Reyssac Bois - Qui sommes-nous ?",
+    title: "Qui sommes-nous ?",
     description:
       "Découvrez l'histoire de Reyssac Bois, une entreprise familiale depuis 1850. Notre expertise du bois et notre engagement pour la qualité vous accompagnent dans tous vos projets.",
+    url: "/qui-sommes-nous",
   },
 }
 
@@ -19,7 +21,8 @@ export default async function QuiSommesNousPage() {
   const aboutTexts = await getAboutTexts()
   const aboutHistory =
     (await getSiteImage(SITE_KEYS.aboutHistory)) ?? {
-      src: "/images/caroussel/histoire.jpg",
+      // Fallback: asset existant dans /public pour éviter des 404 si setting absent.
+      src: "/img/placeholder.svg",
       alt: "Histoire Reyssac Bois",
     }
 

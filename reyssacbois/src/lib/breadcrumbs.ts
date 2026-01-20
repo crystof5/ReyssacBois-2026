@@ -111,7 +111,10 @@ const getProductBreadcrumbCached = unstable_cache(
     }
   },
   ["productBreadcrumb"],
-  { revalidate: 300 }
+  {
+    revalidate: 60 * 30,
+    tags: ["breadcrumbs"],
+  }
 )
 
 export async function getProductBreadcrumb(productSlug: string) {
@@ -131,7 +134,10 @@ const getCategoryBreadcrumbCached = unstable_cache(
     return await getVisibleCategoryPath(category)
   },
   ["categoryBreadcrumb"],
-  { revalidate: 300 }
+  {
+    revalidate: 60 * 30,
+    tags: ["breadcrumbs"],
+  }
 )
 
 export async function getCategoryBreadcrumb(categorySlug: string) {

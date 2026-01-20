@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { SITE_KEYS } from "@/admin/queries/siteSettings"
 
 function parseInterval(value: string) {
@@ -141,6 +141,9 @@ export async function updateSiteContentAction(
         update: { value: promo },
       }),
     ])
+
+    // Invalide le cache des réglages "siteSettings" (utilisé dans le layout/public).
+    revalidateTag("siteSettings", "default")
 
     revalidatePath("/", "layout")
     revalidatePath("/categories", "layout")

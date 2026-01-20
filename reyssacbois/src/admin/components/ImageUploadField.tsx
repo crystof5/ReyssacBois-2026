@@ -1,7 +1,6 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { createSupabaseBrowserClient } from "@/lib/supabase/browser"
 
 function sanitizeFilename(name: string) {
   return name
@@ -22,7 +21,7 @@ export default function ImageUploadField({
   onValueChange,
   bucket = "images",
   folder,
-  helpText = "PNG/JPG/WebP. Le fichier sera uploadé dans Supabase Storage et l’URL sera enregistrée.",
+  helpText = "PNG/JPG/WebP. Le fichier sera uploadé dans Cloudflare R2 et l’URL sera enregistrée.",
 }: {
   label: string
   inputName?: string
@@ -52,33 +51,36 @@ export default function ImageUploadField({
     setError(null)
 
     try {
-      const supabase = createSupabaseBrowserClient()
-
       const safeName = sanitizeFilename(file.name || "image")
-      const path = `${folder}/${Date.now()}-${safeName}`
+      const renamed = new File([file], safeName, { type: file.type || "application/octet-stream" })
 
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(path, file, {
-          upsert: true,
-          cacheControl: "3600",
-          contentType: file.type || undefined,
-        })
+      const form = new FormData()
+      form.set("file", renamed)
+      form.set("folder", folder)
 
-      if (uploadError) {
+      const res = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: form,
+      })
+      const json: unknown = await res.json().catch(() => null)
+
+      const publicUrl =
+        json && typeof json === "object" ? (json as { publicUrl?: unknown }).publicUrl : null
+      if (!res.ok || typeof publicUrl !== "string" || !publicUrl.trim()) {
+        const msg =
+          json && typeof json === "object" && typeof (json as { error?: unknown }).error === "string"
+            ? String((json as { error?: unknown }).error)
+            : `Upload impossible (HTTP ${res.status}).`
         setStatus("error")
-        setError(uploadError.message)
+        setError(msg)
         return
       }
-
-      const { data } = supabase.storage.from(bucket).getPublicUrl(path)
-      const publicUrl = data.publicUrl
 
       setUrl(publicUrl)
       setStatus("idle")
     } catch {
       setStatus("error")
-      setError("Upload impossible. Vérifie Supabase Storage et les policies.")
+      setError("Upload impossible. Vérifie la configuration R2.")
     }
   }
 
@@ -112,7 +114,7 @@ export default function ImageUploadField({
       if (!res.ok || !json?.ok) {
         const fallback =
           json?.error ??
-          `Suppression impossible (HTTP ${res.status}). Vérifie SUPABASE_SERVICE_ROLE_KEY sur Vercel.`
+          `Suppression impossible (HTTP ${res.status}). Vérifie la configuration R2 sur le serveur.`
         setStatus("error")
         setError(fallback)
         return

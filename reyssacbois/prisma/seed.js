@@ -1,8 +1,36 @@
 const { PrismaClient } = require("@prisma/client")
+const bcrypt = require("bcryptjs")
 
 const prisma = new PrismaClient()
 
 async function main() {
+  // Admin (optionnel) : créer/mettre à jour l'utilisateur admin via variables d'env
+  const adminEmail = (
+    process.env.ADMIN_EMAIL ||
+    // Tolérance: certains environnements utilisent ADMIN_EMAILS (liste) pour d'autres features.
+    (process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",")[0] : "") ||
+    ""
+  )
+    .trim()
+    .toLowerCase()
+  const adminPassword = process.env.ADMIN_PASSWORD || ""
+  if (adminEmail && adminPassword) {
+    const passwordHash = await bcrypt.hash(adminPassword, 12)
+    await prisma.adminUser.upsert({
+      where: { email: adminEmail },
+      update: { passwordHash },
+      create: { email: adminEmail, passwordHash },
+    })
+    console.log("✅ Admin seeded/updated:", adminEmail)
+  }
+
+  // Catégories (évite de dupliquer si la DB est déjà remplie)
+  const existingCategories = await prisma.category.count()
+  if (existingCategories > 0) {
+    console.log("ℹ️ Categories already exist, skipping categories seed.")
+    return
+  }
+
   // Catégories racines
   const boisMenuiserie = await prisma.category.create({
     data: {

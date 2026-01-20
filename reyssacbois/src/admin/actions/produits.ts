@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { slugify } from "./slug"
 
@@ -76,6 +76,11 @@ export async function updateProduitAction(formData: FormData) {
       },
     },
   })
+
+  // Invalidation caches (SEO + navigation)
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
 
   revalidatePath("/admin/produits")
   revalidatePath(`/admin/produits/${id}`)

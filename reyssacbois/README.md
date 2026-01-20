@@ -28,15 +28,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Admin (/admin) — Supabase Auth
+## Admin (/admin) — Auth en base (Prisma)
 
-L’admin est accessible via `/admin` et protégée par **Supabase Auth** + une whitelist d’emails.
+L’admin est accessible via `/admin` et protégée par une **authentification en base** :
 
-### Variables d’environnement requises
+- `AdminUser` (email + hash du mot de passe)
+- `AdminSession` (session en DB + cookie HTTP-only)
 
-- **`NEXT_PUBLIC_SUPABASE_URL`**: URL du projet Supabase (ex: `https://xxxx.supabase.co`)
-- **`NEXT_PUBLIC_SUPABASE_ANON_KEY`**: clé anon publique
-- **`ADMIN_EMAILS`**: emails autorisés (séparés par des virgules), ex: `admin@reyssacbois.fr, autre@reyssacbois.fr`
+### Variables d’environnement (seed admin)
+
+- **`ADMIN_EMAIL`**: email admin (ex: `admin@reyssacbois.fr`)
+- **`ADMIN_PASSWORD`**: mot de passe admin
+
+Ensuite:
+
+```bash
+npx prisma migrate deploy   # ou prisma migrate dev en local
+npx prisma db seed
+```
 
 ## Formulaire de contact — SMTP + reCAPTCHA v3
 
@@ -45,12 +54,10 @@ L’admin est accessible via `/admin` et protégée par **Supabase Auth** + une 
   - **`NEXT_PUBLIC_RECAPTCHA_SITE_KEY`** (clé site)
   - **`RECAPTCHA_SECRET_KEY`** (clé secrète)
 
-### Dépendances
+## Images — Cloudflare R2
 
-L’admin utilise:
-
-- `@supabase/supabase-js`
-- `@supabase/ssr`
+Les uploads/suppressions d’images de l’admin passent par Cloudflare R2 (S3 compatible).
+Voir `env.example` pour `R2_*`.
 
 ## Learn More
 

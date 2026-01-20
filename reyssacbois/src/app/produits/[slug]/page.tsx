@@ -3,9 +3,168 @@ import Breadcrumb from "@/components/Breadcrumb"
 import { getProductBreadcrumb } from "@/lib/breadcrumbs"
 import Media from "@/components/ui/Media"
 import Link from "next/link"
+import type { Metadata } from "next"
+import { buildDescription } from "@/lib/meta"
+import { prisma } from "@/lib/prisma"
+import { unstable_cache } from "next/cache"
+import { getCategoriesTree } from "@/lib/categories"
 
-export const runtime = "nodejs"
-export const preferredRegion = ["fra1"]
+function normalizeSeoKeyPart(v: string | null | undefined) {
+  return (v ?? "").trim().toLowerCase().replace(/\s+/g, " ")
+}
+
+function productSeoKey(p: {
+  name: string
+  section?: string | null
+  length?: string | null
+  species?: string | null
+  type?: string | null
+  standard?: string | null
+}) {
+  // Clé “dédup” : si deux produits ont la même clé, on les considère identiques côté SEO.
+  // (Assez stricte pour éviter de fusionner des produits réellement différents.)
+  return [
+    normalizeSeoKeyPart(p.name),
+    normalizeSeoKeyPart(p.section),
+    normalizeSeoKeyPart(p.length),
+    normalizeSeoKeyPart(p.species),
+    normalizeSeoKeyPart(p.type),
+    normalizeSeoKeyPart(p.standard),
+  ].join("|")
+}
+
+const getCanonicalProductSlugCached = unstable_cache(
+  async (current: {
+  slug: string
+  name: string
+  section?: string | null
+  length?: string | null
+  species?: string | null
+  type?: string | null
+  standard?: string | null
+}) => {
+  // Catégories "effectivement visibles" (visibilité + chaîne d'ancêtres)
+  // via le cache serveur `categoriesTree`.
+  const categoriesTree = await getCategoriesTree()
+  const visibleCategoryIds = new Set<string>()
+  const walk = (nodes: unknown[]) => {
+    for (const n of nodes) {
+      if (!n || typeof n !== "object") continue
+      const id = (n as { id?: unknown }).id
+      if (typeof id === "string") visibleCategoryIds.add(id)
+      const children = (n as { children?: unknown }).children
+      if (Array.isArray(children)) walk(children)
+    }
+  }
+  if (Array.isArray(categoriesTree)) walk(categoriesTree)
+
+  // Cherche les “doublons” stricts (même nom + mêmes champs techniques)
+  // puis choisit une URL canonique stable.
+  const candidates = await prisma.product.findMany({
+    where: {
+      isVisible: true,
+      name: { equals: current.name, mode: "insensitive" },
+      section: { equals: current.section ?? null },
+      length: { equals: current.length ?? null },
+      species: { equals: current.species ?? null },
+      type: { equals: current.type ?? null },
+      standard: { equals: current.standard ?? null },
+    },
+    select: {
+      slug: true,
+      sortOrder: true,
+      createdAt: true,
+      categories: { select: { categoryId: true } },
+    },
+  })
+
+  // Si ça ne “matche” pas bien pour une raison quelconque, fallback sur la clé JS.
+  const key = productSeoKey(current)
+  const filtered = candidates.filter((c) => {
+    // on ne peut pas recalculer la clé exacte sans les champs, mais on garde un garde-fou
+    // (si la query DB est “large”, on ne casse pas).
+    return key.length > 0 && !!c.slug
+  })
+
+  const sorted = (filtered.length ? filtered : candidates).slice().sort((a, b) => {
+    const ao = a.sortOrder ?? 0
+    const bo = b.sortOrder ?? 0
+    if (ao !== bo) return ao - bo
+    const at = a.createdAt?.getTime?.() ?? 0
+    const bt = b.createdAt?.getTime?.() ?? 0
+    if (at !== bt) return at - bt
+    return a.slug.localeCompare(b.slug, "fr")
+  })
+
+  // Très important : le canonique doit être une page réellement “publique”.
+  // On évite de rappeler `getProductBreadcrumb()` N fois (trop coûteux) en testant juste
+  // si au moins une catégorie rattachée est "effectivement visible" (ou zéro catégorie).
+  const canonical = sorted.find((c) => {
+    if (!c.categories?.length) return true
+    return c.categories.some((rel) => visibleCategoryIds.has(rel.categoryId))
+  })
+
+  return canonical?.slug ?? current.slug
+  },
+  ["productCanonical"],
+  {
+    revalidate: 60 * 60 * 6, // 6h
+    tags: ["productCanonical"],
+  }
+)
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug?: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  if (!slug) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  const data = await getProductBreadcrumb(slug)
+  if (!data) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  const { product, categories } = data
+  const categoryHint = categories.at(-1)?.name
+
+  const canonicalSlug = await getCanonicalProductSlugCached({
+    slug: product.slug,
+    name: product.name,
+    section: product.section,
+    length: product.length,
+    species: product.species,
+    type: product.type,
+    standard: product.standard,
+  })
+
+  const description = buildDescription(
+    product.description,
+    categoryHint
+      ? `${product.name} — ${categoryHint}. Caractéristiques, conseils et devis chez Reyssac Bois.`
+      : `${product.name} — Caractéristiques, conseils et devis chez Reyssac Bois.`,
+  )
+
+  const isCanonical = canonicalSlug === product.slug
+  const canonicalPath = `/produits/${canonicalSlug}`
+
+  return {
+    title: product.name,
+    description,
+    alternates: { canonical: canonicalPath },
+    robots: isCanonical ? undefined : { index: false, follow: true },
+    openGraph: {
+      title: product.name,
+      description,
+      url: canonicalPath,
+      type: "website",
+      images: product.imageUrl ? [{ url: product.imageUrl, alt: product.name }] : undefined,
+    },
+  }
+}
 
 export default async function ProduitPage({
   params,

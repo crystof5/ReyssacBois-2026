@@ -2,6 +2,13 @@ import Link from "next/link"
 import { getCategoriesTree } from "@/lib/categories"
 import Breadcrumb from "@/components/Breadcrumb"
 import CategoryCard from "@/components/CategoryCard"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Produits",
+  description: "Découvrez nos produits bois : sélectionnez une catégorie pour explorer le catalogue Reyssac Bois.",
+  alternates: { canonical: "/produits" },
+}
 
 export default async function ProduitsPage() {
   const categories = await getCategoriesTree()

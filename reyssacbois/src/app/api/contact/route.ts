@@ -20,6 +20,20 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
+function normalizeSmtpName(raw: string) {
+  const v = (raw || "").trim()
+  if (!v) return ""
+  // accepte un domaine nu ("reyssacbois.fr") ou une URL ("https://reyssacbois.fr")
+  if (/^https?:\/\//i.test(v)) {
+    try {
+      return new URL(v).hostname
+    } catch {
+      return v.replace(/^https?:\/\//i, "").split("/")[0] ?? v
+    }
+  }
+  return v.split("/")[0] ?? v
+}
+
 function escapeHtml(input: string) {
   return input
     .replaceAll("&", "&amp;")
@@ -206,6 +220,11 @@ export async function POST(req: Request) {
     const smtpPass = process.env.SMTP_PASS
     const tlsRejectUnauthorized =
       (process.env.SMTP_TLS_REJECT_UNAUTHORIZED ?? "true").toLowerCase() !== "false"
+    const smtpName =
+      normalizeSmtpName(process.env.SMTP_NAME || "") ||
+      normalizeSmtpName(process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "") ||
+      normalizeSmtpName(req.headers.get("host") || "") ||
+      "localhost"
 
     if (!smtpHost || !smtpUser || !smtpPass) {
       return NextResponse.json(
@@ -239,9 +258,14 @@ export async function POST(req: Request) {
     const to = splitEmails(process.env.CONTACT_TO).length
       ? splitEmails(process.env.CONTACT_TO)
       : [smtpUser]
-    const cc = splitEmails(process.env.CONTACT_CC)
+    // CCI (blind carbon copy)
+    // - variable demandée: CONTACT_CCI
+    // - fallback: CONTACT_CC (compat rétro si déjà configuré)
+    const bcc = splitEmails(process.env.CONTACT_CCI || process.env.CONTACT_CC)
 
     const fromName = process.env.CONTACT_FROM_NAME || "Site ReyssacBois"
+    const fromEmail =
+      (process.env.CONTACT_FROM_EMAIL || process.env.SMTP_FROM || "").trim() || smtpUser
     const subjectPrefix = process.env.CONTACT_SUBJECT_PREFIX || "Site ReyssacBois"
     const emailSubject = `${subjectPrefix} — ${subject ? subject : "Nouveau message"} (de ${name})`
 
@@ -331,6 +355,9 @@ export async function POST(req: Request) {
         host: smtpHost,
         port: smtpPort,
         secure: smtpSecure,
+        // IMPORTANT (Orange notamment): hostname utilisé pour EHLO/HELO.
+        // Sur Vercel, le hostname par défaut peut être un nom de container et être refusé.
+        name: smtpName,
         auth: { user: smtpUser, pass: smtpPass },
         // Sur 587, certains serveurs (dont Orange) exigent STARTTLS
         requireTLS: !smtpSecure && smtpPort === 587,
@@ -342,9 +369,9 @@ export async function POST(req: Request) {
       })
 
       await transport.sendMail({
-        from: { name: fromName, address: smtpUser },
+        from: { name: fromName, address: fromEmail },
         to,
-        cc: cc.length ? cc : undefined,
+        bcc: bcc.length ? bcc : undefined,
         replyTo: { name, address: email },
         subject: emailSubject,
         text,
@@ -371,6 +398,11 @@ export async function POST(req: Request) {
           ? String((err as { responseCode?: unknown }).responseCode)
           : null
       const smtpMessage = err instanceof Error ? err.message : typeof err === "string" ? err : null
+      const looksLikeOrangeRefusal =
+        typeof smtpMessage === "string" &&
+        (smtpMessage.includes("OFR105_") ||
+          smtpMessage.toLowerCase().includes("service refused") ||
+          smtpMessage.toLowerCase().includes("invalid greeting"))
 
       if (contactMessageId) {
         try {
@@ -395,6 +427,9 @@ export async function POST(req: Request) {
           ok: false,
           error: [
             "Impossible d’envoyer l’email pour le moment.",
+            looksLikeOrangeRefusal
+              ? "Astuce: Orange refuse souvent les connexions depuis Vercel (anti-spam). Essaie SMTP_PORT=465 + SMTP_SECURE=true et mets SMTP_NAME=reyssacbois.fr. Sinon, utilise un SMTP transactionnel (Brevo/SendGrid/Mailgun)."
+              : null,
             smtpCode ? `Code: ${smtpCode}` : null,
             smtpResponseCode ? `Réponse: ${smtpResponseCode}` : null,
             smtpMessage ? `Détail: ${smtpMessage.slice(0, 180)}` : null,

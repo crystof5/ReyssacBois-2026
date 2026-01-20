@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import type { Prisma } from "@prisma/client"
+import { unstable_cache } from "next/cache"
 
 export type SiteImage = {
   src: string
@@ -22,11 +23,33 @@ export const SITE_KEYS = {
   constructionBanner: "site.constructionBanner",
 } as const
 
+const SITE_SETTINGS_TAG = "siteSettings"
+
+const getSettingCached = unstable_cache(
+  async (key: string) => {
+    return await prisma.siteSetting.findUnique({
+      where: { key },
+      select: { value: true },
+    })
+  },
+  ["siteSetting"],
+  {
+    // Très important: cache serveur pour éviter de taper la DB à chaque request (Vercel + pooler).
+    // L'admin invalide ce cache via revalidateTag(SITE_SETTINGS_TAG, "default").
+    revalidate: 60 * 30, // 30 minutes (mais invalidable instantanément)
+    tags: [SITE_SETTINGS_TAG],
+  }
+)
+
 async function getSetting(key: string) {
-  return await prisma.siteSetting.findUnique({
-    where: { key },
-    select: { value: true },
-  })
+  // En dev, on évite le cache pour refléter immédiatement les changements (SQL Editor Neon, etc.).
+  if (process.env.NODE_ENV !== "production") {
+    return await prisma.siteSetting.findUnique({
+      where: { key },
+      select: { value: true },
+    })
+  }
+  return await getSettingCached(key)
 }
 
 export async function getSiteImage(key: string): Promise<SiteImage | null> {

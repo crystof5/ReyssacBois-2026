@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { getAdminCategories } from "@/admin/queries/categories"
+import { getDbDiagnostics } from "@/admin/queries/diagnostics"
 import SortableList from "@/admin/components/SortableList"
 
 export default async function AdminCategoriesPage() {
-  const categories = await getAdminCategories()
+  const [categories, diag] = await Promise.all([getAdminCategories(), getDbDiagnostics()])
   const parents = categories.filter((c) => !c.parentId)
   const children = categories.filter((c) => !!c.parentId)
 
@@ -15,6 +16,36 @@ export default async function AdminCategoriesPage() {
       </p>
 
       <div className="mt-6 space-y-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+          <h3 className="text-sm font-semibold text-gray-900">Diagnostic DB</h3>
+          <p className="mt-1 text-xs text-gray-500">
+            Permet de vérifier que l’admin lit bien la même base que Neon Studio.
+          </p>
+          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+            <div className="rounded-xl bg-gray-50 p-3">
+              <div className="text-xs text-gray-500">Database</div>
+              <div className="font-mono text-xs text-gray-900 break-all">{diag.database ?? "—"}</div>
+            </div>
+            <div className="rounded-xl bg-gray-50 p-3">
+              <div className="text-xs text-gray-500">Schema</div>
+              <div className="font-mono text-xs text-gray-900">{diag.schema ?? "—"}</div>
+            </div>
+            <div className="rounded-xl bg-gray-50 p-3">
+              <div className="text-xs text-gray-500">Catégories</div>
+              <div className="font-semibold text-gray-900">
+                {diag.categoriesTotal}{" "}
+                <span className="text-xs font-normal text-gray-500">
+                  ({diag.categoriesParents} parents / {diag.categoriesChildren} enfants)
+                </span>
+              </div>
+            </div>
+            <div className="rounded-xl bg-gray-50 p-3">
+              <div className="text-xs text-gray-500">Produits</div>
+              <div className="font-semibold text-gray-900">{diag.productsTotal}</div>
+            </div>
+          </div>
+        </div>
+
         <SortableList
           title="Catégories parent (ordre sidebar)"
           description="Glisse-dépose pour réordonner. Cet ordre est celui du menu catégories côté public."

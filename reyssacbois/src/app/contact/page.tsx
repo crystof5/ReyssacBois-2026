@@ -1,6 +1,13 @@
 import Breadcrumb from "@/components/Breadcrumb"
 import ContactForm from "@/components/ContactForm"
 import Container from "@/components/ui/Container"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contactez Reyssac Bois pour un devis, une disponibilité ou une question sur nos produits bois.",
+  alternates: { canonical: "/contact" },
+}
 
 export default function ContactPage() {
   return (

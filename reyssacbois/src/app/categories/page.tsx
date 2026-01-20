@@ -1,12 +1,18 @@
-import { prisma } from "@/lib/prisma"
 import Breadcrumb from "@/components/Breadcrumb"
 import CategoryCard from "@/components/CategoryCard"
+import type { Metadata } from "next"
+import { getCategoriesTree } from "@/lib/categories"
+
+export const metadata: Metadata = {
+  title: "Catégories",
+  description: "Parcourez nos familles de produits bois chez Reyssac Bois.",
+  alternates: { canonical: "/categories" },
+}
 
 export default async function CategoriesIndexPage() {
-  const categories = await prisma.category.findMany({
-    where: { parentId: null, isVisible: true },
-    orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-  })
+  // IMPORTANT (SEO + perf): réutilise le cache serveur `categoriesTree`
+  // au lieu de taper la DB à chaque crawl/visite.
+  const categories = await getCategoriesTree()
 
   return (
     <div>

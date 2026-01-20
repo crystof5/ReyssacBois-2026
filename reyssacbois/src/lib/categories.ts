@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { unstable_cache } from "next/cache"
 
 type CategoryNode = {
   id: string
@@ -14,24 +15,27 @@ type CategoryNode = {
   children: CategoryNode[]
 }
 
-export async function getCategoriesTree() {
-  const categories = await prisma.category.findMany({
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      description: true,
-      imageUrl: true,
-      parentId: true,
-      isVisible: true,
-      sortOrder: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  })
+const CATEGORIES_TREE_TAG = "categoriesTree"
 
-  const map = new Map<string, CategoryNode>()
-  const roots: CategoryNode[] = []
+const getCategoriesTreeCached = unstable_cache(
+  async () => {
+    const categories = await prisma.category.findMany({
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+        parentId: true,
+        isVisible: true,
+        sortOrder: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    })
+
+    const map = new Map<string, CategoryNode>()
+    const roots: CategoryNode[] = []
 
   for (const cat of categories) {
     map.set(cat.id, { ...cat, children: [] })
@@ -86,5 +90,15 @@ export async function getCategoriesTree() {
       .sort(sortFn)
   }
 
-  return filterAndSortTree(roots)
+    return filterAndSortTree(roots)
+  },
+  ["categoriesTree"],
+  {
+    revalidate: 60 * 30,
+    tags: [CATEGORIES_TREE_TAG],
+  }
+)
+
+export async function getCategoriesTree() {
+  return await getCategoriesTreeCached()
 }

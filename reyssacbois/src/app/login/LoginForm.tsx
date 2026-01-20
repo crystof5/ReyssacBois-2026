@@ -2,13 +2,11 @@
 
 import { useMemo, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { createSupabaseBrowserClient } from "@/lib/supabase/browser"
 
 export default function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get("redirect") || "/admin"
-  const configError = searchParams.get("error")
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -28,13 +26,14 @@ export default function LoginForm() {
     setError(null)
 
     try {
-      const supabase = createSupabaseBrowserClient()
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
       })
+      const json: unknown = await res.json().catch(() => null)
 
-      if (signInError) {
+      if (!res.ok || !json || typeof json !== "object" || (json as { ok?: boolean }).ok !== true) {
         setStatus("error")
         setError("Identifiants invalides.")
         return
@@ -44,25 +43,12 @@ export default function LoginForm() {
       router.refresh()
     } catch {
       setStatus("error")
-      setError("Impossible de se connecter. Vérifie la configuration Supabase.")
+      setError("Impossible de se connecter. Réessaie.")
     }
   }
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      {configError === "supabase_not_configured" && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-          Supabase n&apos;est pas configuré sur ce projet. Renseigne{" "}
-          <code className="font-mono text-xs">
-            NEXT_PUBLIC_SUPABASE_URL
-          </code>{" "}
-          et{" "}
-          <code className="font-mono text-xs">
-            NEXT_PUBLIC_SUPABASE_ANON_KEY
-          </code>{" "}
-          dans l&apos;environnement, puis réessaie.
-        </div>
-      )}
       {status === "error" && error && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-900">
           {error}

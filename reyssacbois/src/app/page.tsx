@@ -16,8 +16,9 @@ export default async function Home() {
     getHomeTexts(),
   ])
 
-  const heroImage = hero ?? { src: "/images/caroussel/atelier.jpg", alt: "Atelier Reyssac Bois" }
-  const familyImage = family ?? { src: "/images/logo2.jpg", alt: "Reyssac Bois" }
+  // Fallbacks: utiliser un asset existant dans /public pour éviter des 404 si les settings ne sont pas encore remplis.
+  const heroImage = hero ?? { src: "/img/placeholder.svg", alt: "Reyssac Bois" }
+  const familyImage = family ?? { src: "/img/placeholder.svg", alt: "Reyssac Bois" }
   const heroTitle = homeTexts?.heroTitle?.trim() ? homeTexts.heroTitle.trim() : "Reyssac Bois"
   const heroSubtitle = homeTexts?.heroSubtitle?.trim() ? homeTexts.heroSubtitle.trim() : "Votre expert en bois depuis 1850"
   const familyTitle = homeTexts?.familyTitle?.trim() ? homeTexts.familyTitle.trim() : "Une histoire de famille"
@@ -33,9 +34,9 @@ export default async function Home() {
     projects?.slides?.length
       ? projects.slides
       : [
-          { src: "/images/projets/projet-1.jpg", alt: "Projet 1" },
-          { src: "/images/projets/projet-2.jpg", alt: "Projet 2" },
-          { src: "/images/projets/projet-3.jpg", alt: "Projet 3" },
+          { src: "/img/placeholder.svg", alt: "Projet 1" },
+          { src: "/img/placeholder.svg", alt: "Projet 2" },
+          { src: "/img/placeholder.svg", alt: "Projet 3" },
         ]
   const projectsIntervalMs = projects?.intervalMs ?? 5000
 

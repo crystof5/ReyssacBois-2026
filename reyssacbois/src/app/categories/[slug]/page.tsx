@@ -5,28 +5,118 @@ import { getCategoryBreadcrumb } from "@/lib/breadcrumbs"
 import CategoryCard from "@/components/CategoryCard"
 import ProductCard from "@/components/ProductCard"
 import Link from "next/link"
+import type { Metadata } from "next"
+import { buildDescription } from "@/lib/meta"
+import { getCategoriesTree } from "@/lib/categories"
+import { unstable_cache } from "next/cache"
 
-export const runtime = "nodejs"
-export const preferredRegion = ["fra1"]
+type CategoryNode = {
+  id: string
+  name: string
+  slug: string
+  description?: string | null
+  imageUrl?: string | null
+  children?: CategoryNode[]
+}
 
-async function isCategoryEffectivelyVisible(categoryId: string) {
-  let currentId: string | null = categoryId
-  // garde-fou anti-boucle
-  const visited = new Set<string>()
-  while (currentId) {
-    if (visited.has(currentId)) return false
-    visited.add(currentId)
-
-    const cat: { id: string; parentId: string | null; isVisible: boolean } | null =
-      await prisma.category.findUnique({
-      where: { id: currentId },
-      select: { id: true, parentId: true, isVisible: true },
-    })
-    if (!cat) return false
-    if (!cat.isVisible) return false
-    currentId = cat.parentId
+function findCategoryInTree(nodes: CategoryNode[], id: string): CategoryNode | null {
+  for (const n of nodes) {
+    if (n.id === id) return n
+    const child = n.children?.length ? findCategoryInTree(n.children, id) : null
+    if (child) return child
   }
-  return true
+  return null
+}
+
+const getProductsForCategoryCached = unstable_cache(
+  async (categoryId: string) => {
+    return await prisma.product.findMany({
+      where: {
+        isVisible: true,
+        categories: { some: { categoryId } },
+      },
+      // `ProductCard` consomme un sous-ensemble: on évite de surcharger le payload.
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+        section: true,
+        species: true,
+        sortOrder: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    })
+  },
+  ["categoryProducts"],
+  {
+    // Tag volontairement commun pour bénéficier des invalidations déjà en place (admin produits/catégories).
+    // - `updateProduitAction` revalidateTag("sitemap")
+    // - `updateCategoryAction` revalidateTag("sitemap")
+    revalidate: 60 * 30,
+    tags: ["sitemap"],
+  },
+)
+
+async function getProductsForCategory(categoryId: string) {
+  // En dev: reflète immédiatement (Neon SQL editor, etc.).
+  if (process.env.NODE_ENV !== "production") {
+    return await prisma.product.findMany({
+      where: {
+        isVisible: true,
+        categories: { some: { categoryId } },
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        imageUrl: true,
+        section: true,
+        species: true,
+        sortOrder: true,
+      },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    })
+  }
+  return await getProductsForCategoryCached(categoryId)
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug?: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  if (!slug) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  const breadcrumb = await getCategoryBreadcrumb(slug)
+  if (!breadcrumb || breadcrumb.length === 0) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  const category = breadcrumb[breadcrumb.length - 1]
+
+  const description = buildDescription(
+    category.description,
+    `Découvrez nos produits dans la catégorie ${category.name}. Devis et conseils à Reyssac Bois.`,
+  )
+
+  return {
+    title: category.name,
+    description,
+    alternates: { canonical: `/categories/${slug}` },
+    openGraph: {
+      title: category.name,
+      description,
+      url: `/categories/${slug}`,
+      type: "website",
+      images: category.imageUrl ? [{ url: category.imageUrl, alt: category.name }] : undefined,
+    },
+  }
 }
 
 export default async function CategoryPage({
@@ -40,42 +130,21 @@ export default async function CategoryPage({
     notFound()
   }
 
-  const category = await prisma.category.findUnique({
-    where: { slug },
-    include: {
-      children: true,
-    },
-  })
+  const breadcrumb = (await getCategoryBreadcrumb(slug)) ?? []
+  if (breadcrumb.length === 0) notFound()
+  const category = breadcrumb[breadcrumb.length - 1]
 
-  if (!category) {
-    notFound()
-  }
-
-  // Si la catégorie (ou un parent) est caché => 404 côté public
-  if (!(await isCategoryEffectivelyVisible(category.id))) {
-    notFound()
-  }
-
-  // Enfants / produits: filtrage + tri (ordre puis nom)
-  const [children, products] = await Promise.all([
-    prisma.category.findMany({
-      where: { parentId: category.id, isVisible: true },
-      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-    }),
-    prisma.product.findMany({
-      where: {
-        isVisible: true,
-        categories: {
-          some: {
-            categoryId: category.id,
-          },
-        },
-      },
-      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
-    }),
+  // IMPORTANT (SEO + perf):
+  // - Sous-catégories: on les prend depuis `categoriesTree` (cache serveur) -> 0 requête DB ici
+  // - Produits: 1 requête DB, mais cachée + invalidée via tags admin
+  const [categoriesTreeRaw, products] = await Promise.all([
+    getCategoriesTree(),
+    getProductsForCategory(category.id),
   ])
 
-  const breadcrumb = (await getCategoryBreadcrumb(slug)) ?? []
+  const categoriesTree = categoriesTreeRaw as unknown as CategoryNode[]
+  const currentNode = findCategoryInTree(categoriesTree, category.id)
+  const children = currentNode?.children ?? []
 
   return (
     <div>
