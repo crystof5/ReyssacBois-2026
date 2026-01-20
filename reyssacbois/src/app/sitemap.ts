@@ -3,10 +3,9 @@ import { prisma } from "@/lib/prisma"
 import { absoluteUrl } from "@/lib/seo"
 import { unstable_cache } from "next/cache"
 
-export const runtime = "nodejs"
-export const preferredRegion = ["fra1"]
 // Route "SEO" très crawlée: on autorise le cache Next (en plus du `unstable_cache` interne).
-export const revalidate = 60 * 60 * 6 // 6h
+// Note (Next 16 + Turbopack): les exports de config de segment doivent être des littéraux.
+export const revalidate = 21600 // 6h
 
 type CategoryLite = {
   id: string

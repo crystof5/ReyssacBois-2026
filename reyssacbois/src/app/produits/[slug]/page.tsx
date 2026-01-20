@@ -9,9 +9,6 @@ import { prisma } from "@/lib/prisma"
 import { unstable_cache } from "next/cache"
 import { getCategoriesTree } from "@/lib/categories"
 
-export const runtime = "nodejs"
-export const preferredRegion = ["fra1"]
-
 function normalizeSeoKeyPart(v: string | null | undefined) {
   return (v ?? "").trim().toLowerCase().replace(/\s+/g, " ")
 }

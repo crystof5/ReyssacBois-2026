@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next"
 import { absoluteUrl } from "@/lib/seo"
 
-export const runtime = "nodejs"
-export const preferredRegion = ["fra1"]
 // Route "SEO" très crawlée: on autorise le cache Next.
-export const revalidate = 60 * 60 * 24 // 24h
+// Note (Next 16 + Turbopack): les exports de config de segment doivent être des littéraux.
+export const revalidate = 86400 // 24h
 
 export default function robots(): MetadataRoute.Robots {
   return {

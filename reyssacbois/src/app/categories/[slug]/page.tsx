@@ -10,9 +10,6 @@ import { buildDescription } from "@/lib/meta"
 import { getCategoriesTree } from "@/lib/categories"
 import { unstable_cache } from "next/cache"
 
-export const runtime = "nodejs"
-export const preferredRegion = ["fra1"]
-
 type CategoryNode = {
   id: string
   name: string

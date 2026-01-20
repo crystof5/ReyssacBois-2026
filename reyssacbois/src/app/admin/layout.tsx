@@ -4,7 +4,6 @@ import { requireAdmin } from "@/lib/adminAuth"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
-export const runtime = "nodejs"
 
 export default async function AdminLayout({
   children,
