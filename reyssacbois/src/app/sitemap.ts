@@ -45,9 +45,8 @@ function isEffectivelyVisibleCategory(
   return true
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const build = unstable_cache(
-    async () => {
+const buildSitemap = unstable_cache(
+  async (): Promise<MetadataRoute.Sitemap> => {
       const [categories, products] = await Promise.all([
     prisma.category.findMany({
       select: {
@@ -159,16 +158,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-      return [...staticPages, ...categoryPages, ...productPages]
-    },
-    ["sitemap"],
-    {
-      // cache long + invalidation via admin (revalidateTag("sitemap"))
-      revalidate: 60 * 60 * 6, // 6h
-      tags: ["sitemap"],
-    }
-  )
+    return [...staticPages, ...categoryPages, ...productPages]
+  },
+  ["sitemap"],
+  {
+    // cache long + invalidation via admin (revalidateTag("sitemap", "default"))
+    revalidate: 60 * 60 * 6, // 6h
+    tags: ["sitemap"],
+  }
+)
 
-  return await build()
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return await buildSitemap()
 }
 

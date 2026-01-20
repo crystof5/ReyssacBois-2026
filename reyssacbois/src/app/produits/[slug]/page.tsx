@@ -6,6 +6,7 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { buildDescription } from "@/lib/meta"
 import { prisma } from "@/lib/prisma"
+import { unstable_cache } from "next/cache"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
@@ -34,7 +35,8 @@ function productSeoKey(p: {
   ].join("|")
 }
 
-async function getCanonicalProductSlug(current: {
+const getCanonicalProductSlugCached = unstable_cache(
+  async (current: {
   slug: string
   name: string
   section?: string | null
@@ -42,7 +44,7 @@ async function getCanonicalProductSlug(current: {
   species?: string | null
   type?: string | null
   standard?: string | null
-}) {
+}) => {
   // Cherche les “doublons” stricts (même nom + mêmes champs techniques)
   // puis choisit une URL canonique stable.
   const candidates = await prisma.product.findMany({
@@ -88,7 +90,13 @@ async function getCanonicalProductSlug(current: {
   }
 
   return current.slug
-}
+  },
+  ["productCanonical"],
+  {
+    revalidate: 60 * 60 * 6, // 6h
+    tags: ["productCanonical"],
+  }
+)
 
 export async function generateMetadata({
   params,
@@ -108,7 +116,7 @@ export async function generateMetadata({
   const { product, categories } = data
   const categoryHint = categories.at(-1)?.name
 
-  const canonicalSlug = await getCanonicalProductSlug({
+  const canonicalSlug = await getCanonicalProductSlugCached({
     slug: product.slug,
     name: product.name,
     section: product.section,

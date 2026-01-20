@@ -36,6 +36,12 @@ function getPrismaDatasourceUrl() {
     return withQueryParam(withPgbouncer, "connection_limit", "1")
   }
 
+  // Sur Vercel (serverless), même en "direct", plusieurs lambdas peuvent créer trop de connexions.
+  // On force donc un pool minimal côté Prisma.
+  if (process.env.VERCEL) {
+    return withQueryParam(base, "connection_limit", "1")
+  }
+
   // En dev, on limite aussi le nombre de connexions pour éviter les erreurs si la DB est petite.
   if (process.env.NODE_ENV !== "production") {
     return withQueryParam(base, "connection_limit", "1")

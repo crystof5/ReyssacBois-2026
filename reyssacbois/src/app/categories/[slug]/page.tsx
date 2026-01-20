@@ -11,26 +11,6 @@ import { buildDescription } from "@/lib/meta"
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
 
-async function isCategoryEffectivelyVisible(categoryId: string) {
-  let currentId: string | null = categoryId
-  // garde-fou anti-boucle
-  const visited = new Set<string>()
-  while (currentId) {
-    if (visited.has(currentId)) return false
-    visited.add(currentId)
-
-    const cat: { id: string; parentId: string | null; isVisible: boolean } | null =
-      await prisma.category.findUnique({
-      where: { id: currentId },
-      select: { id: true, parentId: true, isVisible: true },
-    })
-    if (!cat) return false
-    if (!cat.isVisible) return false
-    currentId = cat.parentId
-  }
-  return true
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -41,23 +21,12 @@ export async function generateMetadata({
     return { robots: { index: false, follow: false } }
   }
 
-  const category = await prisma.category.findUnique({
-    where: { slug },
-    select: {
-      id: true,
-      name: true,
-      description: true,
-      imageUrl: true,
-    },
-  })
-
-  if (!category) {
+  const breadcrumb = await getCategoryBreadcrumb(slug)
+  if (!breadcrumb || breadcrumb.length === 0) {
     return { robots: { index: false, follow: false } }
   }
 
-  if (!(await isCategoryEffectivelyVisible(category.id))) {
-    return { robots: { index: false, follow: false } }
-  }
+  const category = breadcrumb[breadcrumb.length - 1]
 
   const description = buildDescription(
     category.description,
@@ -89,21 +58,9 @@ export default async function CategoryPage({
     notFound()
   }
 
-  const category = await prisma.category.findUnique({
-    where: { slug },
-    include: {
-      children: true,
-    },
-  })
-
-  if (!category) {
-    notFound()
-  }
-
-  // Si la catégorie (ou un parent) est caché => 404 côté public
-  if (!(await isCategoryEffectivelyVisible(category.id))) {
-    notFound()
-  }
+  const breadcrumb = (await getCategoryBreadcrumb(slug)) ?? []
+  if (breadcrumb.length === 0) notFound()
+  const category = breadcrumb[breadcrumb.length - 1]
 
   // Enfants / produits: filtrage + tri (ordre puis nom)
   const [children, products] = await Promise.all([
@@ -123,8 +80,6 @@ export default async function CategoryPage({
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     }),
   ])
-
-  const breadcrumb = (await getCategoryBreadcrumb(slug)) ?? []
 
   return (
     <div>

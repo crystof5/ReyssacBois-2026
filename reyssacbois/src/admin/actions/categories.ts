@@ -70,6 +70,7 @@ export async function updateCategoryAction(formData: FormData) {
   revalidateTag("categoriesTree", "default")
   revalidateTag("breadcrumbs", "default")
   revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
 
   revalidatePath("/admin/categories")
   revalidatePath(`/admin/categories/${id}`)
