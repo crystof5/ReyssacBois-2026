@@ -143,7 +143,7 @@ export async function updateSiteContentAction(
     ])
 
     // Invalide le cache des réglages "siteSettings" (utilisé dans le layout/public).
-    revalidateTag("siteSettings")
+    revalidateTag("siteSettings", "default")
 
     revalidatePath("/", "layout")
     revalidatePath("/categories", "layout")

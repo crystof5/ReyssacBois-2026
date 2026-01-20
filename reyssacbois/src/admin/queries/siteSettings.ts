@@ -35,7 +35,7 @@ const getSettingCached = unstable_cache(
   ["siteSetting"],
   {
     // Très important: cache serveur pour éviter de taper la DB à chaque request (Vercel + pooler).
-    // L'admin invalide ce cache via revalidateTag(SITE_SETTINGS_TAG).
+    // L'admin invalide ce cache via revalidateTag(SITE_SETTINGS_TAG, "default").
     revalidate: 60 * 30, // 30 minutes (mais invalidable instantanément)
     tags: [SITE_SETTINGS_TAG],
   }

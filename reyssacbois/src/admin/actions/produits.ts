@@ -78,8 +78,8 @@ export async function updateProduitAction(formData: FormData) {
   })
 
   // Invalidation caches (SEO + navigation)
-  revalidateTag("breadcrumbs")
-  revalidateTag("sitemap")
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
 
   revalidatePath("/admin/produits")
   revalidatePath(`/admin/produits/${id}`)

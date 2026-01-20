@@ -67,9 +67,9 @@ export async function updateCategoryAction(formData: FormData) {
   })
 
   // Invalidation caches (SEO + navigation)
-  revalidateTag("categoriesTree")
-  revalidateTag("breadcrumbs")
-  revalidateTag("sitemap")
+  revalidateTag("categoriesTree", "default")
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
 
   revalidatePath("/admin/categories")
   revalidatePath(`/admin/categories/${id}`)
