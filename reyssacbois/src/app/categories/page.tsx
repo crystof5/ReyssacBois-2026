@@ -1,6 +1,13 @@
 import { prisma } from "@/lib/prisma"
 import Breadcrumb from "@/components/Breadcrumb"
 import CategoryCard from "@/components/CategoryCard"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Catégories",
+  description: "Parcourez nos familles de produits bois chez Reyssac Bois.",
+  alternates: { canonical: "/categories" },
+}
 
 export default async function CategoriesIndexPage() {
   const categories = await prisma.category.findMany({

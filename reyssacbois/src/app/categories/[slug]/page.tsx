@@ -5,6 +5,8 @@ import { getCategoryBreadcrumb } from "@/lib/breadcrumbs"
 import CategoryCard from "@/components/CategoryCard"
 import ProductCard from "@/components/ProductCard"
 import Link from "next/link"
+import type { Metadata } from "next"
+import { buildDescription } from "@/lib/meta"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
@@ -27,6 +29,53 @@ async function isCategoryEffectivelyVisible(categoryId: string) {
     currentId = cat.parentId
   }
   return true
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug?: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  if (!slug) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  const category = await prisma.category.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      imageUrl: true,
+    },
+  })
+
+  if (!category) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  if (!(await isCategoryEffectivelyVisible(category.id))) {
+    return { robots: { index: false, follow: false } }
+  }
+
+  const description = buildDescription(
+    category.description,
+    `Découvrez nos produits dans la catégorie ${category.name}. Devis et conseils à Reyssac Bois.`,
+  )
+
+  return {
+    title: category.name,
+    description,
+    alternates: { canonical: `/categories/${slug}` },
+    openGraph: {
+      title: category.name,
+      description,
+      url: `/categories/${slug}`,
+      type: "website",
+      images: category.imageUrl ? [{ url: category.imageUrl, alt: category.name }] : undefined,
+    },
+  }
 }
 
 export default async function CategoryPage({

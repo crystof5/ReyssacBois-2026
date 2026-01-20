@@ -5,13 +5,15 @@ import Media from "@/components/ui/Media"
 import { getAboutTexts, getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
 
 export const metadata: Metadata = {
-  title: "Reyssac Bois - Qui sommes-nous ?",
+  title: "Qui sommes-nous ?",
   description:
     "Découvrez l'histoire de Reyssac Bois, une entreprise familiale depuis 1850. Notre expertise du bois et notre engagement pour la qualité vous accompagnent dans tous vos projets.",
+  alternates: { canonical: "/qui-sommes-nous" },
   openGraph: {
-    title: "Reyssac Bois - Qui sommes-nous ?",
+    title: "Qui sommes-nous ?",
     description:
       "Découvrez l'histoire de Reyssac Bois, une entreprise familiale depuis 1850. Notre expertise du bois et notre engagement pour la qualité vous accompagnent dans tous vos projets.",
+    url: "/qui-sommes-nous",
   },
 }
 
