@@ -1,7 +1,7 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { slugify } from "./slug"
 
@@ -65,6 +65,11 @@ export async function updateCategoryAction(formData: FormData) {
       sortOrder,
     },
   })
+
+  // Invalidation caches (SEO + navigation)
+  revalidateTag("categoriesTree")
+  revalidateTag("breadcrumbs")
+  revalidateTag("sitemap")
 
   revalidatePath("/admin/categories")
   revalidatePath(`/admin/categories/${id}`)

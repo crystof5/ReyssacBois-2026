@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { prisma } from "@/lib/prisma"
 import { absoluteUrl } from "@/lib/seo"
+import { unstable_cache } from "next/cache"
 
 export const runtime = "nodejs"
 export const preferredRegion = ["fra1"]
@@ -45,7 +46,9 @@ function isEffectivelyVisibleCategory(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [categories, products] = await Promise.all([
+  const build = unstable_cache(
+    async () => {
+      const [categories, products] = await Promise.all([
     prisma.category.findMany({
       select: {
         id: true,
@@ -156,6 +159,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [...staticPages, ...categoryPages, ...productPages]
+      return [...staticPages, ...categoryPages, ...productPages]
+    },
+    ["sitemap"],
+    {
+      // cache long + invalidation via admin (revalidateTag("sitemap"))
+      revalidate: 60 * 60 * 6, // 6h
+      tags: ["sitemap"],
+    }
+  )
+
+  return await build()
 }
 
