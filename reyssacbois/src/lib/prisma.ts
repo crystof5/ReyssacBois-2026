@@ -23,9 +23,21 @@ function getPrismaDatasourceUrl() {
   const base =
     process.env.NODE_ENV !== "production" && direct ? direct : pooled || direct
 
-  // Garde-fou: limite le pool côté Prisma en dev pour éviter de saturer un pooler.
-  // (N'a pas d'impact sur la DB "directe", et réduit fortement les erreurs "max clients".)
-  if (process.env.NODE_ENV !== "production" && base) {
+  if (!base) return base
+
+  const isPooler = /\bpooler\.supabase\.com\b/i.test(base)
+
+  // Garde-fou: limite le pool côté Prisma quand on passe par un pooler,
+  // sinon on peut saturer et tomber en 500 (surtout en serverless).
+  if (isPooler) {
+    // Prisma + pgbouncer/transaction pooling: recommandé si tu utilises le pooler.
+    // (Inoffensif même si le pooler est en session mode.)
+    const withPgbouncer = withQueryParam(base, "pgbouncer", "true")
+    return withQueryParam(withPgbouncer, "connection_limit", "1")
+  }
+
+  // En dev, on limite aussi le nombre de connexions pour éviter les erreurs si la DB est petite.
+  if (process.env.NODE_ENV !== "production") {
     return withQueryParam(base, "connection_limit", "1")
   }
 
