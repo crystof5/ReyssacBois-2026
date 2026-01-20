@@ -21,7 +21,8 @@ export default async function QuiSommesNousPage() {
   const aboutTexts = await getAboutTexts()
   const aboutHistory =
     (await getSiteImage(SITE_KEYS.aboutHistory)) ?? {
-      src: "/images/caroussel/histoire.jpg",
+      // Fallback: asset existant dans /public pour éviter des 404 si setting absent.
+      src: "/img/placeholder.svg",
       alt: "Histoire Reyssac Bois",
     }
 

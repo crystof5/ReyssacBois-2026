@@ -162,7 +162,7 @@ const buildSitemap = unstable_cache(
   },
   ["sitemap"],
   {
-    // cache long + invalidation via admin (revalidateTag("sitemap", "default"))
+    // cache long + invalidation via admin (revalidateTag("sitemap"))
     revalidate: 60 * 60 * 6, // 6h
     tags: ["sitemap"],
   }

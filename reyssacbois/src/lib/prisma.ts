@@ -17,8 +17,10 @@ function withQueryParam(url: string, key: string, value: string) {
 function getPrismaDatasourceUrl() {
   // En dev, Turbopack/SSR peut multiplier les initialisations et saturer un pooler "session mode".
   // Si DIRECT_URL est défini, on l'utilise en priorité en dehors de la prod.
-  const direct = process.env.DIRECT_URL?.trim()
-  const pooled = process.env.DATABASE_URL?.trim()
+  const direct =
+    process.env.DIRECT_URL?.trim() || process.env.DIRECT_URL_NEON?.trim()
+  const pooled =
+    process.env.DATABASE_URL?.trim() || process.env.DATABASE_URL_NEON?.trim()
 
   const base =
     process.env.NODE_ENV !== "production" && direct ? direct : pooled || direct

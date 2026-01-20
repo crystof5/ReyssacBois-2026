@@ -42,6 +42,13 @@ const getSettingCached = unstable_cache(
 )
 
 async function getSetting(key: string) {
+  // En dev, on évite le cache pour refléter immédiatement les changements (SQL Editor Neon, etc.).
+  if (process.env.NODE_ENV !== "production") {
+    return await prisma.siteSetting.findUnique({
+      where: { key },
+      select: { value: true },
+    })
+  }
   return await getSettingCached(key)
 }
 
