@@ -9,6 +9,27 @@ export const metadata: Metadata = {
 }
 
 export default function PolitiqueDeConfidentialitePage() {
+  const cookieRows = [
+    {
+      type: "Essentiels",
+      name: "Cookies techniques [variables selon le navigateur]",
+      purpose: "Navigation, sécurité, fonctionnement du site",
+      duration: "Session / selon navigateur",
+    },
+    {
+      type: "Mesure d’audience",
+      name: "Google Analytics (GA4)",
+      purpose: "Statistiques de visite et amélioration du site",
+      duration: "Jusqu’à 13 mois [selon config GA]",
+    },
+    {
+      type: "Préférence",
+      name: "rb_cookie_consent (Reyssac Bois)",
+      purpose: "Mémoriser votre choix cookies",
+      duration: "180 jours",
+    },
+  ] as const
+
   return (
     <div className="bg-gradient-to-b from-amber-50 to-white overflow-x-hidden">
       <Container className="py-10 sm:py-14">
@@ -68,42 +89,52 @@ export default function PolitiqueDeConfidentialitePage() {
               </CookieSettingsButton>
             </div>
 
-            <div className="mt-5 w-full max-w-full overflow-x-auto">
-              <div className="inline-block min-w-full align-middle">
-                <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-                  <table className="min-w-[720px] w-full text-left text-sm">
-                    <thead className="bg-gray-50 text-gray-700">
-                  <tr>
-                    <th className="px-4 py-3 font-semibold">Type</th>
-                    <th className="px-4 py-3 font-semibold">Nom / fournisseur</th>
-                    <th className="px-4 py-3 font-semibold">But</th>
-                    <th className="px-4 py-3 font-semibold">Durée</th>
-                  </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white text-gray-700">
-                  <tr>
-                    <td className="px-4 py-3">Essentiels</td>
-                    <td className="px-4 py-3">
-                      Cookies techniques <span className="text-gray-500">[variables selon le navigateur]</span>
-                    </td>
-                    <td className="px-4 py-3">Navigation, sécurité, fonctionnement du site</td>
-                    <td className="px-4 py-3">Session / selon navigateur</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3">Mesure d’audience</td>
-                    <td className="px-4 py-3">Google Analytics (GA4)</td>
-                    <td className="px-4 py-3">Statistiques de visite et amélioration du site</td>
-                    <td className="px-4 py-3">Jusqu’à 13 mois <span className="text-gray-500">[selon config GA]</span></td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3">Préférence</td>
-                    <td className="px-4 py-3"><span className="font-mono">rb_cookie_consent</span> (Reyssac Bois)</td>
-                    <td className="px-4 py-3">Mémoriser votre choix cookies</td>
-                    <td className="px-4 py-3">180 jours</td>
-                  </tr>
-                    </tbody>
-                  </table>
+            {/* Mobile: vue "cartes" (0 débordement horizontal) */}
+            <div className="mt-5 space-y-3 sm:hidden">
+              {cookieRows.map((row) => (
+                <div key={row.type} className="rounded-xl border border-gray-200 bg-white p-4">
+                  <p className="text-sm font-semibold text-gray-900">{row.type}</p>
+                  <dl className="mt-3 space-y-2 text-sm text-gray-700">
+                    <div className="grid grid-cols-[110px_1fr] gap-3">
+                      <dt className="text-gray-500">Nom</dt>
+                      <dd className="break-words">{row.name}</dd>
+                    </div>
+                    <div className="grid grid-cols-[110px_1fr] gap-3">
+                      <dt className="text-gray-500">But</dt>
+                      <dd className="break-words">{row.purpose}</dd>
+                    </div>
+                    <div className="grid grid-cols-[110px_1fr] gap-3">
+                      <dt className="text-gray-500">Durée</dt>
+                      <dd className="break-words">{row.duration}</dd>
+                    </div>
+                  </dl>
                 </div>
+              ))}
+            </div>
+
+            {/* Desktop: tableau */}
+            <div className="mt-5 hidden sm:block w-full max-w-full overflow-x-auto">
+              <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+                <table className="min-w-full table-fixed text-left text-sm">
+                  <thead className="bg-gray-50 text-gray-700">
+                    <tr>
+                      <th className="w-32 px-4 py-3 font-semibold">Type</th>
+                      <th className="w-64 px-4 py-3 font-semibold">Nom / fournisseur</th>
+                      <th className="px-4 py-3 font-semibold">But</th>
+                      <th className="w-40 px-4 py-3 font-semibold">Durée</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white text-gray-700">
+                    {cookieRows.map((row) => (
+                      <tr key={row.type} className="align-top">
+                        <td className="px-4 py-3">{row.type}</td>
+                        <td className="px-4 py-3 break-words">{row.name}</td>
+                        <td className="px-4 py-3 break-words">{row.purpose}</td>
+                        <td className="px-4 py-3 break-words">{row.duration}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </Card>
