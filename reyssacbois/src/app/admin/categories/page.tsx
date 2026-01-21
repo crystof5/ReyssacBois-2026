@@ -16,7 +16,7 @@ export default async function AdminCategoriesPage() {
       </p>
 
       <div className="mt-6 space-y-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
           <h3 className="text-sm font-semibold text-gray-900">Diagnostic DB</h3>
           <p className="mt-1 text-xs text-gray-500">
             Permet de vérifier que l’admin lit bien la même base que Neon Studio.
@@ -61,7 +61,7 @@ export default async function AdminCategoriesPage() {
           saveKind="topCategories"
         />
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
           <h3 className="text-sm font-semibold text-gray-900">
             Sous-catégories (enfants)
           </h3>
@@ -69,7 +69,57 @@ export default async function AdminCategoriesPage() {
             L’ordre des sous-catégories se règle dans la page du parent (glisser-déposer).
           </p>
 
-          <div className="mt-4 overflow-x-auto">
+          {/* Mobile: vue "cartes" (plus lisible que le tableau) */}
+          <div className="mt-4 space-y-3 sm:hidden">
+            {children.map((c) => (
+              <div
+                key={c.id}
+                className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">
+                      {c.name}
+                    </p>
+                    <p className="mt-0.5 text-xs text-gray-500 break-all">
+                      /{c.slug}
+                    </p>
+                    <p className="mt-1 text-xs text-gray-600">
+                      Parent: <span className="font-medium">{c.parent?.name ?? "—"}</span>
+                      {" · "}
+                      Ordre: <span className="font-mono">{c.sortOrder}</span>
+                    </p>
+                  </div>
+
+                  <span
+                    className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                      c.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
+                    }`}
+                  >
+                    {c.isVisible ? "Visible" : "Cachée"}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex items-center gap-3 text-sm">
+                  <Link
+                    href={`/admin/categories/${c.id}`}
+                    className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-50"
+                  >
+                    Éditer
+                  </Link>
+                  <Link
+                    href={`/categories/${c.slug}`}
+                    className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-800"
+                  >
+                    Voir →
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: tableau */}
+          <div className="mt-4 hidden sm:block overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="border-b text-left text-gray-500">

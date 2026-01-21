@@ -5,6 +5,10 @@ import PromoModal from "@/components/PromoModal"
 import type { Metadata } from "next"
 import { getConstructionBannerSettings, getPromoModalSettings } from "@/admin/queries/siteSettings"
 import { getMetadataBaseUrl } from "@/lib/seo"
+import Link from "next/link"
+import CookieConsent from "@/components/CookieConsent"
+import CookieSettingsButton from "@/components/CookieSettingsButton"
+import Analytics from "@/components/Analytics"
 
 // Les réglages (promo/bannière) viennent de la DB et doivent refléter
 // immédiatement les changements admin (sans rebuild). On force donc du SSR.
@@ -51,7 +55,7 @@ export default async function RootLayout({
 
         <footer className="border-t bg-white">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 text-sm text-gray-600">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -61,10 +65,27 @@ export default async function RootLayout({
                 />
                 <p className="font-medium text-gray-900">Reyssac Bois</p>
               </div>
-              <p>© {new Date().getFullYear()} Reyssac Bois — Tous droits réservés.</p>
+              <div className="flex flex-col gap-2 sm:items-end">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <Link className="hover:text-gray-900 underline-offset-4 hover:underline" href="/mentions-legales">
+                    Mentions légales
+                  </Link>
+                  <Link className="hover:text-gray-900 underline-offset-4 hover:underline" href="/politique-de-confidentialite">
+                    Confidentialité & cookies
+                  </Link>
+                  <CookieSettingsButton className="hover:text-gray-900 underline-offset-4 hover:underline">
+                    Gérer mes cookies
+                  </CookieSettingsButton>
+                </div>
+                <p>© {new Date().getFullYear()} Reyssac Bois — Tous droits réservés.</p>
+              </div>
             </div>
           </div>
         </footer>
+
+        {/* Tracking chargé uniquement après consentement. */}
+        <Analytics />
+        <CookieConsent />
       </body>
     </html>
   )

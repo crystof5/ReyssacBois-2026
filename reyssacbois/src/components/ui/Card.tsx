@@ -1,5 +1,5 @@
 import Link from "next/link"
-//dfdfdddfd main prod
+
 export function Card({
   children,
   className = "",
@@ -9,7 +9,7 @@ export function Card({
 }) {
   return (
     <div
-      className={`rounded-xl border border-gray-200 bg-white shadow-sm transition ${className}`}
+      className={`rounded-2xl border border-gray-200/70 bg-white shadow-sm ring-1 ring-black/5 transition-colors ${className}`}
     >
       {children}
     </div>
@@ -28,7 +28,7 @@ export function CardLink({
   return (
     <Link
       href={href}
-      className={`group block rounded-xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md hover:border-green-300 focus:outline-none focus:ring-2 focus:ring-green-600/30 ${className}`}
+      className={`group block rounded-2xl border border-gray-200/70 bg-white shadow-sm ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-lg hover:ring-black/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600/30 active:translate-y-0 ${className}`}
     >
       {children}
     </Link>

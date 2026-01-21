@@ -71,7 +71,7 @@ export default async function Home() {
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="relative">
-            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
               <div className="aspect-[4/3] w-full">
                 <Media src={familyImage.src} alt={familyImage.alt} className="h-full w-full" />
               </div>
@@ -169,7 +169,7 @@ function Badge({ children }: { children: React.ReactNode }) {
 
 function TeaserCard({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:shadow-md hover:ring-black/10">
       <div className="h-10 w-10 rounded-xl bg-green-50 flex items-center justify-center text-green-800 font-bold">
         ✦
       </div>

@@ -372,6 +372,7 @@ export async function POST(req: Request) {
         from: { name: fromName, address: fromEmail },
         to,
         bcc: bcc.length ? bcc : undefined,
+
         replyTo: { name, address: email },
         subject: emailSubject,
         text,
