@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import Container from "@/components/ui/Container"
 import LoginForm from "./LoginForm"
 import { Suspense } from "react"
+import { getAdminUserFromCookieStore } from "@/lib/adminAuth"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Connexion",
@@ -10,7 +12,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  // Si déjà connecté, inutile d’afficher le login.
+  const user = await getAdminUserFromCookieStore()
+  if (user) {
+    redirect("/admin")
+  }
+
   return (
     <Container className="py-10 sm:py-14">
       <div className="mx-auto w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
