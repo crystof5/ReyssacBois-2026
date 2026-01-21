@@ -24,15 +24,12 @@ export default function CategoryCard({
 
   return (
     <CardLink href={href} className="overflow-hidden">
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50 p-4 sm:p-5">
         <Media
           src={category.imageUrl}
           alt={category.name}
-          className="h-full w-full transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.04]"
-        />
-        <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-transparent opacity-70 transition-opacity duration-200 group-hover:opacity-90"
-          aria-hidden
+          // Packshots: on évite le crop -> on “recule” l’image.
+          className="h-full w-full !object-contain"
         />
       </div>
 

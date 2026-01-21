@@ -181,7 +181,8 @@ export default function ImageUploadField({
           <img
             src={previewUrl}
             alt="Aperçu"
-            className="h-32 w-48 rounded-xl border border-gray-200 object-cover bg-white"
+            // Packshots: on évite le crop dans l’aperçu admin.
+            className="h-32 w-48 rounded-xl border border-gray-200 bg-white object-contain p-2"
             onError={(e) => {
               e.currentTarget.src = "/img/placeholder.svg"
             }}
