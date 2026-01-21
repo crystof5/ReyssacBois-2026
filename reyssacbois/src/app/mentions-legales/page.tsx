@@ -22,21 +22,21 @@ export default function MentionsLegalesPage() {
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900">Éditeur du site</h2>
             <div className="mt-3 space-y-2 text-sm text-gray-700">
-              <p><span className="font-semibold">Raison sociale :</span> Reyssac Bois <span className="text-gray-500">[à compléter si différent]</span></p>
-              <p><span className="font-semibold">Forme juridique :</span> <span className="text-gray-500">[à compléter]</span></p>
-              <p><span className="font-semibold">Adresse :</span> <span className="text-gray-500">[à compléter]</span></p>
-              <p><span className="font-semibold">SIRET :</span> <span className="text-gray-500">[à compléter]</span></p>
-              <p><span className="font-semibold">RCS :</span> <span className="text-gray-500">[à compléter]</span></p>
-              <p><span className="font-semibold">TVA intracommunautaire :</span> <span className="text-gray-500">[à compléter si applicable]</span></p>
-              <p><span className="font-semibold">Téléphone :</span> <span className="text-gray-500">[à compléter]</span></p>
-              <p><span className="font-semibold">Email :</span> <span className="text-gray-500">[à compléter]</span></p>
+              <p><span className="font-semibold">Raison sociale :</span> Reyssac Bois</p>
+              <p><span className="font-semibold">Forme juridique :</span> SARL</p>
+              <p><span className="font-semibold">Adresse :</span> 1250 avenue Jean Nogues 47550 Bien</p>
+              <p><span className="font-semibold">SIRET :</span> 415 010 016 00012</p>
+              <p><span className="font-semibold">RCS :</span> Agen</p>
+              <p><span className="font-semibold">TVA intracommunautaire :</span> FR43 415 010 016</p>
+              <p><span className="font-semibold">Téléphone :</span> 0553961597</p>
+              <p><span className="font-semibold">E-mail :</span> reyssacbois@orange.fr</p>
             </div>
           </Card>
 
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900">Directeur de publication</h2>
             <p className="mt-3 text-sm text-gray-700">
-              <span className="font-semibold">Nom :</span> <span className="text-gray-500">[à compléter]</span>
+              <span className="font-semibold">Nom :</span> Reyssac Benoît
             </p>
           </Card>
 
@@ -44,7 +44,7 @@ export default function MentionsLegalesPage() {
             <h2 className="text-lg font-semibold text-gray-900">Hébergement</h2>
             <div className="mt-3 space-y-2 text-sm text-gray-700">
               <p>
-                <span className="font-semibold">Hébergeur :</span> Vercel Inc. <span className="text-gray-500">[à adapter si besoin]</span>
+                <span className="font-semibold">Hébergeur :</span> Vercel Inc.
               </p>
               <p><span className="font-semibold">Adresse :</span> 440 N Barranca Ave #4133, Covina, CA 91723, USA</p>
               <p><span className="font-semibold">Site web :</span> vercel.com</p>

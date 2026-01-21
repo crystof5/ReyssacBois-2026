@@ -44,10 +44,10 @@ export default function PolitiqueDeConfidentialitePage() {
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900">1) Responsable du traitement</h2>
             <p className="mt-3 text-sm text-gray-700">
-              <span className="font-semibold">Reyssac Bois</span> <span className="text-gray-500">[à compléter avec l’entité juridique et l’adresse]</span>.
+              <span className="font-semibold">Reyssac Bois (SARL)</span>, 1250 avenue Jean Nogues 47550 Bien.
             </p>
             <p className="mt-2 text-sm text-gray-700">
-              Contact : <span className="text-gray-500">[email / téléphone à compléter]</span>.
+              Contact : reyssacbois@orange.fr — 0553961597.
             </p>
           </Card>
 
@@ -143,14 +143,13 @@ export default function PolitiqueDeConfidentialitePage() {
             <h2 className="text-lg font-semibold text-gray-900">5) Destinataires et sous-traitants</h2>
             <p className="mt-3 text-sm text-gray-700 leading-relaxed">
               Les données peuvent être traitées par des prestataires techniques (hébergeur, email) et, si vous l’acceptez, par Google (Analytics).
-              <span className="text-gray-500"> [à compléter si vous utilisez d’autres prestataires]</span>
             </p>
           </Card>
 
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-gray-900">6) Durées de conservation</h2>
             <ul className="mt-3 list-disc pl-5 text-sm text-gray-700 space-y-2">
-              <li><span className="font-semibold">Demandes via contact</span> : durée nécessaire au traitement, puis archivage limité <span className="text-gray-500">[à préciser]</span>.</li>
+              <li><span className="font-semibold">Demandes via contact</span> : durée nécessaire au traitement, puis archivage limité.</li>
               <li><span className="font-semibold">Cookies de mesure d’audience</span> : selon la configuration GA (généralement jusqu’à 13 mois).</li>
               <li><span className="font-semibold">Choix cookies</span> : 180 jours.</li>
             </ul>
@@ -160,7 +159,7 @@ export default function PolitiqueDeConfidentialitePage() {
             <h2 className="text-lg font-semibold text-gray-900">7) Vos droits</h2>
             <p className="mt-3 text-sm text-gray-700 leading-relaxed">
               Conformément au RGPD, vous disposez de droits d’accès, de rectification, d’effacement, d’opposition, de limitation et de portabilité.
-              Pour exercer vos droits, contactez-nous à <span className="text-gray-500">[email à compléter]</span>.
+              Pour exercer vos droits, contactez-nous à <span className="font-medium">reyssacbois@orange.fr</span>.
               Vous pouvez également introduire une réclamation auprès de la CNIL.
             </p>
           </Card>

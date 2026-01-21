@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server"
 import { PutObjectCommand } from "@aws-sdk/client-s3"
 import { getAdminUserFromRequest } from "@/lib/adminAuth"
 import { buildR2PublicUrl, getR2Client, getR2Env } from "@/lib/r2"
+import { optimizeUploadToWebp, toWebpFilename } from "@/lib/imageOptimize"
 
 export const runtime = "nodejs"
 
@@ -49,10 +50,31 @@ export async function POST(req: NextRequest) {
   }
 
   const safeName = sanitizeFilename(file.name || "image")
-  const key = `${folder}/${Date.now()}-${safeName}`
 
   const arrayBuffer = await file.arrayBuffer()
-  const body = Buffer.from(arrayBuffer)
+  const input = Buffer.from(arrayBuffer)
+
+  let body: Buffer
+  let contentType: string
+  let filenameForKey: string
+
+  try {
+    const optimized = await optimizeUploadToWebp({
+      input,
+      filename: safeName,
+      mimeType: file.type || undefined,
+    })
+    body = optimized.body
+    contentType = optimized.contentType
+    filenameForKey = optimized.extension === ".webp" ? toWebpFilename(safeName) : safeName
+  } catch (e: unknown) {
+    return NextResponse.json(
+      { ok: false, error: e instanceof Error ? e.message : "Image invalide." },
+      { status: 400 },
+    )
+  }
+
+  const key = `${folder}/${Date.now()}-${filenameForKey}`
 
   const { bucket } = getR2Env()
   const s3 = getR2Client()
@@ -62,7 +84,7 @@ export async function POST(req: NextRequest) {
       Bucket: bucket,
       Key: key,
       Body: body,
-      ContentType: file.type || "application/octet-stream",
+      ContentType: contentType,
       CacheControl: "public, max-age=31536000, immutable",
     })
   )
