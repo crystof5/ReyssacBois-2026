@@ -1,9 +1,16 @@
 import Link from "next/link"
 import AdminLogoutButton from "@/admin/components/AdminLogoutButton"
 import { requireAdmin } from "@/lib/adminAuth"
+import type { Metadata } from "next"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
+
+export const metadata: Metadata = {
+  title: "Administration",
+  // Sécurité SEO: empêche l’indexation de tout le back-office.
+  robots: { index: false, follow: false },
+}
 
 export default async function AdminLayout({
   children,
@@ -34,7 +41,7 @@ export default async function AdminLayout({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
           {children}
         </div>
       </div>

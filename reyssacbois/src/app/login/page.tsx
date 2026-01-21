@@ -5,6 +5,9 @@ import { Suspense } from "react"
 
 export const metadata: Metadata = {
   title: "Connexion",
+  // Sécurité SEO: `robots.txt` peut être contourné (URL découverte ailleurs).
+  // On force donc un noindex explicite.
+  robots: { index: false, follow: false },
 }
 
 export default function LoginPage() {

@@ -4,6 +4,9 @@
   /* Blanc cassé / beige très clair (plus premium que blanc pur) */
   --background: #f6f1e7;
   --foreground: #171717;
+  /* On force un rendu "light" pour éviter les inversions/contrastes
+     désagréables sur mobile quand le système est en mode sombre. */
+  color-scheme: light;
 }
 
 @theme inline {
@@ -15,13 +18,6 @@
   /* Couleurs gradient (ancien site) */
   --color-gradient-start: #eabf70;
   --color-gradient-end: #875d11;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

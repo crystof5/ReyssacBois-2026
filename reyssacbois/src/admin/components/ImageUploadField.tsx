@@ -135,15 +135,10 @@ export default function ImageUploadField({
           {label}
         </span>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <input
-            name={inputName}
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
-            placeholder="https://… (rempli automatiquement après upload)"
-          />
+        {/* En admin, on ne montre pas l’URL : on la garde dans un hidden pour le submit. */}
+        {inputName ? <input type="hidden" name={inputName} value={url} /> : null}
 
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <label className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50">
             <input
               type="file"
@@ -158,7 +153,7 @@ export default function ImageUploadField({
                 e.currentTarget.value = ""
               }}
             />
-            {status === "uploading" ? "Upload…" : "Uploader"}
+            {status === "uploading" ? "Upload…" : previewUrl ? "Remplacer" : "Uploader"}
           </label>
 
           {previewUrl && (

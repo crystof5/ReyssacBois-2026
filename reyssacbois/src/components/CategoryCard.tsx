@@ -24,35 +24,42 @@ export default function CategoryCard({
 
   return (
     <CardLink href={href} className="overflow-hidden">
-      <div className="aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-[16/10] w-full overflow-hidden">
         <Media
           src={category.imageUrl}
           alt={category.name}
-          className="h-full w-full"
+          className="h-full w-full transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.04]"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-transparent opacity-70 transition-opacity duration-200 group-hover:opacity-90"
+          aria-hidden
         />
       </div>
 
-      <div className="p-5">
+      <div className="p-5 sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-green-800">
             {category.name}
           </h3>
 
           {childrenCount > 0 && (
-            <span className="shrink-0 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-800">
+            <span className="shrink-0 rounded-full border border-green-100 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-800">
               {childrenCount} sous-cat.
             </span>
           )}
         </div>
 
         {showDescription && category.description && (
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm leading-relaxed text-gray-600">
             {truncateText(category.description, 140)}
           </p>
         )}
 
-        <div className="mt-4 text-sm font-medium text-green-700">
-          Découvrir →
+        <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-green-700">
+          <span>Découvrir</span>
+          <span className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>
+            →
+          </span>
         </div>
       </div>
     </CardLink>
