@@ -20,12 +20,48 @@
   --color-gradient-end: #875d11;
 }
 
-body {
+html {
   background: var(--background);
+}
+
+body {
+  background-color: var(--background);
+  background-image:
+    /* Nuances plus visibles (toujours soft) */
+    radial-gradient(980px circle at 12% 0%, rgba(234, 191, 112, 0.32), transparent 62%),
+    radial-gradient(820px circle at 88% 18%, rgba(135, 93, 17, 0.20), transparent 66%),
+    radial-gradient(900px circle at 42% 105%, rgba(22, 163, 74, 0.10), transparent 64%),
+    /* Profondeur: léger voile + vignette */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(1400px circle at 50% 120%, rgba(0, 0, 0, 0.045), transparent 60%),
+    /* Grain doux (STATIQUE) : pas d'effet "points qui bougent" */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+  background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 240px 240px;
+  background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+  background-attachment: fixed;
+  background-blend-mode: normal, normal, normal, normal, normal, multiply;
   color: var(--foreground);
   /* Police moderne (par défaut Next/Geist si dispo), sinon fallback system-ui */
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  animation: rb-bg-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes rb-bg-drift {
+  from {
+    /* On anime uniquement les 3 grosses "taches" (pas le grain) */
+    background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
+  }
+  to {
+    background-position: 100% 60%, 0% 25%, 70% 100%, 0% 0%, 50% 50%, 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
 }
 
 /* util: hide horizontal scrollbar (carrousels) */
