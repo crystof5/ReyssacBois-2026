@@ -51,7 +51,7 @@ export default async function QuiSommesNousPage() {
       : "173 années d'existence font de l'entreprise familiale le plus vieux commerce d'Agen. Hâte de vous recevoir dans nos locaux !"
 
   return (
-    <div className="bg-gradient-to-b from-amber-50 to-white">
+    <div className="bg-gradient-to-b from-amber-50/60 to-white/20">
       <Container className="py-10 sm:py-14 space-y-10">
         <Breadcrumb
           items={[
@@ -72,7 +72,7 @@ export default async function QuiSommesNousPage() {
         </div>
 
         {/* Historique */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
           <div className="flex flex-col justify-center">
             <h2 className="text-2xl font-bold text-gray-900">
               {historyTitle}
@@ -82,7 +82,7 @@ export default async function QuiSommesNousPage() {
             </p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 backdrop-blur">
             <div className="aspect-[4/3] w-full">
               <Media
                 src={aboutHistory.src}
@@ -94,7 +94,7 @@ export default async function QuiSommesNousPage() {
         </section>
 
         {/* Mission */}
-        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
           <h2 className="text-2xl font-bold text-gray-900">{missionTitle}</h2>
           <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
             {missionText}
@@ -102,8 +102,8 @@ export default async function QuiSommesNousPage() {
         </section>
 
         {/* Localisation et projets */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
+          <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 backdrop-blur">
             <div className="relative w-full pt-[56.25%]">
               <iframe
                 title="Carte - Reyssac Bois"
@@ -128,7 +128,7 @@ export default async function QuiSommesNousPage() {
         </section>
 
         {/* Conclusion */}
-        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
           <p className="text-gray-700 text-base sm:text-lg text-center">
             {conclusionText}
           </p>

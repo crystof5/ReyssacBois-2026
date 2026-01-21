@@ -34,13 +34,13 @@ body {
     /* Profondeur: léger voile + vignette */
     linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
     radial-gradient(1400px circle at 50% 120%, rgba(0, 0, 0, 0.045), transparent 60%),
-    /* Grain doux (STATIQUE) : pas d'effet "points qui bougent" */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
-  background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 240px 240px;
+    /* Motif emboss (type flocon/rosette) — statique, répété, effet de relief */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' fill='none'/%3E%3Cg opacity='0.55'%3E%3C!-- ombre (bas/droite) --%3E%3Cg transform='translate(1.2 1.2)' stroke='rgba(0,0,0,0.20)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M110 56V164'/%3E%3Cpath d='M56 110H164'/%3E%3Cpath d='M72 72L148 148'/%3E%3Cpath d='M148 72L72 148'/%3E%3Cpath d='M110 70l10 10M110 70l-10 10M110 150l10-10M110 150l-10-10'/%3E%3Cpath d='M70 110l10 10M70 110l10-10M150 110l-10 10M150 110l-10-10'/%3E%3C/g%3E%3C!-- highlight (haut/gauche) --%3E%3Cg transform='translate(-1.2 -1.2)' stroke='rgba(255,255,255,0.40)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M110 56V164'/%3E%3Cpath d='M56 110H164'/%3E%3Cpath d='M72 72L148 148'/%3E%3Cpath d='M148 72L72 148'/%3E%3Cpath d='M110 70l10 10M110 70l-10 10M110 150l10-10M110 150l-10-10'/%3E%3Cpath d='M70 110l10 10M70 110l10-10M150 110l-10 10M150 110l-10-10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 220px 220px;
   background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
   background-attachment: fixed;
-  background-blend-mode: normal, normal, normal, normal, normal, multiply;
+  background-blend-mode: normal, normal, normal, normal, normal, soft-light;
   color: var(--foreground);
   /* Police moderne (par défaut Next/Geist si dispo), sinon fallback system-ui */
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
@@ -55,6 +55,14 @@ body {
   }
   to {
     background-position: 100% 60%, 0% 25%, 70% 100%, 0% 0%, 50% 50%, 0 0;
+  }
+}
+
+/* Mobile: `background-attachment: fixed` est souvent désactivé -> on force scroll + motif un peu plus dense */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+    background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 180px 180px;
   }
 }
 

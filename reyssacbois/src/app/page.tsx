@@ -41,7 +41,7 @@ export default async function Home() {
   const projectsIntervalMs = projects?.intervalMs ?? 5000
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50/60 to-white/20">
       {/* HERO */}
       <section className="relative h-[60vh] min-h-[420px] overflow-hidden">
         <div className="absolute inset-0">
@@ -118,7 +118,7 @@ export default async function Home() {
       </section>
 
       {/* PROJETS (slider simple) */}
-      <section className="bg-white py-14 sm:py-20 border-y border-gray-100">
+      <section className="bg-white/60 backdrop-blur py-14 sm:py-20 border-y border-gray-200/60">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">

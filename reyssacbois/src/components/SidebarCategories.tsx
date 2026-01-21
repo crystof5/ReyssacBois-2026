@@ -118,6 +118,7 @@ export default function SidebarCategories({
   categories: Category[]
 }) {
   const pathname = usePathname()
+  const [desktopCollapsed, setDesktopCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [dragX, setDragX] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -126,6 +127,24 @@ export default function SidebarCategories({
   const rafId = useRef<number | null>(null)
   const nextDragX = useRef(0)
   const scrollYRef = useRef(0)
+
+  // Desktop: mémoriser l’état replié/déplié
+  useEffect(() => {
+    try {
+      const v = window.localStorage.getItem("rb_sidebar_collapsed")
+      if (v === "1") setDesktopCollapsed(true)
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("rb_sidebar_collapsed", desktopCollapsed ? "1" : "0")
+    } catch {
+      // ignore
+    }
+  }, [desktopCollapsed])
 
   // Quand on navigue, on ferme le drawer mobile
   useEffect(() => {
@@ -246,31 +265,76 @@ export default function SidebarCategories({
       </div>
 
       {/* Desktop: sidebar */}
-      <aside className="hidden md:block shrink-0 w-72">
+      <aside
+        className={`hidden md:block shrink-0 ${
+          desktopCollapsed ? "w-16" : "w-72"
+        }`}
+      >
         <div className="md:sticky md:top-24">
-          <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold tracking-wide text-gray-900">
-                Catégories
-              </h2>
-              <Link
-                href="/produits"
-                className="text-xs font-medium text-gray-600 hover:text-gray-900 underline-offset-4 hover:underline"
-              >
-                Tout voir
-              </Link>
+          {desktopCollapsed ? (
+            <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+              <div className="flex flex-col items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDesktopCollapsed(false)}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                  aria-label="Ouvrir le menu catégories"
+                  title="Ouvrir"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
+                    <path
+                      d="M4 7h16M4 12h16M4 17h16"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+                <Link
+                  href="/produits"
+                  className="text-[11px] font-medium text-gray-600 hover:text-gray-900"
+                  title="Tout voir"
+                >
+                  Produits
+                </Link>
+              </div>
             </div>
+          ) : (
+            <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <h2 className="text-sm font-semibold tracking-wide text-gray-900">
+                  Catégories
+                </h2>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/produits"
+                    className="text-xs font-medium text-gray-600 hover:text-gray-900 underline-offset-4 hover:underline"
+                  >
+                    Tout voir
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setDesktopCollapsed(true)}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white/80 text-gray-700 shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                    aria-label="Réduire le menu catégories"
+                    title="Réduire"
+                  >
+                    ‹
+                  </button>
+                </div>
+              </div>
 
-            <ul className="space-y-1">
-              {categories.map((category) => (
-                <CategoryItem
-                  key={category.id}
-                  category={category}
-                  activeSlug={activeSlug}
-                />
-              ))}
-            </ul>
-          </div>
+              <ul className="space-y-1">
+                {categories.map((category) => (
+                  <CategoryItem
+                    key={category.id}
+                    category={category}
+                    activeSlug={activeSlug}
+                  />
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </aside>
 
