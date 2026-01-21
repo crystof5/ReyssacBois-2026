@@ -9,6 +9,7 @@ import Link from "next/link"
 import CookieConsent from "@/components/CookieConsent"
 import CookieSettingsButton from "@/components/CookieSettingsButton"
 import Analytics from "@/components/Analytics"
+import SocialLinks from "@/components/SocialLinks"
 
 // Les réglages (promo/bannière) viennent de la DB et doivent refléter
 // immédiatement les changements admin (sans rebuild). On force donc du SSR.
@@ -83,6 +84,7 @@ export default async function RootLayout({
                 <CookieSettingsButton className="hover:text-gray-900 underline-offset-4 hover:underline">
                   Cookies
                 </CookieSettingsButton>
+                <SocialLinks />
                 <span className="text-gray-400">|</span>
                 <span className="text-xs text-gray-500">
                   © {new Date().getFullYear()} Reyssac Bois
