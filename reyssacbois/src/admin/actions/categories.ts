@@ -6,6 +6,8 @@ import { redirect } from "next/navigation"
 import { slugify } from "@/lib/slugify"
 import { requireAdmin } from "@/lib/adminAuth"
 
+type ActionResult = { ok: true } | { ok: false; message: string }
+
 async function ensureUniqueCategorySlug(slugBase: string, id: string) {
   let candidate = slugBase
   let i = 2
@@ -167,6 +169,38 @@ export async function deleteCategoryIfOrphanAction(formData: FormData) {
   revalidatePath("/categories", "layout")
   revalidatePath("/produits", "layout")
   redirect("/admin/categories")
+}
+
+export async function detachProductsFromCategoryAction(
+  categoryId: string,
+  productIds: string[],
+): Promise<ActionResult> {
+  const catId = String(categoryId ?? "").trim()
+  if (!catId) return { ok: false, message: "Catégorie manquante." }
+
+  await requireAdmin(`/admin/categories/${catId}`)
+
+  const unique = Array.from(new Set((productIds ?? []).map((x) => String(x).trim()).filter(Boolean)))
+  if (unique.length === 0) return { ok: false, message: "Aucun produit sélectionné." }
+
+  await prisma.productCategory.deleteMany({
+    where: {
+      categoryId: catId,
+      productId: { in: unique },
+    },
+  })
+
+  // Invalidation caches (SEO + navigation)
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath(`/admin/categories/${catId}`)
+  revalidatePath("/admin/produits")
+  revalidatePath("/produits", "layout")
+  revalidatePath("/categories", "layout")
+
+  return { ok: true }
 }
 
 

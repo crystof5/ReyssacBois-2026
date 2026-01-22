@@ -22,25 +22,15 @@ export default function ProductCategoriesSelector({
   categories: CategoryNode[]
   initialSelectedIds: string[]
 }) {
-  const buildInitialSelected = (cats: CategoryNode[], ids: string[]) => {
-    const byId = new Map<string, CategoryNode>()
-    for (const c of cats) byId.set(c.id, c)
-
-    const set = new Set<string>()
-    for (const id of ids) {
-      if (!id) continue
-      set.add(id)
-      let cur = byId.get(id)?.parentId ?? null
-      while (cur) {
-        set.add(cur)
-        cur = byId.get(cur)?.parentId ?? null
-      }
-    }
-    return set
+  const buildInitialSelected = (ids: string[]) => {
+    // IMPORTANT:
+    // On n'ajoute PAS automatiquement les parents.
+    // Cela permet de rattacher un produit uniquement à une sous-catégorie (sans "remonter" au parent).
+    return new Set(ids.filter(Boolean))
   }
 
   const [selected, setSelected] = useState<Set<string>>(() =>
-    buildInitialSelected(categories, initialSelectedIds),
+    buildInitialSelected(initialSelectedIds),
   )
 
   const byId = useMemo(() => {
@@ -76,34 +66,14 @@ export default function ProductCategoriesSelector({
       .sort(sortFr)
   }, [byId, categories])
 
-  const ensureAncestors = (set: Set<string>, id: string) => {
-    let cur = byId.get(id)?.parentId ?? null
-    while (cur) {
-      set.add(cur)
-      cur = byId.get(cur)?.parentId ?? null
-    }
-  }
-
-  const collectDescendants = (bucket: Set<string>, id: string) => {
-    const children = childrenById.get(id) ?? []
-    for (const child of children) {
-      bucket.add(child.id)
-      collectDescendants(bucket, child.id)
-    }
-  }
-
   const toggle = (id: string, checked: boolean) => {
     setSelected((prev) => {
       const next = new Set(prev)
       if (checked) {
         next.add(id)
-        ensureAncestors(next, id)
       } else {
-        // Pour éviter un état incohérent (enfant sans parent),
-        // décocher retire aussi tous les descendants.
-        const toRemove = new Set<string>([id])
-        collectDescendants(toRemove, id)
-        for (const x of toRemove) next.delete(x)
+        // Chaque case est indépendante : on peut garder un enfant coché même si le parent est décoché.
+        next.delete(id)
       }
       return next
     })
