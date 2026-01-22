@@ -5,6 +5,7 @@ import { revalidatePath, revalidateTag } from "next/cache"
 import { SITE_KEYS } from "@/admin/queries/siteSettings"
 import sanitizeHtml from "sanitize-html"
 import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
+import { requireAdmin } from "@/lib/adminAuth"
 
 function parseInterval(value: string) {
   if (value === "slow") return 8000
@@ -77,6 +78,8 @@ export async function updateSiteContentAction(
 ) {
   // (Ce fichier est utilisé via useActionState côté client, donc on retourne un état plutôt qu'un redirect.)
   try {
+    await requireAdmin("/admin/home")
+
     const siteFontKeyRaw = String(formData.get("siteFontKey") ?? "").trim()
     const siteFontKey = isSiteFontKey(siteFontKeyRaw) ? siteFontKeyRaw : DEFAULT_SITE_FONT_KEY
 

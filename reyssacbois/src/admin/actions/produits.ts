@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { slugify } from "@/lib/slugify"
+import { requireAdmin } from "@/lib/adminAuth"
 
 async function ensureUniqueProductSlug(slugBase: string, id: string) {
   let candidate = slugBase
@@ -52,6 +53,7 @@ async function createDraftProduct(baseName: string) {
 }
 
 export async function createProduitAction() {
+  await requireAdmin("/admin/produits")
   const id = await createDraftProduct("Nouveau produit")
 
   revalidateTag("breadcrumbs", "default")
@@ -63,6 +65,7 @@ export async function createProduitAction() {
 }
 
 export async function startProduitFromCategoryAction(formData: FormData) {
+  await requireAdmin("/admin/produits")
   const categoryId = String(formData.get("categoryId") ?? "").trim()
   if (!categoryId) throw new Error("Catégorie manquante")
 
@@ -77,6 +80,7 @@ export async function startProduitFromCategoryAction(formData: FormData) {
 }
 
 export async function updateProduitAction(formData: FormData) {
+  await requireAdmin("/admin/produits")
   const id = String(formData.get("id") ?? "")
   const name = String(formData.get("name") ?? "").trim()
   const slugInput = String(formData.get("slug") ?? "").trim()
@@ -144,6 +148,7 @@ export async function updateProduitAction(formData: FormData) {
 }
 
 export async function deleteProduitIfOrphanAction(formData: FormData) {
+  await requireAdmin("/admin/produits")
   const id = String(formData.get("id") ?? "").trim()
   if (!id) throw new Error("ID manquant")
 

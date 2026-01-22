@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { requireAdmin } from "@/lib/adminAuth"
 
 type ActionResult = { ok: true } | { ok: false; message: string }
 
@@ -12,6 +13,8 @@ function normalizeIds(ids: string[]) {
 }
 
 export async function reorderTopCategoriesAction(ids: string[]): Promise<ActionResult> {
+  await requireAdmin("/admin/categories")
+
   const unique = normalizeIds(ids)
   if (unique.length === 0) return { ok: false, message: "Liste vide." }
 
@@ -45,6 +48,8 @@ export async function reorderCategoryChildrenAction(
   parentId: string,
   childIds: string[]
 ): Promise<ActionResult> {
+  await requireAdmin("/admin/categories")
+
   const parent = String(parentId || "").trim()
   if (!parent) return { ok: false, message: "Parent manquant." }
   const unique = normalizeIds(childIds)
@@ -76,6 +81,8 @@ export async function reorderCategoryChildrenAction(
 }
 
 export async function reorderProductsAction(ids: string[]): Promise<ActionResult> {
+  await requireAdmin("/admin/produits")
+
   const unique = normalizeIds(ids)
   if (unique.length === 0) return { ok: false, message: "Liste vide." }
 
@@ -104,6 +111,8 @@ export async function reorderCategoryProductsAction(
   categoryId: string,
   productIds: string[]
 ): Promise<ActionResult> {
+  await requireAdmin("/admin/categories")
+
   const category = String(categoryId || "").trim()
   if (!category) return { ok: false, message: "Catégorie manquante." }
   const unique = normalizeIds(productIds)

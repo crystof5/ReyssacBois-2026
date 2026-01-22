@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { slugify } from "@/lib/slugify"
+import { requireAdmin } from "@/lib/adminAuth"
 
 async function ensureUniqueCategorySlug(slugBase: string, id: string) {
   let candidate = slugBase
@@ -49,6 +50,7 @@ async function createDraftCategory(baseName: string) {
 }
 
 export async function createCategoryAction() {
+  await requireAdmin("/admin/categories")
   const id = await createDraftCategory("Nouvelle catégorie")
 
   revalidateTag("categoriesTree", "default")
@@ -61,6 +63,7 @@ export async function createCategoryAction() {
 }
 
 export async function startSubCategoryFromCategoryAction(formData: FormData) {
+  await requireAdmin("/admin/categories")
   const parentId = String(formData.get("createChildParentId") ?? "").trim()
   if (!parentId) throw new Error("Parent manquant")
 
@@ -76,6 +79,7 @@ export async function startSubCategoryFromCategoryAction(formData: FormData) {
 }
 
 export async function updateCategoryAction(formData: FormData) {
+  await requireAdmin("/admin/categories")
   const id = String(formData.get("id") ?? "")
   const name = String(formData.get("name") ?? "").trim()
   const slugInput = String(formData.get("slug") ?? "").trim()
@@ -133,6 +137,7 @@ export async function updateCategoryAction(formData: FormData) {
 }
 
 export async function deleteCategoryIfOrphanAction(formData: FormData) {
+  await requireAdmin("/admin/categories")
   const id = String(formData.get("id") ?? "").trim()
   if (!id) throw new Error("ID manquant")
 
