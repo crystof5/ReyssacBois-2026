@@ -40,12 +40,20 @@ export default async function AdminCategoryEditPage({
             Modifie les champs puis enregistre.
           </p>
         </div>
-        <Link
-          href="/admin/categories"
-          className="text-sm text-gray-700 hover:underline"
-        >
-          ← Retour
-        </Link>
+        <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+          <Link
+            href="/admin"
+            className="text-sm text-gray-700 hover:underline"
+          >
+            ← Administration
+          </Link>
+          <Link
+            href="/admin/categories"
+            className="text-sm text-gray-700 hover:underline"
+          >
+            ← Catégories
+          </Link>
+        </div>
       </div>
 
       <form action={updateCategoryAction} className="mt-6 space-y-5">

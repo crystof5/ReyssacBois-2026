@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
-import { slugify } from "./slug"
+import { slugify } from "@/lib/slugify"
 
 async function ensureUniqueProductSlug(slugBase: string, id: string) {
   let candidate = slugBase
@@ -21,6 +21,40 @@ async function ensureUniqueProductSlug(slugBase: string, id: string) {
     candidate = `${slugBase}-${i}`
     i += 1
   }
+}
+
+export async function createProduitAction() {
+  const baseName = "Nouveau produit"
+  const created = await prisma.product.create({
+    data: {
+      name: baseName,
+      slug: "draft",
+      isVisible: false,
+      description: null,
+      imageUrl: null,
+      sortOrder: 0,
+      section: null,
+      length: null,
+      species: null,
+      type: null,
+      standard: null,
+    },
+    select: { id: true },
+  })
+
+  const slugBase = slugify(baseName)
+  const slug = await ensureUniqueProductSlug(slugBase, created.id)
+  await prisma.product.update({
+    where: { id: created.id },
+    data: { slug },
+  })
+
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/produits")
+  redirect(`/admin/produits/${created.id}`)
 }
 
 export async function updateProduitAction(formData: FormData) {
@@ -86,6 +120,40 @@ export async function updateProduitAction(formData: FormData) {
   revalidatePath(`/admin/produits/${id}`)
   revalidatePath("/produits", "layout")
   revalidatePath(`/produits/${slug}`)
+  revalidatePath("/categories", "layout")
+  redirect(`/admin/produits/${id}?saved=1`)
+}
+
+export async function deleteProduitIfOrphanAction(formData: FormData) {
+  const id = String(formData.get("id") ?? "").trim()
+  if (!id) throw new Error("ID manquant")
+
+  const product = await prisma.product.findUnique({ where: { id }, select: { id: true } })
+  if (!product) throw new Error("Produit introuvable")
+
+  // Défensif: compter les catégories "valides" (join réel sur Category).
+  const rows = await prisma.$queryRaw<Array<{ validCount: bigint }>>`
+    SELECT COUNT(c.id) as "validCount"
+    FROM "ProductCategory" pc
+    LEFT JOIN "Category" c ON c.id = pc."categoryId"
+    WHERE pc."productId" = ${id}
+  `
+  const validCount = Number(rows?.[0]?.validCount ?? 0)
+  if (validCount > 0) {
+    throw new Error("Impossible: produit rattaché à une catégorie.")
+  }
+
+  // On nettoie aussi les éventuelles lignes de liaison (liens cassés / anciens imports).
+  await prisma.productCategory.deleteMany({ where: { productId: id } })
+
+  await prisma.product.delete({ where: { id } })
+
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/produits")
+  revalidatePath("/produits", "layout")
   revalidatePath("/categories", "layout")
   redirect("/admin/produits")
 }

@@ -7,11 +7,16 @@ import SlugField from "@/admin/components/SlugField"
 
 export default async function AdminProduitEditPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id?: string }>
+  searchParams?: Promise<{ saved?: string }>
 }) {
   const { id } = await params
   if (!id) notFound()
+
+  const sp = (await searchParams) ?? {}
+  const saved = sp.saved === "1"
 
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({
@@ -36,13 +41,27 @@ export default async function AdminProduitEditPage({
             Modifie les champs puis enregistre.
           </p>
         </div>
-        <Link
-          href="/admin/produits"
-          className="text-sm text-gray-700 hover:underline"
-        >
-          ← Retour
-        </Link>
+        <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+          <Link
+            href="/admin"
+            className="text-sm text-gray-700 hover:underline"
+          >
+            ← Administration
+          </Link>
+          <Link
+            href="/admin/produits"
+            className="text-sm text-gray-700 hover:underline"
+          >
+            ← Produits
+          </Link>
+        </div>
       </div>
+
+      {saved ? (
+        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          Enregistré.
+        </div>
+      ) : null}
 
       <form action={updateProduitAction} className="mt-6 space-y-5">
         <input type="hidden" name="id" value={product.id} />

@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
-import { slugify } from "./slug"
+import { slugify } from "@/lib/slugify"
 
 async function ensureUniqueCategorySlug(slugBase: string, id: string) {
   let candidate = slugBase
@@ -21,6 +21,38 @@ async function ensureUniqueCategorySlug(slugBase: string, id: string) {
     candidate = `${slugBase}-${i}`
     i += 1
   }
+}
+
+export async function createCategoryAction() {
+  const baseName = "Nouvelle catégorie"
+  // On crée un "draft" caché par défaut pour éviter toute apparition côté public.
+  const created = await prisma.category.create({
+    data: {
+      name: baseName,
+      slug: "draft",
+      isVisible: false,
+      description: null,
+      imageUrl: null,
+      parentId: null,
+      sortOrder: 0,
+    },
+    select: { id: true },
+  })
+
+  const slugBase = slugify(baseName)
+  const slug = await ensureUniqueCategorySlug(slugBase, created.id)
+  await prisma.category.update({
+    where: { id: created.id },
+    data: { slug },
+  })
+
+  revalidateTag("categoriesTree", "default")
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/categories")
+  redirect(`/admin/categories/${created.id}`)
 }
 
 export async function updateCategoryAction(formData: FormData) {
@@ -77,6 +109,38 @@ export async function updateCategoryAction(formData: FormData) {
   revalidatePath("/categories", "layout")
   revalidatePath("/produits", "layout")
   revalidatePath(`/categories/${slug}`)
+  redirect("/admin/categories")
+}
+
+export async function deleteCategoryIfOrphanAction(formData: FormData) {
+  const id = String(formData.get("id") ?? "").trim()
+  if (!id) throw new Error("ID manquant")
+
+  // Sécurité: on ne supprime que si la catégorie est réellement “vide”
+  // (pas d'enfants, pas de produits rattachés).
+  const category = await prisma.category.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      slug: true,
+      _count: { select: { children: true, products: true } },
+    },
+  })
+  if (!category) throw new Error("Catégorie introuvable")
+  if (category._count.children > 0 || category._count.products > 0) {
+    throw new Error("Impossible: catégorie non vide.")
+  }
+
+  await prisma.category.delete({ where: { id } })
+
+  revalidateTag("categoriesTree", "default")
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/categories")
+  revalidatePath("/categories", "layout")
+  revalidatePath("/produits", "layout")
   redirect("/admin/categories")
 }
 
