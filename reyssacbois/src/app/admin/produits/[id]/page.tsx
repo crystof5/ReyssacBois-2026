@@ -42,6 +42,10 @@ export default async function AdminProduitEditPage({
     ]),
   )
 
+  const prefillCategory = prefillCategoryId
+    ? categories.find((c) => c.id === prefillCategoryId)
+    : undefined
+
   return (
     <div>
       <div className="flex items-start justify-between gap-4">
@@ -60,6 +64,15 @@ export default async function AdminProduitEditPage({
           >
             ← Administration
           </Link>
+          {prefillCategoryId ? (
+            <Link
+              href={`/admin/categories/${prefillCategoryId}`}
+              className="text-sm text-gray-700 hover:underline"
+              title={prefillCategory?.name ? `Retour à : ${prefillCategory.name}` : "Retour à la catégorie"}
+            >
+              ← {prefillCategory?.name ? prefillCategory.name : "Catégorie"}
+            </Link>
+          ) : null}
           <Link
             href="/admin/produits"
             className="text-sm text-gray-700 hover:underline"

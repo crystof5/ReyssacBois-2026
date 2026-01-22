@@ -197,7 +197,8 @@ export default async function AdminCategoryEditPage({
                   title: p.name,
                   subtitle: `/${p.slug}`,
                   isVisible: p.isVisible,
-                  editHref: `/admin/produits/${p.id}`,
+                  // Permet à la page produit d'afficher un retour vers la catégorie d'origine.
+                  editHref: `/admin/produits/${p.id}?prefillCategoryId=${encodeURIComponent(category.id)}`,
                   viewHref: `/produits/${p.slug}`,
                 }))}
               saveKind="categoryProducts"
