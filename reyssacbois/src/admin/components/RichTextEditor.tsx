@@ -96,7 +96,7 @@ export default function RichTextEditor({
     if (!editor) return
     // si la valeur initiale change (rare), on la recharge
     if ((initialHtml ?? "") !== (editor.getHTML() ?? "")) {
-      editor.commands.setContent(initialHtml || "", false)
+      editor.commands.setContent(initialHtml || "", { emitUpdate: false })
       setHtml(initialHtml || "")
     }
   }, [editor, initialHtml])
@@ -179,7 +179,7 @@ export default function RichTextEditor({
           className="ml-auto inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
           onClick={() => {
             editor.chain().focus().unsetAllMarks().clearNodes().run()
-            editor.commands.setContent("", false)
+            editor.commands.setContent("", { emitUpdate: false })
             setHtml("")
           }}
         >
