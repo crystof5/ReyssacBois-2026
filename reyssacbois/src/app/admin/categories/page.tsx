@@ -44,14 +44,19 @@ export default async function AdminCategoriesPage({
           </p>
         </div>
 
-        <form action={createCategoryAction}>
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-          >
-            + Nouvelle catégorie
-          </button>
-        </form>
+        <div className="flex flex-col items-start gap-2 sm:items-end">
+          <Link href="/admin" className="text-sm text-gray-700 hover:underline">
+            ← Administration
+          </Link>
+          <form action={createCategoryAction}>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+            >
+              + Nouvelle catégorie
+            </button>
+          </form>
+        </div>
       </div>
 
       <div className="mt-6 space-y-6">
