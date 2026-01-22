@@ -34,7 +34,8 @@ export default async function AdminProduitEditPage({
 
   if (!product) notFound()
 
-  const selectedCategoryIds = new Set(product.categories.map((c) => c.categoryId))
+  const linkedCategoryIds = Array.from(new Set(product.categories.map((c) => c.categoryId)))
+  const selectedCategoryIds = new Set(linkedCategoryIds)
   const initialSelectedIds = Array.from(
     new Set([
       ...Array.from(selectedCategoryIds),
@@ -42,8 +43,14 @@ export default async function AdminProduitEditPage({
     ]),
   )
 
-  const prefillCategory = prefillCategoryId
-    ? categories.find((c) => c.id === prefillCategoryId)
+  // Contexte breadcrumb:
+  // - si le produit n'est rattaché qu'à 1 catégorie, on utilise celle-ci (typiquement une sous-catégorie)
+  // - sinon on utilise le prefillCategoryId (si on vient d'une catégorie)
+  const contextCategoryId =
+    linkedCategoryIds.length === 1 ? linkedCategoryIds[0] : prefillCategoryId
+
+  const contextCategory = contextCategoryId
+    ? categories.find((c) => c.id === contextCategoryId)
     : undefined
 
   return (
@@ -64,13 +71,13 @@ export default async function AdminProduitEditPage({
           >
             ← Administration
           </Link>
-          {prefillCategoryId ? (
+          {contextCategoryId ? (
             <Link
-              href={`/admin/categories/${prefillCategoryId}`}
+              href={`/admin/categories/${contextCategoryId}`}
               className="text-sm text-gray-700 hover:underline"
-              title={prefillCategory?.name ? `Retour à : ${prefillCategory.name}` : "Retour à la catégorie"}
+              title={contextCategory?.name ? `Retour à : ${contextCategory.name}` : "Retour à la catégorie"}
             >
-              ← {prefillCategory?.name ? prefillCategory.name : "Catégorie"}
+              ← {contextCategory?.name ? contextCategory.name : "Catégorie"}
             </Link>
           ) : null}
           <Link

@@ -96,7 +96,9 @@ export async function updateProduitAction(formData: FormData) {
   const type = String(formData.get("type") ?? "").trim()
   const standard = String(formData.get("standard") ?? "").trim()
 
-  const categoryIds = formData.getAll("categoryIds").map((v) => String(v))
+  const categoryIds = Array.from(
+    new Set(formData.getAll("categoryIds").map((v) => String(v).trim()).filter(Boolean)),
+  )
 
   if (!id) throw new Error("ID manquant")
   if (name.length < 2) throw new Error("Nom trop court")
@@ -144,7 +146,11 @@ export async function updateProduitAction(formData: FormData) {
   revalidatePath("/produits", "layout")
   revalidatePath(`/produits/${slug}`)
   revalidatePath("/categories", "layout")
-  redirect(`/admin/produits/${id}?saved=1`)
+  redirect(
+    `/admin/produits/${id}?saved=1${
+      categoryIds.length === 1 ? `&prefillCategoryId=${encodeURIComponent(categoryIds[0])}` : ""
+    }`,
+  )
 }
 
 export async function deleteProduitIfOrphanAction(formData: FormData) {
