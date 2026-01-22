@@ -26,13 +26,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  manifest: "/manifest.json",
   icons: {
+    // Google/desktop
     icon: [
-      { url: "/img/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/android-icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/favicon-256x256.png", sizes: "256x256", type: "image/png" },
     ],
-    apple: [
-      { url: "/img/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-    ],
+    shortcut: ["/favicon.ico"],
+    // iOS
+    apple: [{ url: "/apple-icon-180x180.png", sizes: "180x180", type: "image/png" }],
   },
 }
 

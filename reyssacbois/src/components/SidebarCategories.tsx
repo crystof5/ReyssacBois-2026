@@ -250,7 +250,7 @@ export default function SidebarCategories({
           onClick={() => setMobileOpen(true)}
           className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-4 py-2 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-black/5 backdrop-blur hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-600/30"
         >
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-white shadow-sm">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-green-700 text-white shadow-sm">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
               <path
                 d="M4 7h16M4 12h16M4 17h16"
@@ -277,7 +277,7 @@ export default function SidebarCategories({
                 <button
                   type="button"
                   onClick={() => setDesktopCollapsed(false)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-900 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
                   aria-label="Ouvrir le menu catégories"
                   title="Ouvrir"
                 >
@@ -293,9 +293,9 @@ export default function SidebarCategories({
                 <Link
                   href="/produits"
                   className="text-[11px] font-medium text-gray-600 hover:text-gray-900"
-                  title="Tout voir"
+                  title="Catégories"
                 >
-                  Produits
+                  Catégories
                 </Link>
               </div>
             </div>
