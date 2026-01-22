@@ -1,18 +1,25 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
-import { updateCategoryAction } from "@/admin/actions/categories"
+import { startSubCategoryFromCategoryAction, updateCategoryAction } from "@/admin/actions/categories"
+import { startProduitFromCategoryAction } from "@/admin/actions/produits"
 import ImageUploadField from "@/admin/components/ImageUploadField"
 import SlugField from "@/admin/components/SlugField"
 import SortableList from "@/admin/components/SortableList"
 
 export default async function AdminCategoryEditPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id?: string }>
+  searchParams?: Promise<{ prefillParentId?: string }>
 }) {
   const { id } = await params
   if (!id) notFound()
+
+  const sp = (await searchParams) ?? {}
+  const prefillParentId =
+    typeof sp.prefillParentId === "string" ? sp.prefillParentId.trim() : ""
 
   const [category, allCategories] = await Promise.all([
     prisma.category.findUnique({
@@ -112,7 +119,7 @@ export default async function AdminCategoryEditPage({
         <Field label="Parent">
           <select
             name="parentId"
-            defaultValue={category.parentId ?? ""}
+            defaultValue={category.parentId ?? prefillParentId ?? ""}
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
           >
             <option value="">(Aucun)</option>
@@ -127,50 +134,76 @@ export default async function AdminCategoryEditPage({
         </Field>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-          <SortableList
-            title={`Sous-catégories (${category.children.length})`}
-            description="Glisse-dépose pour définir l’ordre d’affichage sous ce parent."
-            items={category.children
-              .slice()
-              .sort((a, b) => {
-                const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
-                if (byOrder !== 0) return byOrder
-                return a.name.localeCompare(b.name, "fr")
-              })
-              .map((child) => ({
-                id: child.id,
-                title: child.name,
-                subtitle: `/${child.slug}`,
-                isVisible: child.isVisible,
-                editHref: `/admin/categories/${child.id}`,
-                viewHref: `/categories/${child.slug}`,
-              }))}
-            saveKind="categoryChildren"
-            scopeId={category.id}
-          />
+          <div className="space-y-3">
+            <div className="flex justify-end">
+              <input type="hidden" name="createChildParentId" value={category.id} />
+              <button
+                type="submit"
+                formAction={startSubCategoryFromCategoryAction}
+                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+              >
+                + Ajouter une sous-catégorie
+              </button>
+            </div>
 
-          <SortableList
-            title={`Produits (${category.products.length})`}
-            description="Glisse-dépose pour définir l’ordre d’affichage des produits dans cette catégorie."
-            items={category.products
-              .map((p) => p.product)
-              .slice()
-              .sort((a, b) => {
-                const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
-                if (byOrder !== 0) return byOrder
-                return a.name.localeCompare(b.name, "fr")
-              })
-              .map((p) => ({
-                id: p.id,
-                title: p.name,
-                subtitle: `/${p.slug}`,
-                isVisible: p.isVisible,
-                editHref: `/admin/produits/${p.id}`,
-                viewHref: `/produits/${p.slug}`,
-              }))}
-            saveKind="categoryProducts"
-            scopeId={category.id}
-          />
+            <SortableList
+              title={`Sous-catégories (${category.children.length})`}
+              description="Glisse-dépose pour définir l’ordre d’affichage sous ce parent."
+              items={category.children
+                .slice()
+                .sort((a, b) => {
+                  const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+                  if (byOrder !== 0) return byOrder
+                  return a.name.localeCompare(b.name, "fr")
+                })
+                .map((child) => ({
+                  id: child.id,
+                  title: child.name,
+                  subtitle: `/${child.slug}`,
+                  isVisible: child.isVisible,
+                  editHref: `/admin/categories/${child.id}`,
+                  viewHref: `/categories/${child.slug}`,
+                }))}
+              saveKind="categoryChildren"
+              scopeId={category.id}
+            />
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex justify-end">
+              <input type="hidden" name="categoryId" value={category.id} />
+              <button
+                type="submit"
+                formAction={startProduitFromCategoryAction}
+                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+              >
+                + Ajouter un produit à cette catégorie
+              </button>
+            </div>
+
+            <SortableList
+              title={`Produits (${category.products.length})`}
+              description="Glisse-dépose pour définir l’ordre d’affichage des produits dans cette catégorie."
+              items={category.products
+                .map((p) => p.product)
+                .slice()
+                .sort((a, b) => {
+                  const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+                  if (byOrder !== 0) return byOrder
+                  return a.name.localeCompare(b.name, "fr")
+                })
+                .map((p) => ({
+                  id: p.id,
+                  title: p.name,
+                  subtitle: `/${p.slug}`,
+                  isVisible: p.isVisible,
+                  editHref: `/admin/produits/${p.id}`,
+                  viewHref: `/produits/${p.slug}`,
+                }))}
+              saveKind="categoryProducts"
+              scopeId={category.id}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-2">

@@ -4,31 +4,43 @@ import { prisma } from "@/lib/prisma"
 import { updateProduitAction } from "@/admin/actions/produits"
 import ImageUploadField from "@/admin/components/ImageUploadField"
 import SlugField from "@/admin/components/SlugField"
+import ProductCategoriesSelector from "@/admin/components/ProductCategoriesSelector"
 
 export default async function AdminProduitEditPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id?: string }>
-  searchParams?: Promise<{ saved?: string }>
+  searchParams?: Promise<{ saved?: string; prefillCategoryId?: string }>
 }) {
   const { id } = await params
   if (!id) notFound()
 
   const sp = (await searchParams) ?? {}
   const saved = sp.saved === "1"
+  const prefillCategoryId =
+    typeof sp.prefillCategoryId === "string" ? sp.prefillCategoryId.trim() : ""
 
   const [product, categories] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
       include: { categories: true },
     }),
-    prisma.category.findMany({ orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
+    prisma.category.findMany({
+      select: { id: true, name: true, parentId: true, sortOrder: true },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+    }),
   ])
 
   if (!product) notFound()
 
   const selectedCategoryIds = new Set(product.categories.map((c) => c.categoryId))
+  const initialSelectedIds = Array.from(
+    new Set([
+      ...Array.from(selectedCategoryIds),
+      ...(prefillCategoryId ? [prefillCategoryId] : []),
+    ]),
+  )
 
   return (
     <div>
@@ -155,19 +167,10 @@ export default async function AdminProduitEditPage({
         </div>
 
         <Field label="Catégories">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 rounded-xl border border-gray-200 bg-white p-3">
-            {categories.map((c) => (
-              <label key={c.id} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="categoryIds"
-                  value={c.id}
-                  defaultChecked={selectedCategoryIds.has(c.id)}
-                />
-                <span className="text-gray-900">{c.name}</span>
-              </label>
-            ))}
-          </div>
+          <ProductCategoriesSelector
+            categories={categories}
+            initialSelectedIds={initialSelectedIds}
+          />
           <p className="mt-2 text-xs text-gray-500">
             Un produit peut appartenir à plusieurs catégories.
           </p>

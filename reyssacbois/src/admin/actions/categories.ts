@@ -23,8 +23,7 @@ async function ensureUniqueCategorySlug(slugBase: string, id: string) {
   }
 }
 
-export async function createCategoryAction() {
-  const baseName = "Nouvelle catégorie"
+async function createDraftCategory(baseName: string) {
   // On crée un "draft" caché par défaut pour éviter toute apparition côté public.
   const created = await prisma.category.create({
     data: {
@@ -46,13 +45,34 @@ export async function createCategoryAction() {
     data: { slug },
   })
 
+  return created.id
+}
+
+export async function createCategoryAction() {
+  const id = await createDraftCategory("Nouvelle catégorie")
+
   revalidateTag("categoriesTree", "default")
   revalidateTag("breadcrumbs", "default")
   revalidateTag("sitemap", "default")
   revalidateTag("productCanonical", "default")
 
   revalidatePath("/admin/categories")
-  redirect(`/admin/categories/${created.id}`)
+  redirect(`/admin/categories/${id}`)
+}
+
+export async function startSubCategoryFromCategoryAction(formData: FormData) {
+  const parentId = String(formData.get("createChildParentId") ?? "").trim()
+  if (!parentId) throw new Error("Parent manquant")
+
+  const id = await createDraftCategory("Nouvelle sous-catégorie")
+
+  revalidateTag("categoriesTree", "default")
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/categories")
+  redirect(`/admin/categories/${id}?prefillParentId=${encodeURIComponent(parentId)}`)
 }
 
 export async function updateCategoryAction(formData: FormData) {

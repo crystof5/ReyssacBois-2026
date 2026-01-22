@@ -23,8 +23,7 @@ async function ensureUniqueProductSlug(slugBase: string, id: string) {
   }
 }
 
-export async function createProduitAction() {
-  const baseName = "Nouveau produit"
+async function createDraftProduct(baseName: string) {
   const created = await prisma.product.create({
     data: {
       name: baseName,
@@ -49,12 +48,32 @@ export async function createProduitAction() {
     data: { slug },
   })
 
+  return created.id
+}
+
+export async function createProduitAction() {
+  const id = await createDraftProduct("Nouveau produit")
+
   revalidateTag("breadcrumbs", "default")
   revalidateTag("sitemap", "default")
   revalidateTag("productCanonical", "default")
 
   revalidatePath("/admin/produits")
-  redirect(`/admin/produits/${created.id}`)
+  redirect(`/admin/produits/${id}`)
+}
+
+export async function startProduitFromCategoryAction(formData: FormData) {
+  const categoryId = String(formData.get("categoryId") ?? "").trim()
+  if (!categoryId) throw new Error("Catégorie manquante")
+
+  const id = await createDraftProduct("Nouveau produit")
+
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/produits")
+  redirect(`/admin/produits/${id}?prefillCategoryId=${encodeURIComponent(categoryId)}`)
 }
 
 export async function updateProduitAction(formData: FormData) {
