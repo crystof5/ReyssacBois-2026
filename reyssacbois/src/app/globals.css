@@ -4,16 +4,55 @@
   /* Blanc cassé / beige très clair (plus premium que blanc pur) */
   --background: #f6f1e7;
   --foreground: #171717;
+  /* Police (pilotée par l'admin via l'attribut `data-rb-font` sur <html>) */
+  --rb-font-sans: var(--font-inter);
   /* On force un rendu "light" pour éviter les inversions/contrastes
      désagréables sur mobile quand le système est en mode sombre. */
   color-scheme: light;
 }
 
+html[data-rb-font="inter"] {
+  --rb-font-sans: var(--font-inter);
+}
+html[data-rb-font="roboto"] {
+  --rb-font-sans: var(--font-roboto);
+}
+html[data-rb-font="openSans"] {
+  --rb-font-sans: var(--font-open-sans);
+}
+html[data-rb-font="lato"] {
+  --rb-font-sans: var(--font-lato);
+}
+html[data-rb-font="nunito"] {
+  --rb-font-sans: var(--font-nunito);
+}
+html[data-rb-font="dmSans"] {
+  --rb-font-sans: var(--font-dm-sans);
+}
+html[data-rb-font="sourceSans3"] {
+  --rb-font-sans: var(--font-source-sans-3);
+}
+html[data-rb-font="poppins"] {
+  --rb-font-sans: var(--font-poppins);
+}
+html[data-rb-font="montserrat"] {
+  --rb-font-sans: var(--font-montserrat);
+}
+html[data-rb-font="raleway"] {
+  --rb-font-sans: var(--font-raleway);
+}
+html[data-rb-font="merriweather"] {
+  --rb-font-sans: var(--font-merriweather);
+}
+html[data-rb-font="playfair"] {
+  --rb-font-sans: var(--font-playfair);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--rb-font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* Couleurs gradient (ancien site) */
   --color-gradient-start: #eabf70;

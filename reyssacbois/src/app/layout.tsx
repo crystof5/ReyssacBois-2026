@@ -3,13 +3,41 @@ import Navbar from "@/components/Navbar"
 import ConstructionBanner from "@/components/ConstructionBanner"
 import PromoModal from "@/components/PromoModal"
 import type { Metadata } from "next"
-import { getConstructionBannerSettings, getPromoModalSettings } from "@/admin/queries/siteSettings"
+import { getConstructionBannerSettings, getPromoModalSettings, getSiteFontSettings } from "@/admin/queries/siteSettings"
 import { getMetadataBaseUrl } from "@/lib/seo"
 import Link from "next/link"
 import CookieConsent from "@/components/CookieConsent"
 import CookieSettingsButton from "@/components/CookieSettingsButton"
 import Analytics from "@/components/Analytics"
 import SocialLinks from "@/components/SocialLinks"
+import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
+import {
+  DM_Sans,
+  Inter,
+  Lato,
+  Merriweather,
+  Montserrat,
+  Nunito,
+  Open_Sans,
+  Playfair_Display,
+  Poppins,
+  Raleway,
+  Roboto,
+  Source_Sans_3,
+} from "next/font/google"
+
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter", weight: ["400", "600", "700"] })
+const roboto = Roboto({ subsets: ["latin"], display: "swap", variable: "--font-roboto", weight: ["400", "500", "700"] })
+const openSans = Open_Sans({ subsets: ["latin"], display: "swap", variable: "--font-open-sans", weight: ["400", "600", "700"] })
+const lato = Lato({ subsets: ["latin"], display: "swap", variable: "--font-lato", weight: ["400", "700"] })
+const nunito = Nunito({ subsets: ["latin"], display: "swap", variable: "--font-nunito", weight: ["400", "600", "700"] })
+const dmSans = DM_Sans({ subsets: ["latin"], display: "swap", variable: "--font-dm-sans", weight: ["400", "500", "700"] })
+const sourceSans3 = Source_Sans_3({ subsets: ["latin"], display: "swap", variable: "--font-source-sans-3", weight: ["400", "600", "700"] })
+const poppins = Poppins({ subsets: ["latin"], display: "swap", variable: "--font-poppins", weight: ["400", "500", "600", "700"] })
+const montserrat = Montserrat({ subsets: ["latin"], display: "swap", variable: "--font-montserrat", weight: ["400", "500", "600", "700"] })
+const raleway = Raleway({ subsets: ["latin"], display: "swap", variable: "--font-raleway", weight: ["400", "600", "700"] })
+const merriweather = Merriweather({ subsets: ["latin"], display: "swap", variable: "--font-merriweather", weight: ["400", "700"] })
+const playfair = Playfair_Display({ subsets: ["latin"], display: "swap", variable: "--font-playfair", weight: ["400", "600", "700"] })
 
 // Les réglages (promo/bannière) viennent de la DB et doivent refléter
 // immédiatement les changements admin (sans rebuild). On force donc du SSR.
@@ -45,15 +73,37 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [banner, promo] = await Promise.all([
+  const [banner, promo, siteFont] = await Promise.all([
     getConstructionBannerSettings(),
     getPromoModalSettings(),
+    getSiteFontSettings(),
   ])
 
+  const siteFontKey = isSiteFontKey(siteFont?.key) ? siteFont.key : DEFAULT_SITE_FONT_KEY
+
   return (
-    <html lang="fr">
+    <html
+      lang="fr"
+      data-rb-font={siteFontKey}
+      className={[
+        inter.variable,
+        roboto.variable,
+        openSans.variable,
+        lato.variable,
+        nunito.variable,
+        dmSans.variable,
+        sourceSans3.variable,
+        poppins.variable,
+        montserrat.variable,
+        raleway.variable,
+        merriweather.variable,
+        playfair.variable,
+      ].join(" ")}
+    >
       <body className="min-h-screen antialiased flex flex-col">
-        {banner?.isVisible ? <ConstructionBanner text={banner.text} /> : null}
+        {banner?.isVisible ? (
+          <ConstructionBanner text={banner.text} textHtml={banner.textHtml} />
+        ) : null}
         <Navbar />
         <PromoModal promo={promo} />
         <div className="flex-1">{children}</div>

@@ -77,10 +77,11 @@ export function updateGtagConsent(
   if (!id) return
 
   // Coupe GA de manière defensive si l'utilisateur refuse.
-  ;(window as any)[`ga-disable-${id}`] = value === "denied"
+  const w = window as Window & Record<string, unknown>
+  w[`ga-disable-${id}`] = value === "denied"
 
   // Si gtag est déjà chargé, met à jour le consentement.
-  const gtag = (window as any).gtag as undefined | ((...args: any[]) => void)
+  const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag
   if (typeof gtag === "function") {
     gtag("consent", "update", { analytics_storage: value })
   }

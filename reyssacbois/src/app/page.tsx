@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Media from "@/components/ui/Media"
 import ProjectsCarousel from "@/components/ProjectsCarousel"
+import RichText from "@/components/ui/RichText"
 import {
   getHomeTexts,
   getProjectsCarouselSettings,
@@ -22,14 +23,16 @@ export default async function Home() {
   const heroTitle = homeTexts?.heroTitle?.trim() ? homeTexts.heroTitle.trim() : "Reyssac Bois"
   const heroSubtitle = homeTexts?.heroSubtitle?.trim() ? homeTexts.heroSubtitle.trim() : "Votre expert en bois depuis 1850"
   const familyTitle = homeTexts?.familyTitle?.trim() ? homeTexts.familyTitle.trim() : "Une histoire de famille"
-  const familyP1 =
+  const familyP1Fallback =
     homeTexts?.familyP1?.trim()
       ? homeTexts.familyP1.trim()
       : "Implantée à Boé et Bon-Encontre, proche d'Agen, l'entreprise Reyssac Bois a vu le jour en 1850. Depuis, notre passion et notre expertise du bois se sont transmises de père en fils sur cinq générations."
-  const familyP2 =
+  const familyP2Fallback =
     homeTexts?.familyP2?.trim()
       ? homeTexts.familyP2.trim()
       : "Nos équipes sont prêtes à accueillir aussi bien les professionnels que les particuliers. Avec un stock important à disposition, nous nous efforçons de répondre à chaque demande avec précision."
+  const familyP1Html = (homeTexts?.familyP1Html ?? "").trim()
+  const familyP2Html = (homeTexts?.familyP2Html ?? "").trim()
   const projectsSlides =
     projects?.slides?.length
       ? projects.slides
@@ -86,12 +89,16 @@ export default async function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               {familyTitle}
             </h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {familyP1}
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {familyP2}
-            </p>
+            {familyP1Html ? (
+              <RichText html={familyP1Html} className="text-lg text-gray-600" />
+            ) : (
+              <p className="text-lg text-gray-600 leading-relaxed">{familyP1Fallback}</p>
+            )}
+            {familyP2Html ? (
+              <RichText html={familyP2Html} className="text-lg text-gray-600" />
+            ) : (
+              <p className="text-lg text-gray-600 leading-relaxed">{familyP2Fallback}</p>
+            )}
 
             <div className="flex flex-wrap gap-4 text-sm">
               <Badge>Expertise professionnelle</Badge>

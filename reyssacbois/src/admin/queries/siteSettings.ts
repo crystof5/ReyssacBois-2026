@@ -21,6 +21,7 @@ export const SITE_KEYS = {
   aboutTexts: "about.texts",
   promoModal: "site.promoModal",
   constructionBanner: "site.constructionBanner",
+  siteFont: "site.font",
 } as const
 
 const SITE_SETTINGS_TAG = "siteSettings"
@@ -88,6 +89,7 @@ export async function getProjectsCarouselSettings(): Promise<ProjectsCarouselSet
 export type ConstructionBannerSettings = {
   isVisible: boolean
   text: string
+  textHtml?: string
 }
 
 export async function getConstructionBannerSettings(): Promise<ConstructionBannerSettings | null> {
@@ -97,13 +99,18 @@ export async function getConstructionBannerSettings(): Promise<ConstructionBanne
   const value = setting.value as unknown as Partial<ConstructionBannerSettings>
   const isVisible = Boolean(value.isVisible)
   const text = typeof value.text === "string" ? value.text.trim() : ""
-  return { isVisible, text }
+  const textHtml =
+    typeof (value as { textHtml?: unknown }).textHtml === "string"
+      ? String((value as { textHtml: string }).textHtml).trim()
+      : ""
+  return { isVisible, text, textHtml: textHtml || undefined }
 }
 
 export type PromoModalSettings = {
   isVisible: boolean
   title: string
   text: string
+  textHtml?: string
   image?: SiteImage | null
 }
 
@@ -115,6 +122,9 @@ export async function getPromoModalSettings(): Promise<PromoModalSettings | null
   const isVisible = Boolean(value.isVisible)
   const title = typeof value.title === "string" ? value.title.trim() : ""
   const text = typeof value.text === "string" ? value.text.trim() : ""
+  const textHtml = typeof (value as { textHtml?: unknown }).textHtml === "string"
+    ? String((value as { textHtml: string }).textHtml).trim()
+    : ""
   const imageValue = (value as { image?: unknown }).image
   const image =
     imageValue &&
@@ -131,7 +141,7 @@ export async function getPromoModalSettings(): Promise<PromoModalSettings | null
         }
       : null
 
-  return { isVisible, title, text, image }
+  return { isVisible, title, text, textHtml: textHtml || undefined, image }
 }
 
 export type HomeTexts = {
@@ -140,6 +150,8 @@ export type HomeTexts = {
   familyTitle: string
   familyP1: string
   familyP2: string
+  familyP1Html?: string
+  familyP2Html?: string
 }
 
 export async function getHomeTexts(): Promise<HomeTexts | null> {
@@ -152,6 +164,8 @@ export async function getHomeTexts(): Promise<HomeTexts | null> {
     familyTitle: typeof value.familyTitle === "string" ? value.familyTitle : "",
     familyP1: typeof value.familyP1 === "string" ? value.familyP1 : "",
     familyP2: typeof value.familyP2 === "string" ? value.familyP2 : "",
+    familyP1Html: typeof (value as { familyP1Html?: unknown }).familyP1Html === "string" ? String((value as { familyP1Html: string }).familyP1Html) : undefined,
+    familyP2Html: typeof (value as { familyP2Html?: unknown }).familyP2Html === "string" ? String((value as { familyP2Html: string }).familyP2Html) : undefined,
   }
 }
 
@@ -164,6 +178,10 @@ export type AboutTexts = {
   locationTitle: string
   locationText: string
   conclusionText: string
+  historyTextHtml?: string
+  missionTextHtml?: string
+  locationTextHtml?: string
+  conclusionTextHtml?: string
 }
 
 export async function getAboutTexts(): Promise<AboutTexts | null> {
@@ -179,7 +197,22 @@ export async function getAboutTexts(): Promise<AboutTexts | null> {
     locationTitle: typeof value.locationTitle === "string" ? value.locationTitle : "",
     locationText: typeof value.locationText === "string" ? value.locationText : "",
     conclusionText: typeof value.conclusionText === "string" ? value.conclusionText : "",
+    historyTextHtml: typeof (value as { historyTextHtml?: unknown }).historyTextHtml === "string" ? String((value as { historyTextHtml: string }).historyTextHtml) : undefined,
+    missionTextHtml: typeof (value as { missionTextHtml?: unknown }).missionTextHtml === "string" ? String((value as { missionTextHtml: string }).missionTextHtml) : undefined,
+    locationTextHtml: typeof (value as { locationTextHtml?: unknown }).locationTextHtml === "string" ? String((value as { locationTextHtml: string }).locationTextHtml) : undefined,
+    conclusionTextHtml: typeof (value as { conclusionTextHtml?: unknown }).conclusionTextHtml === "string" ? String((value as { conclusionTextHtml: string }).conclusionTextHtml) : undefined,
   }
+}
+
+export type SiteFontSettings = {
+  key: string
+}
+
+export async function getSiteFontSettings(): Promise<SiteFontSettings | null> {
+  const setting = await getSetting(SITE_KEYS.siteFont)
+  if (!setting) return null
+  const value = setting.value as unknown as Partial<SiteFontSettings>
+  return { key: typeof value.key === "string" ? value.key : "" }
 }
 
 // --- Defaults + backfill (utilisé côté admin uniquement) ---
@@ -207,6 +240,10 @@ export const DEFAULT_ABOUT_TEXTS: AboutTexts = {
     "Notre connaissance du bois transmise de générations en générations nous permet de conseiller, guider et accompagner chaque personne dans ses projets. Notre localisation est une force, aux portes d'Agen et à mi-chemin entre Bordeaux et Toulouse, nous sommes au coeur du Sud-Ouest. Aujourd'hui, nous sommes fiers d'être indépendants et sommes excités pour nos futurs projets, notamment la rénovation de nos bâtiments historiques.",
   conclusionText:
     "173 années d'existence font de l'entreprise familiale le plus vieux commerce d'Agen. Hâte de vous recevoir dans nos locaux !",
+}
+
+export const DEFAULT_SITE_FONT: SiteFontSettings = {
+  key: "inter",
 }
 
 async function ensureSettingValue<T extends object>(key: string, defaultValue: T): Promise<T> {
@@ -239,6 +276,8 @@ export async function ensureHomeTexts(): Promise<HomeTexts> {
     familyTitle: typeof value.familyTitle === "string" ? value.familyTitle : DEFAULT_HOME_TEXTS.familyTitle,
     familyP1: typeof value.familyP1 === "string" ? value.familyP1 : DEFAULT_HOME_TEXTS.familyP1,
     familyP2: typeof value.familyP2 === "string" ? value.familyP2 : DEFAULT_HOME_TEXTS.familyP2,
+    familyP1Html: typeof (value as { familyP1Html?: unknown }).familyP1Html === "string" ? String((value as { familyP1Html: string }).familyP1Html) : undefined,
+    familyP2Html: typeof (value as { familyP2Html?: unknown }).familyP2Html === "string" ? String((value as { familyP2Html: string }).familyP2Html) : undefined,
   }
 }
 
@@ -253,5 +292,14 @@ export async function ensureAboutTexts(): Promise<AboutTexts> {
     locationTitle: typeof value.locationTitle === "string" ? value.locationTitle : DEFAULT_ABOUT_TEXTS.locationTitle,
     locationText: typeof value.locationText === "string" ? value.locationText : DEFAULT_ABOUT_TEXTS.locationText,
     conclusionText: typeof value.conclusionText === "string" ? value.conclusionText : DEFAULT_ABOUT_TEXTS.conclusionText,
+    historyTextHtml: typeof (value as { historyTextHtml?: unknown }).historyTextHtml === "string" ? String((value as { historyTextHtml: string }).historyTextHtml) : undefined,
+    missionTextHtml: typeof (value as { missionTextHtml?: unknown }).missionTextHtml === "string" ? String((value as { missionTextHtml: string }).missionTextHtml) : undefined,
+    locationTextHtml: typeof (value as { locationTextHtml?: unknown }).locationTextHtml === "string" ? String((value as { locationTextHtml: string }).locationTextHtml) : undefined,
+    conclusionTextHtml: typeof (value as { conclusionTextHtml?: unknown }).conclusionTextHtml === "string" ? String((value as { conclusionTextHtml: string }).conclusionTextHtml) : undefined,
   }
+}
+
+export async function ensureSiteFontSettings(): Promise<SiteFontSettings> {
+  const value = await ensureSettingValue<SiteFontSettings>(SITE_KEYS.siteFont, DEFAULT_SITE_FONT)
+  return { key: typeof value.key === "string" ? value.key : DEFAULT_SITE_FONT.key }
 }
