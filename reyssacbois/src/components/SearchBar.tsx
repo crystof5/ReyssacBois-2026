@@ -94,6 +94,7 @@ export default function SearchBar({
   const [cats, setCats] = useState<ApiCategory[]>([])
   const [prods, setProds] = useState<ApiProduct[]>([])
   const [open, setOpen] = useState(false)
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const abortRef = useRef<AbortController | null>(null)
   const cacheRef = useRef<Map<string, { c: ApiCategory[]; p: ApiProduct[] }>>(new Map())
 
@@ -152,6 +153,15 @@ export default function SearchBar({
       })
   }, [debounced, hasQuery, mode])
 
+  // Sur certains environnements prod, le dropdown peut se fermer pendant la frappe.
+  // On force l'ouverture dès qu'il y a une requête valide ET que l'input est focus.
+  useEffect(() => {
+    if (!hasQuery) return
+    const el = inputRef.current
+    if (!el) return
+    if (document.activeElement === el) setOpen(true)
+  }, [hasQuery, loading, error, cats.length, prods.length])
+
   const resultsCount = cats.length + prods.length
   const empty = hasQuery && !loading && !error && resultsCount === 0
 
@@ -193,8 +203,12 @@ export default function SearchBar({
           <MagnifierIcon />
         </span>
         <input
+          ref={inputRef}
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => {
+            setQ(e.target.value)
+            setOpen(true)
+          }}
           onFocus={() => setOpen(true)}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
