@@ -8,7 +8,7 @@ import {
   reorderProductsAction,
   reorderTopCategoriesAction,
 } from "@/admin/actions/order"
-import { detachProductsFromCategoryAction } from "@/admin/actions/categories"
+import { detachCategoryChildrenIfEmptyAction, detachProductsFromCategoryAction } from "@/admin/actions/categories"
 
 export type SortableListItem = {
   id: string
@@ -18,6 +18,12 @@ export type SortableListItem = {
   isVisible?: boolean
   editHref?: string
   viewHref?: string
+  /**
+   * Si false, la case de sélection est désactivée (ex: sous-catégorie non vide).
+   * Si undefined/true, l'item est détachable quand la fonctionnalité est active.
+   */
+  canDetach?: boolean
+  detachDisabledReason?: string
 }
 
 type ActionResult = { ok: true } | { ok: false; message: string }
@@ -58,8 +64,15 @@ export default function SortableList({
   }, [])
 
   const ids = useMemo(() => items.map((i) => i.id), [items])
-  const selectionEnabled = saveKind === "categoryProducts" && !!scopeId
-  const allSelected = selectionEnabled && items.length > 0 && selectedIds.size === items.length
+  const selectionEnabled = (saveKind === "categoryProducts" || saveKind === "categoryChildren") && !!scopeId
+  const selectableIds = useMemo(() => {
+    if (!selectionEnabled) return []
+    if (saveKind === "categoryChildren") {
+      return items.filter((x) => x.canDetach !== false).map((x) => x.id)
+    }
+    return items.map((x) => x.id)
+  }, [items, saveKind, selectionEnabled])
+  const allSelected = selectionEnabled && selectableIds.length > 0 && selectedIds.size === selectableIds.length
   const anySelected = selectionEnabled && selectedIds.size > 0
 
   const move = (from: number, to: number) => {
@@ -73,6 +86,10 @@ export default function SortableList({
   }
 
   const toggleSelected = (id: string, checked: boolean) => {
+    if (selectionEnabled && saveKind === "categoryChildren") {
+      const it = items.find((x) => x.id === id)
+      if (it && it.canDetach === false) return
+    }
     setSelectedIds((prev) => {
       const next = new Set(prev)
       if (checked) next.add(id)
@@ -82,7 +99,7 @@ export default function SortableList({
   }
 
   const toggleSelectAll = (checked: boolean) => {
-    setSelectedIds(() => (checked ? new Set(items.map((x) => x.id)) : new Set()))
+    setSelectedIds(() => (checked ? new Set(selectableIds) : new Set()))
   }
 
   const onDetachSelected = () => {
@@ -90,12 +107,21 @@ export default function SortableList({
     if (selectedIds.size === 0) return
     setState(null)
     startTransition(async () => {
-      const res = await detachProductsFromCategoryAction(scopeId, Array.from(selectedIds))
+      const res =
+        saveKind === "categoryChildren"
+          ? await detachCategoryChildrenIfEmptyAction(scopeId, Array.from(selectedIds))
+          : await detachProductsFromCategoryAction(scopeId, Array.from(selectedIds))
       if (res.ok) {
         const remove = new Set(selectedIds)
         setItems((prev) => prev.filter((x) => !remove.has(x.id)))
         setSelectedIds(new Set())
-        setState({ ok: true, message: "Produits détachés de cette catégorie." })
+        setState({
+          ok: true,
+          message:
+            saveKind === "categoryChildren"
+              ? "Sous-catégories détachées (uniquement les sous-catégories vides)."
+              : "Produits détachés de cette catégorie.",
+        })
       } else {
         setState({ ok: false, message: res.message })
       }
@@ -148,7 +174,11 @@ export default function SortableList({
               onClick={onDetachSelected}
               disabled={isPending || !anySelected}
               className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600/20 disabled:opacity-60"
-              title="Retire le lien produits ↔ catégorie (les produits peuvent devenir orphelins s’ils n’ont plus d’autre catégorie)."
+              title={
+                saveKind === "categoryChildren"
+                  ? "Détache uniquement les sous-catégories vides (0 enfants, 0 produits)."
+                  : "Retire le lien produits ↔ catégorie (les produits peuvent devenir orphelins s’ils n’ont plus d’autre catégorie)."
+              }
             >
               Détacher ({selectedIds.size})
             </button>
@@ -176,16 +206,24 @@ export default function SortableList({
 
       {selectionEnabled ? (
         <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-white/30 bg-white/60 px-3 py-2 text-xs text-gray-700 backdrop-blur">
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={(e) => toggleSelectAll(e.currentTarget.checked)}
-            />
-            Tout sélectionner
-          </label>
+          <div className="flex items-center gap-3">
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={(e) => toggleSelectAll(e.currentTarget.checked)}
+                disabled={selectableIds.length === 0}
+              />
+              Tout sélectionner {saveKind === "categoryChildren" ? "(vides)" : ""}
+            </label>
+            {saveKind === "categoryChildren" ? (
+              <span className="hidden sm:inline text-[11px] text-gray-600">
+                Seules les sous-catégories <span className="font-semibold">vides</span> sont détachables.
+              </span>
+            ) : null}
+          </div>
           <span>
-            Sélection: <span className="font-medium text-gray-900">{selectedIds.size}</span> / {items.length}
+            Sélection: <span className="font-medium text-gray-900">{selectedIds.size}</span> / {selectableIds.length}
           </span>
         </div>
       ) : null}
@@ -236,13 +274,26 @@ export default function SortableList({
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
               {selectionEnabled ? (
+                (() => {
+                  const disabled = saveKind === "categoryChildren" && it.canDetach === false
+                  const title =
+                    saveKind === "categoryChildren"
+                      ? disabled
+                        ? it.detachDisabledReason ?? "Détachable uniquement si la sous-catégorie est vide (0 enfants, 0 produits)."
+                        : "Sélectionner pour détacher"
+                      : "Sélectionner pour détacher"
+                  return (
                 <input
                   type="checkbox"
                   className="mt-1 sm:mt-0"
                   checked={selectedIds.has(it.id)}
                   onChange={(e) => toggleSelected(it.id, e.currentTarget.checked)}
                   aria-label={`Sélectionner ${it.title}`}
+                  disabled={disabled}
+                  title={title}
                 />
+                  )
+                })()
               ) : null}
               <span
                 className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-700 ${
@@ -269,6 +320,11 @@ export default function SortableList({
                 </div>
                 {it.subtitle ? (
                   <p className="mt-0.5 text-xs text-gray-500 truncate">{it.subtitle}</p>
+                ) : null}
+                {it.rightNote ? (
+                  <p className="mt-1 text-[11px] text-gray-600 sm:hidden">
+                    {it.rightNote}
+                  </p>
                 ) : null}
               </div>
 

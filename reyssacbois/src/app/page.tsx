@@ -186,23 +186,6 @@ export default async function Home() {
         </Container>
       </section>
 
-      {/* PROJETS */}
-      <section id="projets" className="py-14 sm:py-20 border-y border-white/10 bg-white/30 backdrop-blur scroll-mt-24">
-        <Container>
-          <div className="flex flex-col items-center text-center">
-            <p className="text-xs font-semibold tracking-wide text-green-800/90">RÉALISATIONS</p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">Nos projets</h2>
-            <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
-              Inspirations, chantiers, aménagements extérieurs, menuiserie… un aperçu du savoir-faire et de la matière.
-            </p>
-          </div>
-
-          <div className="mt-10">
-            <ProjectsCarousel slides={projectsSlides} intervalMs={projectsIntervalMs} />
-          </div>
-        </Container>
-      </section>
-
       {/* PRODUITS */}
       <section id="catalogue" className="py-14 sm:py-20 scroll-mt-24">
         <Container>
@@ -347,6 +330,27 @@ export default async function Home() {
 
             <div className="rounded-3xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm ring-1 ring-black/5">
               <ContactForm />
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* NOS BOIS, VOS PROJETS (exemples / inspirations) */}
+      <section id="projets" className="py-12 sm:py-16 scroll-mt-24">
+        <Container>
+          <div className="rounded-3xl border border-white/15 bg-white/35 backdrop-blur p-6 sm:p-7 shadow-sm ring-1 ring-black/5">
+            <div className="flex flex-col items-center text-center">
+              <p className="text-xs font-semibold tracking-wide text-green-800/90">INSPIRATIONS</p>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+                Nos bois, vos projets
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
+                Quelques exemples de réalisations avec nos bois — pour vous inspirer avant de demander un devis.
+              </p>
+            </div>
+
+            <div className="mt-8">
+              <ProjectsCarousel slides={projectsSlides} intervalMs={projectsIntervalMs} />
             </div>
           </div>
         </Container>

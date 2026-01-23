@@ -1,7 +1,7 @@
 "use client"
 
 import { usePathname } from "next/navigation"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useRef } from "react"
 
 function setHashSilently(id: string) {
   const next = `#${encodeURIComponent(id)}`
@@ -23,10 +23,10 @@ export default function HashSections({
 }) {
   const pathname = usePathname()
   const idsKey = useMemo(() => ids.join("|"), [ids])
+  const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (pathname !== "/") return
-    if (!("IntersectionObserver" in window)) return
 
     const elements = ids
       .map((id) => ({ id, el: document.getElementById(id) }))
@@ -36,34 +36,44 @@ export default function HashSections({
 
     let current: string | null = null
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // On prend la section la plus “dominante” parmi celles visibles
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))
+    const computeActiveId = () => {
+      // Règle "scrollspy" la plus fiable:
+      // section active = la DERNIÈRE section dont le top est passé sous la navbar.
+      const markerY = offsetPx + 2
+      let active = elements[0]?.id ?? null
+      for (const { id, el } of elements) {
+        const top = el.getBoundingClientRect().top
+        if (top <= markerY) active = id
+        else break
+      }
+      return active
+    }
 
-        const top = visible[0]
-        const id = top?.target?.id
-        if (!id) return
+    const tick = () => {
+      rafRef.current = null
+      const id = computeActiveId()
+      if (!id) return
+      if (current !== id) {
+        current = id
+        setHashSilently(id)
+      }
+    }
 
-        if (current !== id) {
-          current = id
-          setHashSilently(id)
-        }
-      },
-      {
-        // On considère qu'une section “active” commence un peu sous la navbar
-        root: null,
-        rootMargin: `-${offsetPx}px 0px -65% 0px`,
-        threshold: [0, 0.05, 0.15, 0.3, 0.5],
-      },
-    )
+    const onScrollOrResize = () => {
+      if (rafRef.current != null) return
+      rafRef.current = window.requestAnimationFrame(tick)
+    }
 
-    for (const { el } of elements) observer.observe(el)
+    // Initial
+    onScrollOrResize()
+    window.addEventListener("scroll", onScrollOrResize, { passive: true })
+    window.addEventListener("resize", onScrollOrResize)
 
     return () => {
-      observer.disconnect()
+      window.removeEventListener("scroll", onScrollOrResize)
+      window.removeEventListener("resize", onScrollOrResize)
+      if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
   }, [pathname, idsKey, offsetPx, ids])
 

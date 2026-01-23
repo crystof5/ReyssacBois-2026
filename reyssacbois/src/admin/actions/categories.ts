@@ -223,4 +223,66 @@ export async function detachProductsFromCategoryAction(
   return { ok: true }
 }
 
+export async function detachCategoryChildrenIfEmptyAction(
+  parentCategoryId: string,
+  childCategoryIds: string[],
+): Promise<ActionResult> {
+  const parentId = String(parentCategoryId ?? "").trim()
+  if (!parentId) return { ok: false, message: "Parent manquant." }
+
+  await requireAdmin(`/admin/categories/${parentId}`)
+
+  const unique = Array.from(new Set((childCategoryIds ?? []).map((x) => String(x).trim()).filter(Boolean)))
+  if (unique.length === 0) return { ok: false, message: "Aucune sous-catégorie sélectionnée." }
+
+  // Vérifie que ce sont bien des enfants du parent + qu'elles sont vides.
+  const children = await prisma.category.findMany({
+    where: { id: { in: unique } },
+    select: {
+      id: true,
+      parentId: true,
+      _count: { select: { children: true, products: true } },
+    },
+  })
+
+  if (children.length !== unique.length) {
+    return { ok: false, message: "Sous-catégories introuvables." }
+  }
+
+  if (children.some((c) => c.parentId !== parentId)) {
+    return { ok: false, message: "La sélection contient des sous-catégories hors de ce parent." }
+  }
+
+  const notEmpty = children.filter((c) => (c._count.children ?? 0) > 0 || (c._count.products ?? 0) > 0)
+  if (notEmpty.length > 0) {
+    return {
+      ok: false,
+      message:
+        "Détachage impossible: certaines sous-catégories ne sont pas vides (elles ont des sous-catégories ou des produits).",
+    }
+  }
+
+  await prisma.$transaction(
+    unique.map((id) =>
+      prisma.category.update({
+        where: { id },
+        data: { parentId: null, sortOrder: 0 },
+      }),
+    ),
+  )
+
+  // Invalidation caches (SEO + navigation)
+  revalidateTag("categoriesTree", "default")
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath(`/admin/categories/${parentId}`)
+  revalidatePath("/admin/categories")
+  revalidatePath("/categories", "layout")
+  revalidatePath("/produits", "layout")
+
+  return { ok: true }
+}
+
 

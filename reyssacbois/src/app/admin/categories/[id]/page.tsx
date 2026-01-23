@@ -28,7 +28,7 @@ export default async function AdminCategoryEditPage({
     prisma.category.findUnique({
       where: { id },
       include: {
-        children: true,
+        children: { include: { _count: { select: { children: true, products: true } } } },
         products: {
           include: { product: true },
         },
@@ -202,7 +202,7 @@ export default async function AdminCategoryEditPage({
 
             <SortableList
               title={`Sous-catégories (${category.children.length})`}
-              description="Glisse-dépose pour définir l’ordre d’affichage sous ce parent."
+              description="Glisse-dépose pour définir l’ordre d’affichage sous ce parent. Détachage possible uniquement pour les sous-catégories vides (0 sous-cat., 0 produits)."
               items={category.children
                 .slice()
                 .sort((a, b) => {
@@ -211,9 +211,14 @@ export default async function AdminCategoryEditPage({
                   return a.name.localeCompare(b.name, "fr")
                 })
                 .map((child) => ({
+                  // Détachage autorisé uniquement si la sous-catégorie est "nue"
+                  // (sinon elle deviendrait orpheline et on perdrait la navigation des produits dessous).
+                  canDetach: child._count.children === 0 && child._count.products === 0,
+                  detachDisabledReason: `Non détachable: ${child._count.children} sous-cat. • ${child._count.products} produits`,
                   id: child.id,
                   title: child.name,
                   subtitle: `/${child.slug}`,
+                  rightNote: `${child._count.children} sous-cat. • ${child._count.products} produits`,
                   isVisible: child.isVisible,
                   editHref: `/admin/categories/${child.id}`,
                   viewHref: `/categories/${child.slug}`,
