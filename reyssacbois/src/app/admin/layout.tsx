@@ -23,7 +23,7 @@ export default async function AdminLayout({
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
       <div className="mx-auto w-full max-w-6xl">
-        <div className="mb-6 rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+        <div className="relative z-50 mb-6 rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Administration</h1>
