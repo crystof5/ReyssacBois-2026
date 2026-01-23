@@ -89,8 +89,6 @@ const buildSitemap = unstable_cache(
     { url: absoluteUrl("/"), changeFrequency: "weekly", priority: 1 },
     { url: absoluteUrl("/produits"), changeFrequency: "weekly", priority: 0.9 },
     { url: absoluteUrl("/categories"), changeFrequency: "weekly", priority: 0.7 },
-    { url: absoluteUrl("/qui-sommes-nous"), changeFrequency: "monthly", priority: 0.5 },
-    { url: absoluteUrl("/contact"), changeFrequency: "yearly", priority: 0.4 },
     { url: absoluteUrl("/mentions-legales"), changeFrequency: "yearly", priority: 0.2 },
     { url: absoluteUrl("/politique-de-confidentialite"), changeFrequency: "yearly", priority: 0.2 },
   ]

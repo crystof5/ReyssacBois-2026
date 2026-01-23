@@ -4,6 +4,13 @@
   /* Blanc cassé / beige très clair (plus premium que blanc pur) */
   --background: #f6f1e7;
   --foreground: #171717;
+
+  /* Photo de fond (optionnelle) — mettez votre image dans /public puis remplacez par ex:
+     --rb-bg-image: url("/img/mon-fond.jpg"); */
+  --rb-bg-image: none;
+  --rb-bg-image-opacity: 0.55;
+  --rb-scroll-offset: 96px;
+
   /* Police (pilotée par l'admin via l'attribut `data-rb-font` sur <html>) */
   --rb-font-sans: var(--font-inter);
   /* On force un rendu "light" pour éviter les inversions/contrastes
@@ -61,54 +68,75 @@ html[data-rb-font="playfair"] {
 
 html {
   background: var(--background);
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--rb-scroll-offset);
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   background-color: var(--background);
   background-image:
-    /* Nuances plus visibles (toujours soft) */
-    radial-gradient(980px circle at 12% 0%, rgba(234, 191, 112, 0.32), transparent 62%),
-    radial-gradient(820px circle at 88% 18%, rgba(135, 93, 17, 0.20), transparent 66%),
-    radial-gradient(900px circle at 42% 105%, rgba(22, 163, 74, 0.10), transparent 64%),
-    /* Profondeur: léger voile + vignette */
-    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
-    radial-gradient(1400px circle at 50% 120%, rgba(0, 0, 0, 0.045), transparent 60%),
-    /* Motif emboss (type flocon/rosette) — statique, répété, effet de relief */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' fill='none'/%3E%3Cg opacity='0.55'%3E%3C!-- ombre (bas/droite) --%3E%3Cg transform='translate(1.2 1.2)' stroke='rgba(0,0,0,0.20)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M110 56V164'/%3E%3Cpath d='M56 110H164'/%3E%3Cpath d='M72 72L148 148'/%3E%3Cpath d='M148 72L72 148'/%3E%3Cpath d='M110 70l10 10M110 70l-10 10M110 150l10-10M110 150l-10-10'/%3E%3Cpath d='M70 110l10 10M70 110l10-10M150 110l-10 10M150 110l-10-10'/%3E%3C/g%3E%3C!-- highlight (haut/gauche) --%3E%3Cg transform='translate(-1.2 -1.2)' stroke='rgba(255,255,255,0.40)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M110 56V164'/%3E%3Cpath d='M56 110H164'/%3E%3Cpath d='M72 72L148 148'/%3E%3Cpath d='M148 72L72 148'/%3E%3Cpath d='M110 70l10 10M110 70l-10 10M110 150l10-10M110 150l-10-10'/%3E%3Cpath d='M70 110l10 10M70 110l10-10M150 110l-10 10M150 110l-10-10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 220px 220px;
-  background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
+    /* 1) Photo optionnelle (peut rester fixe derrière la navbar) */
+    linear-gradient(0deg, rgba(246, 241, 231, var(--rb-bg-image-opacity)), rgba(246, 241, 231, var(--rb-bg-image-opacity))),
+    var(--rb-bg-image),
+    /* 2) Nuances premium */
+    radial-gradient(900px circle at 15% 0%, rgba(234, 191, 112, 0.28), transparent 62%),
+    radial-gradient(820px circle at 90% 18%, rgba(135, 93, 17, 0.18), transparent 66%),
+    radial-gradient(980px circle at 45% 110%, rgba(22, 163, 74, 0.10), transparent 64%),
+    /* 3) Grain léger (noise) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+  background-size: 100% 100%, cover, 160% 160%, 160% 160%, 160% 160%, 140px 140px;
+  background-position: 0 0, 50% 0%, 0% 0%, 100% 10%, 30% 100%, 0 0;
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
-  background-attachment: fixed;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
   background-blend-mode: normal, normal, normal, normal, normal, soft-light;
   color: var(--foreground);
   /* Police moderne (par défaut Next/Geist si dispo), sinon fallback system-ui */
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  animation: rb-bg-drift 28s ease-in-out infinite alternate;
-}
-
-@keyframes rb-bg-drift {
-  from {
-    /* On anime uniquement les 3 grosses "taches" (pas le grain) */
-    background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
-  }
-  to {
-    background-position: 100% 60%, 0% 25%, 70% 100%, 0% 0%, 50% 50%, 0 0;
-  }
 }
 
 /* Mobile: `background-attachment: fixed` est souvent désactivé -> on force scroll + motif un peu plus dense */
 @media (max-width: 768px) {
   body {
-    background-attachment: scroll;
-    background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 180px 180px;
+    /* Sur mobile, l'image de fond peut être trop petite -> pixellisation.
+       On remplace la couche photo par une version dédiée (body::before) floutée. */
+    background-image:
+      /* 1) Voile (sans la photo) */
+      linear-gradient(0deg, rgba(246, 241, 231, var(--rb-bg-image-opacity)), rgba(246, 241, 231, var(--rb-bg-image-opacity))),
+      /* 2) Nuances premium */
+      radial-gradient(900px circle at 15% 0%, rgba(234, 191, 112, 0.28), transparent 62%),
+      radial-gradient(820px circle at 90% 18%, rgba(135, 93, 17, 0.18), transparent 66%),
+      radial-gradient(980px circle at 45% 110%, rgba(22, 163, 74, 0.10), transparent 64%),
+      /* 3) Grain léger (noise) */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+    background-attachment: scroll, scroll, scroll, scroll, scroll;
+    background-size: 100% 100%, 160% 160%, 160% 160%, 160% 160%, 120px 120px;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    /* On dépasse l'écran pour éviter les bords visibles après blur */
+    inset: -24px;
+    z-index: -1;
+    pointer-events: none;
+
+    background-image: var(--rb-bg-image);
+    background-size: cover;
+    background-position: 50% 10%;
+    background-repeat: no-repeat;
+
+    /* Le blur masque la pixellisation, et le scale évite les bords */
+    filter: blur(14px) saturate(1.05);
+    transform: scale(1.08);
+    opacity: 0.9;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none;
-  }
+  html { scroll-behavior: auto; }
 }
 
 /* util: hide horizontal scrollbar (carrousels) */
@@ -118,4 +146,22 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* util: multi-line truncation (ellipsis) */
+.rb-clamp-1,
+.rb-clamp-2,
+.rb-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rb-clamp-1 {
+  -webkit-line-clamp: 1;
+}
+.rb-clamp-2 {
+  -webkit-line-clamp: 2;
+}
+.rb-clamp-3 {
+  -webkit-line-clamp: 3;
 }

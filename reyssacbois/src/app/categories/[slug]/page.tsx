@@ -149,36 +149,41 @@ export default async function CategoryPage({
   return (
     <div>
       {/* ✅ BREADCRUMB ICI */}
-      <Breadcrumb
-        items={[
-          { id: "produits", name: "Produits", href: "/produits" },
-          ...breadcrumb.map((c) => ({
-            id: c.id,
-            name: c.name,
-            href: `/categories/${c.slug}`,
-          })),
-        ]}
-      />
+      <div className="hidden md:block">
+        <Breadcrumb
+          items={[
+            { id: "catalogue", name: "Catalogue", href: "/produits" },
+            ...breadcrumb.map((c) => ({
+              id: c.id,
+              name: c.name,
+              href: `/categories/${c.slug}`,
+            })),
+          ]}
+        />
+      </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            {category.name}
-          </h1>
+      <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-wide text-green-800/90">CATÉGORIE</p>
+            <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+              {category.name}
+            </h1>
 
-          {category.description && (
-            <p className="mt-2 text-gray-600 max-w-3xl">
-              {category.description}
-            </p>
-          )}
+            {category.description ? (
+              <p className="mt-2 text-gray-700 max-w-3xl rb-clamp-3" title={category.description}>
+                {category.description}
+              </p>
+            ) : null}
+          </div>
+
+          <Link
+            href="/#contact"
+            className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+          >
+            Nous contacter
+          </Link>
         </div>
-
-        <Link
-          href="/contact"
-          className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-        >
-          Nous contacter
-        </Link>
       </div>
 
       {/* SOUS-CATÉGORIES CLIQUABLES */}
@@ -190,7 +195,7 @@ export default async function CategoryPage({
             </h2>
           </div>
 
-          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {children.map((child) => (
               <li key={child.id}>
                 <CategoryCard category={child} showDescription />
@@ -204,10 +209,10 @@ export default async function CategoryPage({
       {products.length > 0 && (
         <div className="mt-10">
           <h2 className="text-lg font-semibold text-gray-900">
-            Produits
+            Catalogue
           </h2>
 
-          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {products.map((product) => (
               <li key={product.id}>
                 <ProductCard product={product} />

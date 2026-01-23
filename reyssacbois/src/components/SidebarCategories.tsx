@@ -16,13 +16,24 @@ function isInTree(category: Category, slug: string): boolean {
   return category.children?.some((c) => isInTree(c, slug)) ?? false
 }
 
+function findPathToSlug(nodes: Category[], slug: string): Category[] | null {
+  for (const n of nodes) {
+    if (n.slug === slug) return [n]
+    const children = n.children ?? []
+    if (!children.length) continue
+    const childPath = findPathToSlug(children, slug)
+    if (childPath) return [n, ...childPath]
+  }
+  return null
+}
+
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
       viewBox="0 0 20 20"
       fill="currentColor"
       aria-hidden="true"
-      className={`h-5 w-5 transition-transform duration-150 ${
+      className={`h-4 w-4 transition-transform duration-150 ${
         open ? "rotate-180" : "rotate-0"
       }`}
     >
@@ -61,17 +72,17 @@ function CategoryItem({
   return (
     <li>
       <div
-        className={`group flex items-center gap-2 rounded-xl px-2 py-1.5 ${
+        className={`group flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors ${
           isActive
-            ? "bg-green-50 text-green-900"
-            : "text-gray-900 hover:bg-gray-50"
+            ? "bg-green-700 text-white shadow-sm ring-1 ring-black/10"
+            : "text-gray-900 hover:bg-white/70"
         }`}
         style={{ paddingLeft: level ? `${8 + level * 10}px` : undefined }}
       >
         <Link
           href={`/categories/${category.slug}`}
           className={`min-w-0 flex-1 truncate text-sm font-medium ${
-            isActive ? "text-green-900" : "text-gray-900"
+            isActive ? "text-white" : "text-gray-900"
           }`}
           onClick={() => {
             // Si la catégorie a des enfants, on ouvre aussi au clic sur le nom.
@@ -85,19 +96,23 @@ function CategoryItem({
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border bg-white/70 text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-600/30 ${
-              isActive ? "border-green-200" : "border-gray-200"
+            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-600/30 ${
+              isActive
+                ? "bg-white/15 text-white hover:bg-white/20"
+                : "bg-black/5 text-gray-700 hover:bg-black/10"
             }`}
             aria-label={open ? "Replier la catégorie" : "Déplier la catégorie"}
             aria-expanded={open}
           >
-            <ChevronIcon open={open} />
+            <span className="opacity-90 group-hover:opacity-100">
+              <ChevronIcon open={open} />
+            </span>
           </button>
         )}
       </div>
 
       {open && children.length > 0 && (
-        <ul className="mt-1 space-y-1 border-l border-gray-200/70 pl-3">
+        <ul className="mt-1 space-y-1 pl-3">
           {children.map((child) => (
             <CategoryItem
               key={child.id}
@@ -241,16 +256,29 @@ export default function SidebarCategories({
     return undefined
   }, [pathname])
 
+  const activePath = useMemo(() => {
+    if (!activeSlug) return [] as Category[]
+    return findPathToSlug(categories, activeSlug) ?? []
+  }, [activeSlug, categories])
+
+  const compactPath = useMemo(() => {
+    if (!activePath.length) return [] as Category[]
+    // sur mobile: garder ça compact (dernier 1–2 niveaux)
+    return activePath.slice(-2)
+  }, [activePath])
+
   return (
     <>
-      {/* Mobile: bouton pour ouvrir le drawer */}
-      <div className="md:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white/80 px-4 py-2 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-black/5 backdrop-blur hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-600/30"
-        >
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-green-700 text-white shadow-sm">
+      {/* Mobile: barre sticky (catégories + fil d’Ariane compact) */}
+      <div className="md:hidden sticky top-16 z-30">
+        <div className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/75 px-3 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+            aria-label="Ouvrir les catégories"
+            title="Catégories"
+          >
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
               <path
                 d="M4 7h16M4 12h16M4 17h16"
@@ -259,9 +287,39 @@ export default function SidebarCategories({
                 strokeLinecap="round"
               />
             </svg>
-          </span>
-          Catégories
-        </button>
+          </button>
+
+          <nav aria-label="Fil d’Ariane" className="min-w-0 flex-1">
+            <ol className="flex min-w-0 items-center gap-1 text-xs text-gray-700">
+              <li className="min-w-0">
+                <Link href="/produits" className="font-semibold text-gray-900 hover:underline underline-offset-4">
+                  Catalogue
+                </Link>
+              </li>
+
+              {activePath.length > 2 && (
+                <li className="text-gray-400" aria-hidden>
+                  / …
+                </li>
+              )}
+
+              {compactPath.map((c) => (
+                <li key={`crumb:${c.id}`} className="flex min-w-0 items-center gap-1">
+                  <span className="text-gray-400" aria-hidden>
+                    /
+                  </span>
+                  <Link
+                    href={`/categories/${c.slug}`}
+                    className="rb-clamp-1 max-w-[22ch] font-medium text-gray-700 hover:text-gray-900 hover:underline underline-offset-4"
+                    title={c.name}
+                  >
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
       </div>
 
       {/* Desktop: sidebar */}
@@ -272,7 +330,7 @@ export default function SidebarCategories({
       >
         <div className="md:sticky md:top-24">
           {desktopCollapsed ? (
-            <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="rounded-2xl border border-white/20 bg-white/70 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
               <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
@@ -293,14 +351,14 @@ export default function SidebarCategories({
                 <Link
                   href="/produits"
                   className="text-[11px] font-medium text-gray-600 hover:text-gray-900"
-                  title="Catégories"
+                  title="Catalogue"
                 >
-                  Catégories
+                  Catalogue
                 </Link>
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-gray-200/70 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="rounded-2xl border border-white/20 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur">
               <div className="mb-3 flex items-center justify-between gap-2">
                 <h2 className="text-sm font-semibold tracking-wide text-gray-900">
                   Catégories
@@ -310,16 +368,24 @@ export default function SidebarCategories({
                     href="/produits"
                     className="text-xs font-medium text-gray-600 hover:text-gray-900 underline-offset-4 hover:underline"
                   >
-                    Tout voir
+                    Catalogue
                   </Link>
                   <button
                     type="button"
                     onClick={() => setDesktopCollapsed(true)}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white/80 text-gray-700 shadow-sm hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-gray-900 transition hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-green-600/30"
                     aria-label="Réduire le menu catégories"
                     title="Réduire"
                   >
-                    ‹
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-5 w-5">
+                      <path
+                        d="M14.5 6.5 9 12l5.5 5.5"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>

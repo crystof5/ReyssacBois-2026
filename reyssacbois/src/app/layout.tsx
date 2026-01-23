@@ -3,13 +3,15 @@ import Navbar from "@/components/Navbar"
 import ConstructionBanner from "@/components/ConstructionBanner"
 import PromoModal from "@/components/PromoModal"
 import type { Metadata } from "next"
-import { getConstructionBannerSettings, getPromoModalSettings, getSiteFontSettings } from "@/admin/queries/siteSettings"
+import { getConstructionBannerSettings, getPromoModalSettings, getSiteFontSettings, getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
 import { getMetadataBaseUrl } from "@/lib/seo"
 import Link from "next/link"
 import CookieConsent from "@/components/CookieConsent"
 import CookieSettingsButton from "@/components/CookieSettingsButton"
 import Analytics from "@/components/Analytics"
 import SocialLinks from "@/components/SocialLinks"
+import HashScroll from "@/components/HashScroll"
+import HashSections from "../components/HashSections"
 import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
 import {
   DM_Sans,
@@ -73,10 +75,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [banner, promo, siteFont] = await Promise.all([
+  const [banner, promo, siteFont, heroBg] = await Promise.all([
     getConstructionBannerSettings(),
     getPromoModalSettings(),
     getSiteFontSettings(),
+    getSiteImage(SITE_KEYS.homeHero),
   ])
 
   const siteFontKey = isSiteFontKey(siteFont?.key) ? siteFont.key : DEFAULT_SITE_FONT_KEY
@@ -85,6 +88,14 @@ export default async function RootLayout({
     <html
       lang="fr"
       data-rb-font={siteFontKey}
+      style={
+        heroBg?.src
+          ? ({
+              ["--rb-bg-image" as unknown as string]: `url("${heroBg.src}")`,
+              ["--rb-bg-image-opacity" as unknown as string]: "0.32",
+            } as React.CSSProperties)
+          : undefined
+      }
       className={[
         inter.variable,
         roboto.variable,
@@ -105,6 +116,8 @@ export default async function RootLayout({
           <ConstructionBanner text={banner.text} textHtml={banner.textHtml} />
         ) : null}
         <Navbar />
+        <HashScroll offsetPx={96} />
+        <HashSections ids={["accueil", "projets", "catalogue", "qui-sommes-nous", "contact"]} offsetPx={96} />
         <PromoModal promo={promo} />
         <div className="flex-1">{children}</div>
 
@@ -122,8 +135,6 @@ export default async function RootLayout({
                   <p className="text-sm font-semibold text-gray-900 leading-tight">Reyssac Bois</p>
                   <p className="text-xs text-gray-600 leading-tight">
                     <a className="hover:underline underline-offset-4" href="tel:0553961597">05 53 96 15 97</a>
-                    <span className="mx-2 text-gray-300">•</span>
-                    <a className="hover:underline underline-offset-4" href="mailto:reyssacbois@orange.fr">reyssacbois@orange.fr</a>
                   </p>
                 </div>
               </div>

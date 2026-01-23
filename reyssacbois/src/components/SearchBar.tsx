@@ -80,11 +80,13 @@ export default function SearchBar({
   placeholder,
   className = "",
   onSelectResult,
+  showHint = true,
 }: {
   mode?: "public" | "admin"
   placeholder?: string
   className?: string
   onSelectResult?: () => void
+  showHint?: boolean
 }) {
   const [q, setQ] = useState("")
   const debounced = useDebouncedValue(q, 220)
@@ -209,15 +211,17 @@ export default function SearchBar({
           placeholder={ph}
           aria-label={ph}
         />
-        {loading ? (
-          <span className={mode === "admin" ? "text-gray-500" : "text-white/80"} aria-label="Recherche en cours">
-            <Spinner />
-          </span>
-        ) : (
-          <span className={mode === "admin" ? "text-xs text-gray-500" : "text-xs text-white/80"}>
-            {rightHint}
-          </span>
-        )}
+        {showHint ? (
+          loading ? (
+            <span className={mode === "admin" ? "text-gray-500" : "text-white/80"} aria-label="Recherche en cours">
+              <Spinner />
+            </span>
+          ) : (
+            <span className={mode === "admin" ? "text-xs text-gray-500" : "text-xs text-white/80"}>
+              {rightHint}
+            </span>
+          )
+        ) : null}
       </div>
 
       {open && hasQuery && (

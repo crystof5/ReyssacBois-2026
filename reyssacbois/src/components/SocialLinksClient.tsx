@@ -1,13 +1,11 @@
-import "server-only"
+"use client"
 
 function normalizeUrl(raw: string | undefined): string | null {
   const v = (raw ?? "").trim()
   if (!v) return null
-  // tolérance: si l’utilisateur met juste le host, on force https
   const url = /^https?:\/\//i.test(v) ? v : `https://${v}`
   try {
     const u = new URL(url)
-    // garde-fou: uniquement http/https
     if (u.protocol !== "http:" && u.protocol !== "https:") return null
     return u.toString()
   } catch {
@@ -33,15 +31,22 @@ function InstagramIcon() {
   )
 }
 
-export default function SocialLinks({
+export default function SocialLinksClient({
   className = "",
+  variant = "light",
 }: {
   className?: string
+  variant?: "light" | "dark"
 }) {
   const facebook = normalizeUrl(process.env.NEXT_PUBLIC_FACEBOOK_URL)
   const instagram = normalizeUrl(process.env.NEXT_PUBLIC_INSTAGRAM_URL)
 
   if (!facebook && !instagram) return null
+
+  const base =
+    variant === "dark"
+      ? "border-white/20 bg-white/10 text-white hover:bg-white/15"
+      : "border-gray-200 bg-white/70 text-gray-700 hover:bg-white hover:text-gray-900"
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -50,7 +55,7 @@ export default function SocialLinks({
           href={facebook}
           target="_blank"
           rel="me noopener noreferrer"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white/70 text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white hover:text-gray-900"
+          className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border shadow-sm ring-1 ring-black/5 ${base}`}
           aria-label="Facebook Reyssac Bois"
           title="Facebook"
         >
@@ -62,7 +67,7 @@ export default function SocialLinks({
           href={instagram}
           target="_blank"
           rel="me noopener noreferrer"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white/70 text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white hover:text-gray-900"
+          className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border shadow-sm ring-1 ring-black/5 ${base}`}
           aria-label="Instagram Reyssac Bois"
           title="Instagram"
         >
