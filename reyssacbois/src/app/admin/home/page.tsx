@@ -29,18 +29,18 @@ export default async function AdminHomePage() {
 
   return (
     <div>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Contenu du site
-          </h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Images, textes, promo, et bannière “site en construction”.
-          </p>
+      <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Contenu du site</h2>
+            <p className="mt-1 text-sm text-gray-700">
+              Images, textes, promo, et bannière “site en construction”.
+            </p>
+          </div>
+          <Link href="/admin" className="text-sm text-gray-700 hover:underline">
+            ← Dashboard
+          </Link>
         </div>
-        <Link href="/admin" className="text-sm text-gray-700 hover:underline">
-          ← Dashboard
-        </Link>
       </div>
 
       <AdminSiteContentForm

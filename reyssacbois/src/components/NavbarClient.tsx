@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import SearchBar from "@/components/SearchBar"
-import SocialLinksClient from "@/components/SocialLinksClient"
+import SocialLinksClient from "./SocialLinksClient"
 
 export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
   const [open, setOpen] = useState(false)

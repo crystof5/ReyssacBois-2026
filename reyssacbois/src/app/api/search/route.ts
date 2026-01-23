@@ -22,9 +22,8 @@ type SearchProduct = {
   isVisible: boolean
   section: string | null
   length: string | null
-  species: string | null
+  width: string | null
   type: string | null
-  standard: string | null
   categories: { category: { name: string; slug: string } }[]
 }
 
@@ -63,9 +62,8 @@ function scoreProduct(q: string, p: SearchProduct) {
     scoreText(q, p.description) +
     scoreText(q, p.section) +
     scoreText(q, p.length) +
-    scoreText(q, p.species) +
+    scoreText(q, p.width) +
     scoreText(q, p.type) +
-    scoreText(q, p.standard) +
     scoreText(q, catText)
   )
 }
@@ -124,9 +122,8 @@ export async function GET(req: NextRequest) {
           { description: { contains: q, mode: "insensitive" } },
           { section: { contains: q, mode: "insensitive" } },
           { length: { contains: q, mode: "insensitive" } },
-          { species: { contains: q, mode: "insensitive" } },
+          { width: { contains: q, mode: "insensitive" } },
           { type: { contains: q, mode: "insensitive" } },
-          { standard: { contains: q, mode: "insensitive" } },
           {
             categories: {
               some: {
@@ -149,9 +146,8 @@ export async function GET(req: NextRequest) {
         isVisible: true,
         section: true,
         length: true,
-        species: true,
+        width: true,
         type: true,
-        standard: true,
         categories: { select: { category: { select: { name: true, slug: true } } } },
       },
       take: 25,

@@ -35,9 +35,8 @@ async function createDraftProduct(baseName: string) {
       sortOrder: 0,
       section: null,
       length: null,
-      species: null,
+      width: null,
       type: null,
-      standard: null,
     },
     select: { id: true },
   })
@@ -92,9 +91,8 @@ export async function updateProduitAction(formData: FormData) {
 
   const section = String(formData.get("section") ?? "").trim()
   const length = String(formData.get("length") ?? "").trim()
-  const species = String(formData.get("species") ?? "").trim()
+  const width = String(formData.get("width") ?? "").trim()
   const type = String(formData.get("type") ?? "").trim()
-  const standard = String(formData.get("standard") ?? "").trim()
 
   const categoryIds = Array.from(
     new Set(formData.getAll("categoryIds").map((v) => String(v).trim()).filter(Boolean)),
@@ -124,9 +122,8 @@ export async function updateProduitAction(formData: FormData) {
       sortOrder,
       section: section || null,
       length: length || null,
-      species: species || null,
+      width: width || null,
       type: type || null,
-      standard: standard || null,
       categories: {
         deleteMany: {},
         create: categoryIds.map((categoryId) => ({

@@ -31,7 +31,7 @@ export default function AdminPage() {
           <Link
             key={it.href}
             href={it.href}
-            className="group rounded-xl border border-gray-200 bg-white p-4 hover:border-green-300 hover:shadow-sm transition"
+            className="group rounded-2xl border border-white/20 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur hover:bg-white/80 hover:shadow-[0_14px_60px_-50px_rgba(0,0,0,0.7)] transition"
           >
             <div className="flex items-start justify-between gap-3">
               <h3 className="font-semibold text-gray-900 group-hover:text-green-800">

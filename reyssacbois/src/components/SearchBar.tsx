@@ -20,9 +20,8 @@ type ApiProduct = {
   isVisible: boolean
   section: string | null
   length: string | null
-  species: string | null
+  width: string | null
   type: string | null
-  standard: string | null
   categories: { category: { name: string; slug: string } }[]
 }
 
@@ -283,7 +282,7 @@ export default function SearchBar({
               {prods.map((p) => {
                 const viewHref = `/produits/${p.slug}`
                 const adminHref = `/admin/produits/${p.id}`
-                const meta = [p.section, p.species, p.length, p.type, p.standard].filter(Boolean).join(" • ")
+                const meta = [p.section, p.width, p.length, p.type].filter(Boolean).join(" • ")
                 const catHint = p.categories[0]?.category?.name
                 return (
                   <li key={`p:${p.id}`}>

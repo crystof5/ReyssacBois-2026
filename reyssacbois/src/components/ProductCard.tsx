@@ -8,7 +8,7 @@ type ProductLike = {
   description?: string | null
   imageUrl?: string | null
   section?: string | null
-  species?: string | null
+  width?: string | null
 }
 
 export default function ProductCard({
@@ -18,7 +18,7 @@ export default function ProductCard({
   product: ProductLike
   href?: string
 }) {
-  const meta = [product.section, product.species].filter(Boolean).join(" • ")
+  const meta = [product.section, product.width].filter(Boolean).join(" • ")
 
   return (
     <CardLink href={href} className="self-stretch h-full overflow-hidden bg-white/75 hover:bg-white/85">

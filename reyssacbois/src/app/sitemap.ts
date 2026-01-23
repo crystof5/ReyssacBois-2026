@@ -66,9 +66,8 @@ const buildSitemap = unstable_cache(
         sortOrder: true,
         section: true,
         length: true,
-        species: true,
+        width: true,
         type: true,
-        standard: true,
         categories: { select: { categoryId: true } },
       },
     }),
@@ -117,9 +116,8 @@ const buildSitemap = unstable_cache(
       normalize(p.name),
       normalize(p.section),
       normalize(p.length),
-      normalize(p.species),
+      normalize(p.width),
       normalize(p.type),
-      normalize(p.standard),
     ].join("|")
 
   // Déduplication: on n'inclut qu'un “canonique” par groupe de produits identiques.
