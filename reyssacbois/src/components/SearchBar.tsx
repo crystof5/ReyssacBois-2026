@@ -20,9 +20,8 @@ type ApiProduct = {
   isVisible: boolean
   section: string | null
   length: string | null
-  species: string | null
+  width: string | null
   type: string | null
-  standard: string | null
   categories: { category: { name: string; slug: string } }[]
 }
 
@@ -80,11 +79,13 @@ export default function SearchBar({
   placeholder,
   className = "",
   onSelectResult,
+  showHint = true,
 }: {
   mode?: "public" | "admin"
   placeholder?: string
   className?: string
   onSelectResult?: () => void
+  showHint?: boolean
 }) {
   const [q, setQ] = useState("")
   const debounced = useDebouncedValue(q, 220)
@@ -209,15 +210,17 @@ export default function SearchBar({
           placeholder={ph}
           aria-label={ph}
         />
-        {loading ? (
-          <span className={mode === "admin" ? "text-gray-500" : "text-white/80"} aria-label="Recherche en cours">
-            <Spinner />
-          </span>
-        ) : (
-          <span className={mode === "admin" ? "text-xs text-gray-500" : "text-xs text-white/80"}>
-            {rightHint}
-          </span>
-        )}
+        {showHint ? (
+          loading ? (
+            <span className={mode === "admin" ? "text-gray-500" : "text-white/80"} aria-label="Recherche en cours">
+              <Spinner />
+            </span>
+          ) : (
+            <span className={mode === "admin" ? "text-xs text-gray-500" : "text-xs text-white/80"}>
+              {rightHint}
+            </span>
+          )
+        ) : null}
       </div>
 
       {open && hasQuery && (
@@ -279,7 +282,7 @@ export default function SearchBar({
               {prods.map((p) => {
                 const viewHref = `/produits/${p.slug}`
                 const adminHref = `/admin/produits/${p.id}`
-                const meta = [p.section, p.species, p.length, p.type, p.standard].filter(Boolean).join(" • ")
+                const meta = [p.section, p.width, p.length, p.type].filter(Boolean).join(" • ")
                 const catHint = p.categories[0]?.category?.name
                 return (
                   <li key={`p:${p.id}`}>

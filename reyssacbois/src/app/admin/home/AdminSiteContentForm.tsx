@@ -89,7 +89,7 @@ export default function AdminSiteContentForm({
         </div>
       )}
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Identité visuelle — Police du site</h3>
         <p className="mt-1 text-xs text-gray-500">
           La prévisualisation ci-dessous ne modifie rien côté clients. La police est appliquée au site seulement après
@@ -137,7 +137,7 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Home — Hero (1 photo)</h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ImageUploadField
@@ -179,7 +179,7 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Home — “Une histoire de famille”</h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ImageUploadField
@@ -229,14 +229,14 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Home — Nos Projets (carrousel)</h3>
         <div className="mt-4">
           <ProjectsCarouselEditor initialSpeed={projects.speed} initialSlides={projects.slides} />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Qui sommes-nous — “Notre Histoire”</h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ImageUploadField
@@ -257,7 +257,7 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Qui sommes-nous — Textes</h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
@@ -335,7 +335,7 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Bannière — “Site en construction”</h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
@@ -363,7 +363,7 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6">
+      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Promo / Événement — Modale</h3>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-gray-500">

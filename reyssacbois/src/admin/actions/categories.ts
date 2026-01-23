@@ -111,6 +111,26 @@ export async function updateCategoryAction(formData: FormData) {
     throw new Error("Une catégorie ne peut pas être son propre parent.")
   }
 
+  // Sécurité: empêche les cycles (ex: définir un descendant comme parent).
+  if (parentId) {
+    const links = await prisma.category.findMany({
+      select: { id: true, parentId: true },
+    })
+    const parentById = new Map<string, string | null>(links.map((c) => [c.id, c.parentId]))
+    let cur: string | null = parentId
+    let guard = 0
+    while (cur) {
+      if (cur === id) {
+        throw new Error("Parent invalide: une catégorie ne peut pas avoir l’un de ses descendants comme parent.")
+      }
+      guard += 1
+      if (guard > 50) {
+        throw new Error("Arborescence invalide (cycle détecté).")
+      }
+      cur = parentById.get(cur) ?? null
+    }
+  }
+
   await prisma.category.update({
     where: { id },
     data: {
@@ -135,7 +155,7 @@ export async function updateCategoryAction(formData: FormData) {
   revalidatePath("/categories", "layout")
   revalidatePath("/produits", "layout")
   revalidatePath(`/categories/${slug}`)
-  redirect("/admin/categories")
+  redirect(`/admin/categories/${id}?saved=1`)
 }
 
 export async function deleteCategoryIfOrphanAction(formData: FormData) {

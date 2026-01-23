@@ -3,59 +3,58 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model Category {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
-  slug        String   @unique
+  slug        String  @unique
   description String?
   imageUrl    String?
-  isVisible   Boolean  @default(true)
-  sortOrder   Int      @default(0)
+  isVisible   Boolean @default(true)
+  sortOrder   Int     @default(0)
 
-  parentId   String?
-  parent     Category? @relation("CategoryTree", fields: [parentId], references: [id])
-  children   Category[] @relation("CategoryTree")
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
 
-  products   ProductCategory[]
+  products ProductCategory[]
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
-  slug        String   @unique
+  slug        String  @unique
   description String?
   imageUrl    String?
-  isVisible   Boolean  @default(true)
-  sortOrder   Int      @default(0)
+  isVisible   Boolean @default(true)
+  sortOrder   Int     @default(0)
 
-  categories  ProductCategory[]
+  categories ProductCategory[]
 
-  section     String?
-  length      String?
-  species     String?
-  type        String?
-  standard    String?
+  section String?
+  length  String?
+  width   String?
+  type    String?
 
   specifications Json?
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ProductCategory {
   productId  String
   categoryId String
 
-  product   Product  @relation(fields: [productId], references: [id])
-  category  Category @relation(fields: [categoryId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
 
   @@id([productId, categoryId])
 }
@@ -91,8 +90,8 @@ model ContactMessage {
 }
 
 model AdminUser {
-  id           String   @id @default(uuid())
-  email        String   @unique
+  id           String    @id @default(uuid())
+  email        String    @unique
   passwordHash String
   lastLoginAt  DateTime?
 
@@ -103,8 +102,8 @@ model AdminUser {
 }
 
 model AdminSession {
-  id        String   @id @default(uuid())
-  tokenHash String   @unique
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
   expiresAt DateTime
   revokedAt DateTime?
 

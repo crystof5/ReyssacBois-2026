@@ -130,7 +130,7 @@ export default function SortableList({
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
+    <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
@@ -175,7 +175,7 @@ export default function SortableList({
       ) : null}
 
       {selectionEnabled ? (
-        <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-700">
+        <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-white/30 bg-white/60 px-3 py-2 text-xs text-gray-700 backdrop-blur">
           <label className="inline-flex items-center gap-2">
             <input
               type="checkbox"
@@ -190,7 +190,7 @@ export default function SortableList({
         </div>
       ) : null}
 
-      <ul className="mt-4 divide-y divide-gray-100 rounded-xl border border-gray-100 bg-white shadow-sm">
+      <ul className="mt-4 divide-y divide-black/5 rounded-2xl border border-white/25 bg-white/75 shadow-sm ring-1 ring-black/5 backdrop-blur">
         {items.map((it, idx) => (
           <li
             key={it.id}
@@ -279,34 +279,44 @@ export default function SortableList({
               ) : null}
 
               <div className="flex flex-wrap items-center gap-2 sm:gap-1">
-                <button
-                  type="button"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-50"
-                  onClick={() => move(idx, idx - 1)}
-                  disabled={idx === 0}
-                  aria-label="Monter"
-                  title="Monter"
-                >
-                  ↑
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-50"
-                  onClick={() => move(idx, idx + 1)}
-                  disabled={idx === items.length - 1}
-                  aria-label="Descendre"
-                  title="Descendre"
-                >
-                  ↓
-                </button>
+                {isCoarsePointer ? (
+                  <>
+                    <button
+                      type="button"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-50"
+                      onClick={() => move(idx, idx - 1)}
+                      disabled={idx === 0}
+                      aria-label="Monter"
+                      title="Monter"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-50"
+                      onClick={() => move(idx, idx + 1)}
+                      disabled={idx === items.length - 1}
+                      aria-label="Descendre"
+                      title="Descendre"
+                    >
+                      ↓
+                    </button>
+                  </>
+                ) : null}
 
                 {it.editHref ? (
-                  <Link className="ml-1 text-xs font-medium text-gray-900 hover:underline" href={it.editHref}>
+                  <Link
+                    className="ml-0.5 inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                    href={it.editHref}
+                  >
                     Éditer
                   </Link>
                 ) : null}
                 {it.viewHref ? (
-                  <Link className="ml-2 hidden sm:inline text-xs text-green-700 hover:underline" href={it.viewHref}>
+                  <Link
+                    className="hidden sm:inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                    href={it.viewHref}
+                  >
                     Voir →
                   </Link>
                 ) : null}

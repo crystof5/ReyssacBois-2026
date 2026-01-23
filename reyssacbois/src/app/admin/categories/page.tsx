@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Fragment } from "react"
 import { getAdminCategories } from "@/admin/queries/categories"
 import { getDbDiagnostics } from "@/admin/queries/diagnostics"
 import SortableList from "@/admin/components/SortableList"
@@ -34,33 +35,63 @@ export default async function AdminCategoriesPage({
     return true
   })
 
+  const sortFr = (a: (typeof categories)[number], b: (typeof categories)[number]) => {
+    const byOrder = (a.sortOrder ?? 0) - (b.sortOrder ?? 0)
+    if (byOrder !== 0) return byOrder
+    return a.name.localeCompare(b.name, "fr")
+  }
+
+  const childrenByParentId = new Map<string, (typeof categories)[number][]>()
+  for (const c of categories) {
+    if (!c.parentId) continue
+    const arr = childrenByParentId.get(c.parentId) ?? []
+    arr.push(c)
+    childrenByParentId.set(c.parentId, arr)
+  }
+  for (const [, arr] of childrenByParentId) arr.sort(sortFr)
+
   return (
     <div>
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
-          <p className="mt-1 text-sm text-gray-600">
-            L’ordre des <span className="font-medium">catégories parent</span> correspond à la sidebar.
-          </p>
-        </div>
+      <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
+            <p className="mt-1 text-sm text-gray-700">
+              L’ordre des <span className="font-medium">catégories parent</span> correspond à la sidebar.
+            </p>
 
-        <div className="flex flex-col items-start gap-2 sm:items-end">
-          <Link href="/admin" className="text-sm text-gray-700 hover:underline">
-            ← Administration
-          </Link>
-          <form action={createCategoryAction}>
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-            >
-              + Nouvelle catégorie
-            </button>
-          </form>
+            <nav aria-label="Fil d’Ariane admin" className="mt-3">
+              <ol className="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-white/20 bg-white/65 px-3 py-2 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
+                <li className="min-w-0">
+                  <Link href="/admin" className="font-medium text-gray-900 hover:underline underline-offset-4">
+                    Administration
+                  </Link>
+                </li>
+                <li className="flex min-w-0 items-center gap-1">
+                  <span className="text-gray-400" aria-hidden>
+                    /
+                  </span>
+                  <span className="font-semibold text-gray-900">Catégories</span>
+                </li>
+              </ol>
+            </nav>
+          </div>
+
+          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+            <form action={createCategoryAction}>
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center rounded-full bg-green-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+              >
+                + Nouvelle catégorie
+              </button>
+            </form>
+          </div>
         </div>
       </div>
 
       <div className="mt-6 space-y-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
+        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h3 className="text-sm font-semibold text-gray-900">Recherche / visibilité</h3>
@@ -101,7 +132,7 @@ export default async function AdminCategoriesPage({
                 </p>
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {filtered.slice(0, 60).map((c) => (
-                    <div key={c.id} className="rounded-xl border border-gray-200 bg-white p-3">
+                    <div key={c.id} className="rounded-2xl border border-white/25 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
@@ -125,13 +156,13 @@ export default async function AdminCategoriesPage({
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <Link
                           href={`/admin/categories/${c.id}`}
-                          className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-50"
+                          className="inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
                         >
                           Éditer
                         </Link>
                         <Link
                           href={`/categories/${c.slug}`}
-                          className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-800"
+                          className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
                         >
                           Voir →
                         </Link>
@@ -164,7 +195,7 @@ export default async function AdminCategoriesPage({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
+        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h3 className="text-sm font-semibold text-gray-900">
@@ -182,7 +213,7 @@ export default async function AdminCategoriesPage({
           {orphans.length ? (
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {orphans.slice(0, 60).map((c) => (
-                <div key={c.id} className="rounded-xl border border-gray-200 bg-white p-3">
+                <div key={c.id} className="rounded-2xl border border-white/25 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
@@ -203,7 +234,7 @@ export default async function AdminCategoriesPage({
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <Link
                       href={`/admin/categories/${c.id}`}
-                      className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-50"
+                      className="inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
                     >
                       Éditer
                     </Link>
@@ -226,7 +257,7 @@ export default async function AdminCategoriesPage({
         </div>
 
         {brokenParents.length ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50/40 p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
+          <div className="rounded-3xl border border-amber-200 bg-amber-50/40 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.45)] ring-1 ring-black/10 backdrop-blur-xl">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">
@@ -243,7 +274,7 @@ export default async function AdminCategoriesPage({
 
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {brokenParents.slice(0, 30).map((c) => (
-                <div key={c.id} className="rounded-xl border border-amber-200 bg-white p-3">
+                <div key={c.id} className="rounded-2xl border border-amber-200 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
                   <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
                   <p className="mt-0.5 text-xs text-gray-600 break-all">/{c.slug}</p>
                   <p className="mt-1 text-xs text-gray-700">
@@ -279,20 +310,12 @@ export default async function AdminCategoriesPage({
           </div>
         ) : null}
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
-          <h3 className="text-sm font-semibold text-gray-900">Diagnostic DB</h3>
+        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+          <h3 className="text-sm font-semibold text-gray-900">État</h3>
           <p className="mt-1 text-xs text-gray-500">
-            Permet de vérifier que l’admin lit bien la même base que Neon Studio.
+            Résumé des contenus (catégories / produits).
           </p>
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
-            <div className="rounded-xl bg-gray-50 p-3">
-              <div className="text-xs text-gray-500">Database</div>
-              <div className="font-mono text-xs text-gray-900 break-all">{diag.database ?? "—"}</div>
-            </div>
-            <div className="rounded-xl bg-gray-50 p-3">
-              <div className="text-xs text-gray-500">Schema</div>
-              <div className="font-mono text-xs text-gray-900">{diag.schema ?? "—"}</div>
-            </div>
+          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
             <div className="rounded-xl bg-gray-50 p-3">
               <div className="text-xs text-gray-500">Catégories</div>
               <div className="font-semibold text-gray-900">
@@ -324,107 +347,81 @@ export default async function AdminCategoriesPage({
           saveKind="topCategories"
         />
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm ring-1 ring-black/5">
-          <h3 className="text-sm font-semibold text-gray-900">
-            Sous-catégories (enfants)
-          </h3>
+        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+          <h3 className="text-sm font-semibold text-gray-900">Arborescence (tous niveaux)</h3>
           <p className="mt-1 text-xs text-gray-500">
-            L’ordre des sous-catégories se règle dans la page du parent (glisser-déposer).
+            Indentation = niveau. Pour réordonner des sous-catégories, ouvre le parent puis glisse-dépose.
           </p>
 
-          {/* Mobile: vue "cartes" (plus lisible que le tableau) */}
-          <div className="mt-4 space-y-3 sm:hidden">
-            {children.map((c) => (
-              <div
-                key={c.id}
-                className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">
-                      {c.name}
-                    </p>
-                    <p className="mt-0.5 text-xs text-gray-500 break-all">
-                      /{c.slug}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-600">
-                      Parent: <span className="font-medium">{c.parent?.name ?? "—"}</span>
-                      {" · "}
-                      Ordre: <span className="font-mono">{c.sortOrder}</span>
-                    </p>
-                  </div>
+          <div className="mt-4 rounded-2xl border border-white/25 bg-white/75 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <ul className="divide-y divide-black/5">
+              {parents.map((root) => {
+                const render = (
+                  node: (typeof categories)[number],
+                  level: number,
+                  path: string[],
+                ) => {
+                  const nextPath = [...path, node.name]
+                  const kids = childrenByParentId.get(node.id) ?? []
+                  const blocks: any[] = []
 
-                  <span
-                    className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                      c.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {c.isVisible ? "Visible" : "Cachée"}
-                  </span>
-                </div>
+                  blocks.push(
+                    <li
+                      key={node.id}
+                      className="px-3 py-2.5"
+                      style={{ paddingLeft: 12 + level * 28 }}
+                    >
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-medium text-gray-900 truncate">{node.name}</p>
+                            <span
+                              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${
+                                node.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {node.isVisible ? "Visible" : "Cachée"}
+                            </span>
+                            <span className="text-xs text-gray-600">
+                              {node._count.children} sous-cat. • {node._count.products} produits
+                            </span>
+                          </div>
+                          <p className="mt-0.5 text-xs text-gray-500 break-all">/{node.slug}</p>
+                          {level > 0 ? (
+                            <p className="mt-1 text-[11px] text-gray-600 rb-clamp-1" title={nextPath.join(" / ")}>
+                              Chemin: {nextPath.join(" / ")}
+                            </p>
+                          ) : null}
+                        </div>
 
-                <div className="mt-3 flex items-center gap-3 text-sm">
-                  <Link
-                    href={`/admin/categories/${c.id}`}
-                    className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-50"
-                  >
-                    Éditer
-                  </Link>
-                  <Link
-                    href={`/categories/${c.slug}`}
-                    className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-800"
-                  >
-                    Voir →
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            href={`/admin/categories/${node.id}`}
+                            className="inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                          >
+                            Éditer
+                          </Link>
+                          <Link
+                            href={`/categories/${node.slug}`}
+                            className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                          >
+                            Voir →
+                          </Link>
+                        </div>
+                      </div>
+                    </li>
+                  )
 
-          {/* Desktop: tableau */}
-          <div className="mt-4 hidden sm:block overflow-x-auto">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="border-b text-left text-gray-500">
-                  <th className="py-3 pr-4 font-medium">Parent</th>
-                  <th className="py-3 pr-4 font-medium">Ordre</th>
-                  <th className="py-3 pr-4 font-medium">Visible</th>
-                  <th className="py-3 pr-4 font-medium">Nom</th>
-                  <th className="py-3 pr-4 font-medium">Slug</th>
-                  <th className="py-3 pr-4 font-medium">Admin</th>
-                  <th className="py-3 pr-4 font-medium">Lien</th>
-                </tr>
-              </thead>
-              <tbody>
-                {children.map((c) => (
-                  <tr key={c.id} className="border-b last:border-0">
-                    <td className="py-3 pr-4 text-gray-700">{c.parent?.name ?? "—"}</td>
-                    <td className="py-3 pr-4 font-mono text-xs text-gray-700">{c.sortOrder}</td>
-                    <td className="py-3 pr-4">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                          c.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {c.isVisible ? "Oui" : "Non"}
-                      </span>
-                    </td>
-                    <td className="py-3 pr-4 font-medium text-gray-900">{c.name}</td>
-                    <td className="py-3 pr-4 font-mono text-xs text-gray-700">{c.slug}</td>
-                    <td className="py-3 pr-4">
-                      <Link href={`/admin/categories/${c.id}`} className="text-gray-900 hover:underline">
-                        Éditer
-                      </Link>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <Link href={`/categories/${c.slug}`} className="text-green-700 hover:underline">
-                        Voir →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  for (const k of kids) {
+                    blocks.push(...render(k, level + 1, nextPath))
+                  }
+
+                  return blocks
+                }
+
+                return <Fragment key={root.id}>{render(root, 0, [])}</Fragment>
+              })}
+            </ul>
           </div>
         </div>
       </div>

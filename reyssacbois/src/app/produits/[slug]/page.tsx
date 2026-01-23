@@ -17,9 +17,8 @@ function productSeoKey(p: {
   name: string
   section?: string | null
   length?: string | null
-  species?: string | null
+  width?: string | null
   type?: string | null
-  standard?: string | null
 }) {
   // Clé “dédup” : si deux produits ont la même clé, on les considère identiques côté SEO.
   // (Assez stricte pour éviter de fusionner des produits réellement différents.)
@@ -27,9 +26,8 @@ function productSeoKey(p: {
     normalizeSeoKeyPart(p.name),
     normalizeSeoKeyPart(p.section),
     normalizeSeoKeyPart(p.length),
-    normalizeSeoKeyPart(p.species),
+    normalizeSeoKeyPart(p.width),
     normalizeSeoKeyPart(p.type),
-    normalizeSeoKeyPart(p.standard),
   ].join("|")
 }
 
@@ -39,9 +37,8 @@ const getCanonicalProductSlugCached = unstable_cache(
   name: string
   section?: string | null
   length?: string | null
-  species?: string | null
+  width?: string | null
   type?: string | null
-  standard?: string | null
 }) => {
   // Catégories "effectivement visibles" (visibilité + chaîne d'ancêtres)
   // via le cache serveur `categoriesTree`.
@@ -66,9 +63,8 @@ const getCanonicalProductSlugCached = unstable_cache(
       name: { equals: current.name, mode: "insensitive" },
       section: { equals: current.section ?? null },
       length: { equals: current.length ?? null },
-      species: { equals: current.species ?? null },
+      width: { equals: current.width ?? null },
       type: { equals: current.type ?? null },
-      standard: { equals: current.standard ?? null },
     },
     select: {
       slug: true,
@@ -136,9 +132,8 @@ export async function generateMetadata({
     name: product.name,
     section: product.section,
     length: product.length,
-    species: product.species,
+    width: product.width,
     type: product.type,
-    standard: product.standard,
   })
 
   const description = buildDescription(
@@ -187,21 +182,23 @@ export default async function ProduitPage({
 
   return (
     <div>
-      <Breadcrumb
-        items={[
-          { id: "produits", name: "Produits", href: "/produits" },
-          ...categories.map((c) => ({
-            id: c.id,
-            name: c.name,
-            href: `/categories/${c.slug}`,
-          })),
-          {
-            id: product.id,
-            name: product.name,
-            href: `/produits/${product.slug}`,
-          },
-        ]}
-      />
+      <div className="hidden md:block">
+        <Breadcrumb
+          items={[
+            { id: "catalogue", name: "Catalogue", href: "/produits" },
+            ...categories.map((c) => ({
+              id: c.id,
+              name: c.name,
+              href: `/categories/${c.slug}`,
+            })),
+            {
+              id: product.id,
+              name: product.name,
+              href: `/produits/${product.slug}`,
+            },
+          ]}
+        />
+      </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
@@ -221,9 +218,14 @@ export default async function ProduitPage({
           </h1>
 
           {product.description && (
-            <p className="mt-3 text-gray-600">
-              {product.description}
-            </p>
+            <div className="mt-4 rounded-2xl border border-gray-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur">
+              <h2 className="text-base font-semibold text-gray-900">
+                Description
+              </h2>
+              <p className="mt-3 text-gray-700 leading-relaxed">
+                {product.description}
+              </p>
+            </div>
           )}
 
           <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ring-1 ring-black/5">
@@ -244,22 +246,16 @@ export default async function ProduitPage({
                   <dd className="font-medium text-gray-900">{product.length}</dd>
                 </div>
               )}
-              {product.species && (
+              {product.width && (
                 <div>
-                  <dt className="text-gray-500">Essence</dt>
-                  <dd className="font-medium text-gray-900">{product.species}</dd>
+                  <dt className="text-gray-500">Largeur</dt>
+                  <dd className="font-medium text-gray-900">{product.width}</dd>
                 </div>
               )}
               {product.type && (
                 <div>
                   <dt className="text-gray-500">Type</dt>
                   <dd className="font-medium text-gray-900">{product.type}</dd>
-                </div>
-              )}
-              {product.standard && (
-                <div>
-                  <dt className="text-gray-500">Norme</dt>
-                  <dd className="font-medium text-gray-900">{product.standard}</dd>
                 </div>
               )}
             </dl>
@@ -271,15 +267,6 @@ export default async function ProduitPage({
               >
                 Demander un devis
               </Link>
-
-              {categories[0]?.slug && (
-                <Link
-                  href={`/categories/${categories[0].slug}`}
-                  className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20"
-                >
-                  Voir la catégorie
-                </Link>
-              )}
             </div>
           </div>
         </div>
