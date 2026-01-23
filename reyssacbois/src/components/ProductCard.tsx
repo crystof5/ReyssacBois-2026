@@ -21,14 +21,24 @@ export default function ProductCard({
 }) {
   return (
     <CardLink href={href} className="overflow-hidden">
-      <div className="relative aspect-[16/10] w-full overflow-hidden">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50 p-4 sm:p-5">
         <Media
           src={product.imageUrl}
           alt={product.name}
-          className="h-full w-full transition-transform duration-500 ease-out will-change-transform group-hover:scale-[1.04]"
+          // Packshots: on évite le crop -> on “recule” l’image.
+          className="h-full w-full !object-contain"
+        />
+        {/* Reflet / texture légère pour donner du relief */}
+        <div
+          className="pointer-events-none absolute inset-0
+          bg-[radial-gradient(800px_circle_at_20%_0%,rgba(255,255,255,0.75),transparent_55%)]
+          opacity-60"
+          aria-hidden
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-transparent opacity-70 transition-opacity duration-200 group-hover:opacity-90"
+          className="pointer-events-none absolute inset-0
+          bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_40%,rgba(0,0,0,0.04))]
+          opacity-100"
           aria-hidden
         />
       </div>

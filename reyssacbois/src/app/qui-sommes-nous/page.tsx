@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Breadcrumb from "@/components/Breadcrumb"
 import Container from "@/components/ui/Container"
 import Media from "@/components/ui/Media"
+import RichText from "@/components/ui/RichText"
 import { getAboutTexts, getSiteImage, SITE_KEYS } from "@/admin/queries/siteSettings"
 
 export const metadata: Metadata = {
@@ -28,11 +29,13 @@ export default async function QuiSommesNousPage() {
 
   const pageTitle = aboutTexts?.pageTitle?.trim() ? aboutTexts.pageTitle.trim() : "Qui sommes-nous ?"
   const historyTitle = aboutTexts?.historyTitle?.trim() ? aboutTexts.historyTitle.trim() : "Notre Histoire"
+  const historyTextHtml = (aboutTexts?.historyTextHtml ?? "").trim()
   const historyText =
     aboutTexts?.historyText?.trim()
       ? aboutTexts.historyText.trim()
       : "L'histoire débute il y a plus de 170 ans. Jean Reyssac, l'arrière-arrière grand-père de Benoît, l'actuel gérant, crée la société Reyssac Bois en 1850. Maraicher à l'époque, il commercialise désormais les bois du Nord et de Pays. La propriété étendue jusqu'au canal, permettait la livraison des bois par péniche en provenance de Bordeaux."
   const missionTitle = aboutTexts?.missionTitle?.trim() ? aboutTexts.missionTitle.trim() : "Notre Mission"
+  const missionTextHtml = (aboutTexts?.missionTextHtml ?? "").trim()
   const missionText =
     aboutTexts?.missionText?.trim()
       ? aboutTexts.missionText.trim()
@@ -41,17 +44,19 @@ export default async function QuiSommesNousPage() {
     aboutTexts?.locationTitle?.trim()
       ? aboutTexts.locationTitle.trim()
       : "Notre Localisation & Projets Futurs"
+  const locationTextHtml = (aboutTexts?.locationTextHtml ?? "").trim()
   const locationText =
     aboutTexts?.locationText?.trim()
       ? aboutTexts.locationText.trim()
       : "Notre connaissance du bois transmise de générations en générations nous permet de conseiller, guider et accompagner chaque personne dans ses projets. Notre localisation est une force, aux portes d'Agen et à mi-chemin entre Bordeaux et Toulouse, nous sommes au coeur du Sud-Ouest. Aujourd'hui, nous sommes fiers d'être indépendants et sommes excités pour nos futurs projets, notamment la rénovation de nos bâtiments historiques."
+  const conclusionTextHtml = (aboutTexts?.conclusionTextHtml ?? "").trim()
   const conclusionText =
     aboutTexts?.conclusionText?.trim()
       ? aboutTexts.conclusionText.trim()
       : "173 années d'existence font de l'entreprise familiale le plus vieux commerce d'Agen. Hâte de vous recevoir dans nos locaux !"
 
   return (
-    <div className="bg-gradient-to-b from-amber-50 to-white">
+    <div className="bg-gradient-to-b from-amber-50/60 to-white/20">
       <Container className="py-10 sm:py-14 space-y-10">
         <Breadcrumb
           items={[
@@ -72,17 +77,23 @@ export default async function QuiSommesNousPage() {
         </div>
 
         {/* Historique */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
           <div className="flex flex-col justify-center">
             <h2 className="text-2xl font-bold text-gray-900">
               {historyTitle}
             </h2>
-            <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
-              {historyText}
-            </p>
+            {historyTextHtml ? (
+              <div className="mt-4">
+                <RichText html={historyTextHtml} className="text-gray-600 text-base sm:text-lg" />
+              </div>
+            ) : (
+              <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
+                {historyText}
+              </p>
+            )}
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 backdrop-blur">
             <div className="aspect-[4/3] w-full">
               <Media
                 src={aboutHistory.src}
@@ -94,16 +105,22 @@ export default async function QuiSommesNousPage() {
         </section>
 
         {/* Mission */}
-        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
           <h2 className="text-2xl font-bold text-gray-900">{missionTitle}</h2>
-          <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
-            {missionText}
-          </p>
+          {missionTextHtml ? (
+            <div className="mt-4">
+              <RichText html={missionTextHtml} className="text-gray-600 text-base sm:text-lg" />
+            </div>
+          ) : (
+            <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
+              {missionText}
+            </p>
+          )}
         </section>
 
         {/* Localisation et projets */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
+          <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 backdrop-blur">
             <div className="relative w-full pt-[56.25%]">
               <iframe
                 title="Carte - Reyssac Bois"
@@ -121,17 +138,27 @@ export default async function QuiSommesNousPage() {
             <h2 className="text-2xl font-bold text-gray-900">
               {locationTitle}
             </h2>
-            <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
-              {locationText}
-            </p>
+            {locationTextHtml ? (
+              <div className="mt-4">
+                <RichText html={locationTextHtml} className="text-gray-600 text-base sm:text-lg" />
+              </div>
+            ) : (
+              <p className="mt-4 text-gray-600 text-base sm:text-lg leading-relaxed">
+                {locationText}
+              </p>
+            )}
           </div>
         </section>
 
         {/* Conclusion */}
-        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition">
-          <p className="text-gray-700 text-base sm:text-lg text-center">
-            {conclusionText}
-          </p>
+        <section className="max-w-5xl mx-auto rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm hover:shadow-md transition">
+          {conclusionTextHtml ? (
+            <RichText html={conclusionTextHtml} className="text-gray-700 text-base sm:text-lg text-center" />
+          ) : (
+            <p className="text-gray-700 text-base sm:text-lg text-center">
+              {conclusionText}
+            </p>
+          )}
         </section>
       </Container>
     </div>

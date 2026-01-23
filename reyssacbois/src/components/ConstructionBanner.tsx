@@ -1,12 +1,20 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import RichText from "@/components/ui/RichText"
 
-export default function ConstructionBanner({ text }: { text: string }) {
+export default function ConstructionBanner({
+  text,
+  textHtml,
+}: {
+  text: string
+  textHtml?: string
+}) {
   const t = text.trim()
+  const html = (textHtml ?? "").trim()
   const storageKey = useMemo(
-    () => `constructionBannerDismissed::${t.slice(0, 160)}`,
-    [t]
+    () => `constructionBannerDismissed::${(html || t).slice(0, 160)}`,
+    [html, t]
   )
 
   const [open, setOpen] = useState(true)
@@ -23,7 +31,7 @@ export default function ConstructionBanner({ text }: { text: string }) {
     }
   }, [storageKey, t])
 
-  if (!t || !open) return null
+  if ((!t && !html) || !open) return null
 
   return (
     <div className="border-b border-amber-200/70 bg-gradient-to-r from-amber-50/90 via-white/70 to-amber-50/90 backdrop-blur">
@@ -38,9 +46,11 @@ export default function ConstructionBanner({ text }: { text: string }) {
                 <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-900 ring-1 ring-amber-500/20">
                   Site en construction
                 </span>
-                <p className="text-sm text-gray-700">
-                  {t}
-                </p>
+                {html ? (
+                  <RichText html={html} className="text-sm text-gray-700" />
+                ) : (
+                  <p className="text-sm text-gray-700">{t}</p>
+                )}
               </div>
             </div>
           </div>

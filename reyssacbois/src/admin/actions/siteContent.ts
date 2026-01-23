@@ -3,6 +3,9 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { SITE_KEYS } from "@/admin/queries/siteSettings"
+import sanitizeHtml from "sanitize-html"
+import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
+import { requireAdmin } from "@/lib/adminAuth"
 
 function parseInterval(value: string) {
   if (value === "slow") return 8000
@@ -24,12 +27,62 @@ function parseVisibleFlag(value: FormDataEntryValue | null | undefined) {
   return v === "1" || v === "true" || v === "on" || v === "yes"
 }
 
+function sanitizeRichTextHtml(input: string) {
+  const clean = sanitizeHtml(input, {
+    allowedTags: ["p", "br", "strong", "em", "u", "span", "a", "ul", "ol", "li"],
+    allowedAttributes: {
+      a: ["href", "target", "rel"],
+      span: ["style"],
+    },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    allowProtocolRelative: false,
+    allowedStyles: {
+      span: {
+        color: [/^#[0-9a-fA-F]{3,8}$/, /^rgb\((\s*\d+\s*,){2}\s*\d+\s*\)$/],
+      },
+    },
+    transformTags: {
+      a: (tagName, attribs) => {
+        const href = String(attribs.href ?? "").trim()
+        const isInternal = href.startsWith("/")
+        const safeHref =
+          href.startsWith("/") || /^https?:\/\//i.test(href) || href.startsWith("mailto:") || href.startsWith("tel:")
+            ? href
+            : ""
+        return {
+          tagName,
+          attribs: {
+            href: safeHref,
+            ...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" }),
+          },
+        }
+      },
+    },
+  })
+  return clean.trim()
+}
+
+function richHtmlToPlainText(html: string) {
+  const withNewlines = html
+    .replace(/<\s*br\s*\/?>/gi, "\n")
+    .replace(/<\/\s*p\s*>/gi, "\n\n")
+    .replace(/<\/\s*li\s*>/gi, "\n")
+
+  const stripped = sanitizeHtml(withNewlines, { allowedTags: [], allowedAttributes: {} })
+  return stripped.replace(/\n{3,}/g, "\n\n").trim()
+}
+
 export async function updateSiteContentAction(
   _prevState: { ok?: boolean; message?: string } | null,
   formData: FormData
 ) {
   // (Ce fichier est utilisé via useActionState côté client, donc on retourne un état plutôt qu'un redirect.)
   try {
+    await requireAdmin("/admin/home")
+
+    const siteFontKeyRaw = String(formData.get("siteFontKey") ?? "").trim()
+    const siteFontKey = isSiteFontKey(siteFontKeyRaw) ? siteFontKeyRaw : DEFAULT_SITE_FONT_KEY
+
     const heroSrc = normalizeText(formData.get("heroSrc"))
     const heroAlt = normalizeAlt(String(formData.get("heroAlt") ?? ""), "Atelier Reyssac Bois")
 
@@ -64,42 +117,74 @@ export async function updateSiteContentAction(
     }
 
     // Textes Home / About
+    const homeFamilyP1HtmlRaw = normalizeText(formData.get("homeFamilyP1Html"))
+    const homeFamilyP2HtmlRaw = normalizeText(formData.get("homeFamilyP2Html"))
+    const homeFamilyP1Html = homeFamilyP1HtmlRaw ? sanitizeRichTextHtml(homeFamilyP1HtmlRaw) : ""
+    const homeFamilyP2Html = homeFamilyP2HtmlRaw ? sanitizeRichTextHtml(homeFamilyP2HtmlRaw) : ""
+
     const homeTexts = {
       heroTitle: normalizeText(formData.get("homeHeroTitle")),
       heroSubtitle: normalizeText(formData.get("homeHeroSubtitle")),
       familyTitle: normalizeText(formData.get("homeFamilyTitle")),
-      familyP1: normalizeText(formData.get("homeFamilyP1")),
-      familyP2: normalizeText(formData.get("homeFamilyP2")),
+      familyP1: homeFamilyP1Html ? richHtmlToPlainText(homeFamilyP1Html) : normalizeText(formData.get("homeFamilyP1")),
+      familyP2: homeFamilyP2Html ? richHtmlToPlainText(homeFamilyP2Html) : normalizeText(formData.get("homeFamilyP2")),
+      familyP1Html: homeFamilyP1Html || undefined,
+      familyP2Html: homeFamilyP2Html || undefined,
     }
+
+    const aboutHistoryTextHtmlRaw = normalizeText(formData.get("aboutHistoryTextHtml"))
+    const aboutMissionTextHtmlRaw = normalizeText(formData.get("aboutMissionTextHtml"))
+    const aboutLocationTextHtmlRaw = normalizeText(formData.get("aboutLocationTextHtml"))
+    const aboutConclusionTextHtmlRaw = normalizeText(formData.get("aboutConclusionTextHtml"))
+
+    const aboutHistoryTextHtml = aboutHistoryTextHtmlRaw ? sanitizeRichTextHtml(aboutHistoryTextHtmlRaw) : ""
+    const aboutMissionTextHtml = aboutMissionTextHtmlRaw ? sanitizeRichTextHtml(aboutMissionTextHtmlRaw) : ""
+    const aboutLocationTextHtml = aboutLocationTextHtmlRaw ? sanitizeRichTextHtml(aboutLocationTextHtmlRaw) : ""
+    const aboutConclusionTextHtml = aboutConclusionTextHtmlRaw ? sanitizeRichTextHtml(aboutConclusionTextHtmlRaw) : ""
 
     const aboutTexts = {
       pageTitle: normalizeText(formData.get("aboutPageTitle")),
       historyTitle: normalizeText(formData.get("aboutHistoryTitle")),
-      historyText: normalizeText(formData.get("aboutHistoryText")),
+      historyText: aboutHistoryTextHtml ? richHtmlToPlainText(aboutHistoryTextHtml) : normalizeText(formData.get("aboutHistoryText")),
       missionTitle: normalizeText(formData.get("aboutMissionTitle")),
-      missionText: normalizeText(formData.get("aboutMissionText")),
+      missionText: aboutMissionTextHtml ? richHtmlToPlainText(aboutMissionTextHtml) : normalizeText(formData.get("aboutMissionText")),
       locationTitle: normalizeText(formData.get("aboutLocationTitle")),
-      locationText: normalizeText(formData.get("aboutLocationText")),
-      conclusionText: normalizeText(formData.get("aboutConclusionText")),
+      locationText: aboutLocationTextHtml ? richHtmlToPlainText(aboutLocationTextHtml) : normalizeText(formData.get("aboutLocationText")),
+      conclusionText: aboutConclusionTextHtml ? richHtmlToPlainText(aboutConclusionTextHtml) : normalizeText(formData.get("aboutConclusionText")),
+      historyTextHtml: aboutHistoryTextHtml || undefined,
+      missionTextHtml: aboutMissionTextHtml || undefined,
+      locationTextHtml: aboutLocationTextHtml || undefined,
+      conclusionTextHtml: aboutConclusionTextHtml || undefined,
     }
 
     // Bannière "site en construction"
+    const bannerTextHtmlRaw = normalizeText(formData.get("bannerTextHtml"))
+    const bannerTextHtml = bannerTextHtmlRaw ? sanitizeRichTextHtml(bannerTextHtmlRaw) : ""
     const banner = {
       isVisible: parseVisibleFlag(formData.get("bannerVisible")),
-      text: normalizeText(formData.get("bannerText")),
+      text: bannerTextHtml ? richHtmlToPlainText(bannerTextHtml) : normalizeText(formData.get("bannerText")),
+      textHtml: bannerTextHtml || undefined,
     }
 
     // Promo modal
     const promoImageSrc = normalizeText(formData.get("promoImageSrc"))
     const promoImageAlt = normalizeAlt(String(formData.get("promoImageAlt") ?? ""), "Photo promo")
+    const promoTextHtmlRaw = normalizeText(formData.get("promoTextHtml"))
+    const promoTextHtml = promoTextHtmlRaw ? sanitizeRichTextHtml(promoTextHtmlRaw) : ""
     const promo = {
       isVisible: parseVisibleFlag(formData.get("promoVisible")),
       title: normalizeText(formData.get("promoTitle")),
-      text: normalizeText(formData.get("promoText")),
+      text: promoTextHtml ? richHtmlToPlainText(promoTextHtml) : normalizeText(formData.get("promoText")),
+      textHtml: promoTextHtml,
       image: { src: promoImageSrc, alt: promoImageAlt },
     }
 
     await prisma.$transaction([
+      prisma.siteSetting.upsert({
+        where: { key: SITE_KEYS.siteFont },
+        create: { key: SITE_KEYS.siteFont, value: { key: siteFontKey } },
+        update: { value: { key: siteFontKey } },
+      }),
       prisma.siteSetting.upsert({
         where: { key: SITE_KEYS.homeHero },
         create: { key: SITE_KEYS.homeHero, value: heroSrc ? { src: heroSrc, alt: heroAlt } : { src: "", alt: heroAlt } },

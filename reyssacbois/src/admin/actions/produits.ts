@@ -3,7 +3,8 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
-import { slugify } from "./slug"
+import { slugify } from "@/lib/slugify"
+import { requireAdmin } from "@/lib/adminAuth"
 
 async function ensureUniqueProductSlug(slugBase: string, id: string) {
   let candidate = slugBase
@@ -23,7 +24,63 @@ async function ensureUniqueProductSlug(slugBase: string, id: string) {
   }
 }
 
+async function createDraftProduct(baseName: string) {
+  const created = await prisma.product.create({
+    data: {
+      name: baseName,
+      slug: "draft",
+      isVisible: false,
+      description: null,
+      imageUrl: null,
+      sortOrder: 0,
+      section: null,
+      length: null,
+      species: null,
+      type: null,
+      standard: null,
+    },
+    select: { id: true },
+  })
+
+  const slugBase = slugify(baseName)
+  const slug = await ensureUniqueProductSlug(slugBase, created.id)
+  await prisma.product.update({
+    where: { id: created.id },
+    data: { slug },
+  })
+
+  return created.id
+}
+
+export async function createProduitAction() {
+  await requireAdmin("/admin/produits")
+  const id = await createDraftProduct("Nouveau produit")
+
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/produits")
+  redirect(`/admin/produits/${id}`)
+}
+
+export async function startProduitFromCategoryAction(formData: FormData) {
+  await requireAdmin("/admin/produits")
+  const categoryId = String(formData.get("categoryId") ?? "").trim()
+  if (!categoryId) throw new Error("Catégorie manquante")
+
+  const id = await createDraftProduct("Nouveau produit")
+
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/produits")
+  redirect(`/admin/produits/${id}?prefillCategoryId=${encodeURIComponent(categoryId)}`)
+}
+
 export async function updateProduitAction(formData: FormData) {
+  await requireAdmin("/admin/produits")
   const id = String(formData.get("id") ?? "")
   const name = String(formData.get("name") ?? "").trim()
   const slugInput = String(formData.get("slug") ?? "").trim()
@@ -39,7 +96,9 @@ export async function updateProduitAction(formData: FormData) {
   const type = String(formData.get("type") ?? "").trim()
   const standard = String(formData.get("standard") ?? "").trim()
 
-  const categoryIds = formData.getAll("categoryIds").map((v) => String(v))
+  const categoryIds = Array.from(
+    new Set(formData.getAll("categoryIds").map((v) => String(v).trim()).filter(Boolean)),
+  )
 
   if (!id) throw new Error("ID manquant")
   if (name.length < 2) throw new Error("Nom trop court")
@@ -86,6 +145,45 @@ export async function updateProduitAction(formData: FormData) {
   revalidatePath(`/admin/produits/${id}`)
   revalidatePath("/produits", "layout")
   revalidatePath(`/produits/${slug}`)
+  revalidatePath("/categories", "layout")
+  redirect(
+    `/admin/produits/${id}?saved=1${
+      categoryIds.length === 1 ? `&prefillCategoryId=${encodeURIComponent(categoryIds[0])}` : ""
+    }`,
+  )
+}
+
+export async function deleteProduitIfOrphanAction(formData: FormData) {
+  await requireAdmin("/admin/produits")
+  const id = String(formData.get("id") ?? "").trim()
+  if (!id) throw new Error("ID manquant")
+
+  const product = await prisma.product.findUnique({ where: { id }, select: { id: true } })
+  if (!product) throw new Error("Produit introuvable")
+
+  // Défensif: compter les catégories "valides" (join réel sur Category).
+  const rows = await prisma.$queryRaw<Array<{ validCount: bigint }>>`
+    SELECT COUNT(c.id) as "validCount"
+    FROM "ProductCategory" pc
+    LEFT JOIN "Category" c ON c.id = pc."categoryId"
+    WHERE pc."productId" = ${id}
+  `
+  const validCount = Number(rows?.[0]?.validCount ?? 0)
+  if (validCount > 0) {
+    throw new Error("Impossible: produit rattaché à une catégorie.")
+  }
+
+  // On nettoie aussi les éventuelles lignes de liaison (liens cassés / anciens imports).
+  await prisma.productCategory.deleteMany({ where: { productId: id } })
+
+  await prisma.product.delete({ where: { id } })
+
+  revalidateTag("breadcrumbs", "default")
+  revalidateTag("sitemap", "default")
+  revalidateTag("productCanonical", "default")
+
+  revalidatePath("/admin/produits")
+  revalidatePath("/produits", "layout")
   revalidatePath("/categories", "layout")
   redirect("/admin/produits")
 }

@@ -205,8 +205,13 @@ export default async function ProduitPage({
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
-          <div className="aspect-[4/3] w-full">
-            <Media src={product.imageUrl} alt={product.name} className="h-full w-full" />
+          <div className="aspect-[4/3] w-full bg-gray-50 p-5 sm:p-6">
+            <Media
+              src={product.imageUrl}
+              alt={product.name}
+              // Packshots: affiche l’image entière (sans crop).
+              className="h-full w-full !object-contain"
+            />
           </div>
         </div>
 

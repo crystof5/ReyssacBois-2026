@@ -17,11 +17,6 @@ export default function AdminPage() {
       desc: "Gérer les fiches produits et leurs caractéristiques.",
       href: "/admin/produits",
     },
-    {
-      title: "Import CSV",
-      desc: "Importer/réimporter le catalogue depuis un CSV.",
-      href: "/admin/import",
-    },
   ]
 
   return (

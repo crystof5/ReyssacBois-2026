@@ -6,12 +6,13 @@ import {
   getSiteImage,
   ensureAboutTexts,
   ensureHomeTexts,
+  ensureSiteFontSettings,
   SITE_KEYS,
 } from "@/admin/queries/siteSettings"
 import AdminSiteContentForm from "./AdminSiteContentForm"
 
 export default async function AdminHomePage() {
-  const [hero, family, aboutHistory, projects, homeTexts, aboutTexts, banner, promo] = await Promise.all([
+  const [hero, family, aboutHistory, projects, homeTexts, aboutTexts, banner, promo, siteFont] = await Promise.all([
     getSiteImage(SITE_KEYS.homeHero),
     getSiteImage(SITE_KEYS.homeFamily),
     getSiteImage(SITE_KEYS.aboutHistory),
@@ -20,6 +21,7 @@ export default async function AdminHomePage() {
     ensureAboutTexts(),
     getConstructionBannerSettings(),
     getPromoModalSettings(),
+    ensureSiteFontSettings(),
   ])
 
   const projectsSpeed: "slow" | "normal" | "fast" =
@@ -48,11 +50,12 @@ export default async function AdminHomePage() {
         projects={{ speed: projectsSpeed, slides: projects?.slides ?? [] }}
         homeTexts={homeTexts}
         aboutTexts={aboutTexts}
-        banner={banner ?? { isVisible: false, text: "" }}
+        banner={banner ?? { isVisible: false, text: "", textHtml: "" }}
+        siteFont={siteFont}
         promo={
           promo
             ? { ...promo, image: promo.image ?? { src: "", alt: "" } }
-            : { isVisible: false, title: "", text: "", image: { src: "", alt: "" } }
+            : { isVisible: false, title: "", text: "", textHtml: "", image: { src: "", alt: "" } }
         }
       />
     </div>

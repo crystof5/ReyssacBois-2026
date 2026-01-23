@@ -38,6 +38,20 @@ export default function ContactPage() {
               </li>
             </ul>
           </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="relative w-full pt-[56.25%]">
+              <iframe
+                title="Carte - Reyssac Bois"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2861.0054045604797!2d0.6584004767006642!3d44.186355417784526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12abb381555554cf%3A0xa1fac795a72fef80!2sReyssac%20Bois!5e0!3m2!1sfr!2sfr!4v1693635316155!5m2!1sfr!2sfr"
+                className="absolute inset-0 h-full w-full"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">

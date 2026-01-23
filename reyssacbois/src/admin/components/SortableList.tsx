@@ -8,6 +8,7 @@ import {
   reorderProductsAction,
   reorderTopCategoriesAction,
 } from "@/admin/actions/order"
+import { detachProductsFromCategoryAction } from "@/admin/actions/categories"
 
 export type SortableListItem = {
   id: string
@@ -39,6 +40,7 @@ export default function SortableList({
   const [state, setState] = useState<{ ok?: boolean; message?: string } | null>(null)
   const [isPending, startTransition] = useTransition()
   const [isCoarsePointer, setIsCoarsePointer] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
 
   // Mobile/tactile: HTML5 drag&drop ne fonctionne pas bien.
   // On garde le ré-ordonnancement via ↑ ↓ et on désactive le drag.
@@ -56,6 +58,9 @@ export default function SortableList({
   }, [])
 
   const ids = useMemo(() => items.map((i) => i.id), [items])
+  const selectionEnabled = saveKind === "categoryProducts" && !!scopeId
+  const allSelected = selectionEnabled && items.length > 0 && selectedIds.size === items.length
+  const anySelected = selectionEnabled && selectedIds.size > 0
 
   const move = (from: number, to: number) => {
     if (from === to) return
@@ -65,6 +70,36 @@ export default function SortableList({
     const [picked] = next.splice(from, 1)
     next.splice(to, 0, picked)
     setItems(next)
+  }
+
+  const toggleSelected = (id: string, checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (checked) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  const toggleSelectAll = (checked: boolean) => {
+    setSelectedIds(() => (checked ? new Set(items.map((x) => x.id)) : new Set()))
+  }
+
+  const onDetachSelected = () => {
+    if (!scopeId) return
+    if (selectedIds.size === 0) return
+    setState(null)
+    startTransition(async () => {
+      const res = await detachProductsFromCategoryAction(scopeId, Array.from(selectedIds))
+      if (res.ok) {
+        const remove = new Set(selectedIds)
+        setItems((prev) => prev.filter((x) => !remove.has(x.id)))
+        setSelectedIds(new Set())
+        setState({ ok: true, message: "Produits détachés de cette catégorie." })
+      } else {
+        setState({ ok: false, message: res.message })
+      }
+    })
   }
 
   const onSave = () => {
@@ -106,14 +141,27 @@ export default function SortableList({
             </p>
           ) : null}
         </div>
-        <button
-          type="button"
-          onClick={onSave}
-          disabled={isPending}
-          className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
-        >
-          {isPending ? "Enregistrement…" : "Enregistrer l’ordre"}
-        </button>
+        <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-end">
+          {selectionEnabled ? (
+            <button
+              type="button"
+              onClick={onDetachSelected}
+              disabled={isPending || !anySelected}
+              className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600/20 disabled:opacity-60"
+              title="Retire le lien produits ↔ catégorie (les produits peuvent devenir orphelins s’ils n’ont plus d’autre catégorie)."
+            >
+              Détacher ({selectedIds.size})
+            </button>
+          ) : null}
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={isPending}
+            className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
+          >
+            {isPending ? "Enregistrement…" : "Enregistrer l’ordre"}
+          </button>
+        </div>
       </div>
 
       {state?.message ? (
@@ -123,6 +171,22 @@ export default function SortableList({
           }`}
         >
           {state.message}
+        </div>
+      ) : null}
+
+      {selectionEnabled ? (
+        <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-700">
+          <label className="inline-flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={allSelected}
+              onChange={(e) => toggleSelectAll(e.currentTarget.checked)}
+            />
+            Tout sélectionner
+          </label>
+          <span>
+            Sélection: <span className="font-medium text-gray-900">{selectedIds.size}</span> / {items.length}
+          </span>
         </div>
       ) : null}
 
@@ -171,6 +235,15 @@ export default function SortableList({
             onDragEnd={isCoarsePointer ? undefined : () => setDragId(null)}
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+              {selectionEnabled ? (
+                <input
+                  type="checkbox"
+                  className="mt-1 sm:mt-0"
+                  checked={selectedIds.has(it.id)}
+                  onChange={(e) => toggleSelected(it.id, e.currentTarget.checked)}
+                  aria-label={`Sélectionner ${it.title}`}
+                />
+              ) : null}
               <span
                 className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-700 ${
                   isCoarsePointer ? "cursor-default" : "cursor-grab"

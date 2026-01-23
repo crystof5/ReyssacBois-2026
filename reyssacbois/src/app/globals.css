@@ -4,26 +4,111 @@
   /* Blanc cassé / beige très clair (plus premium que blanc pur) */
   --background: #f6f1e7;
   --foreground: #171717;
+  /* Police (pilotée par l'admin via l'attribut `data-rb-font` sur <html>) */
+  --rb-font-sans: var(--font-inter);
   /* On force un rendu "light" pour éviter les inversions/contrastes
      désagréables sur mobile quand le système est en mode sombre. */
   color-scheme: light;
 }
 
+html[data-rb-font="inter"] {
+  --rb-font-sans: var(--font-inter);
+}
+html[data-rb-font="roboto"] {
+  --rb-font-sans: var(--font-roboto);
+}
+html[data-rb-font="openSans"] {
+  --rb-font-sans: var(--font-open-sans);
+}
+html[data-rb-font="lato"] {
+  --rb-font-sans: var(--font-lato);
+}
+html[data-rb-font="nunito"] {
+  --rb-font-sans: var(--font-nunito);
+}
+html[data-rb-font="dmSans"] {
+  --rb-font-sans: var(--font-dm-sans);
+}
+html[data-rb-font="sourceSans3"] {
+  --rb-font-sans: var(--font-source-sans-3);
+}
+html[data-rb-font="poppins"] {
+  --rb-font-sans: var(--font-poppins);
+}
+html[data-rb-font="montserrat"] {
+  --rb-font-sans: var(--font-montserrat);
+}
+html[data-rb-font="raleway"] {
+  --rb-font-sans: var(--font-raleway);
+}
+html[data-rb-font="merriweather"] {
+  --rb-font-sans: var(--font-merriweather);
+}
+html[data-rb-font="playfair"] {
+  --rb-font-sans: var(--font-playfair);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--rb-font-sans);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* Couleurs gradient (ancien site) */
   --color-gradient-start: #eabf70;
   --color-gradient-end: #875d11;
 }
 
-body {
+html {
   background: var(--background);
+}
+
+body {
+  background-color: var(--background);
+  background-image:
+    /* Nuances plus visibles (toujours soft) */
+    radial-gradient(980px circle at 12% 0%, rgba(234, 191, 112, 0.32), transparent 62%),
+    radial-gradient(820px circle at 88% 18%, rgba(135, 93, 17, 0.20), transparent 66%),
+    radial-gradient(900px circle at 42% 105%, rgba(22, 163, 74, 0.10), transparent 64%),
+    /* Profondeur: léger voile + vignette */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(1400px circle at 50% 120%, rgba(0, 0, 0, 0.045), transparent 60%),
+    /* Motif emboss (type flocon/rosette) — statique, répété, effet de relief */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Crect width='220' height='220' fill='none'/%3E%3Cg opacity='0.55'%3E%3C!-- ombre (bas/droite) --%3E%3Cg transform='translate(1.2 1.2)' stroke='rgba(0,0,0,0.20)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M110 56V164'/%3E%3Cpath d='M56 110H164'/%3E%3Cpath d='M72 72L148 148'/%3E%3Cpath d='M148 72L72 148'/%3E%3Cpath d='M110 70l10 10M110 70l-10 10M110 150l10-10M110 150l-10-10'/%3E%3Cpath d='M70 110l10 10M70 110l10-10M150 110l-10 10M150 110l-10-10'/%3E%3C/g%3E%3C!-- highlight (haut/gauche) --%3E%3Cg transform='translate(-1.2 -1.2)' stroke='rgba(255,255,255,0.40)' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M110 56V164'/%3E%3Cpath d='M56 110H164'/%3E%3Cpath d='M72 72L148 148'/%3E%3Cpath d='M148 72L72 148'/%3E%3Cpath d='M110 70l10 10M110 70l-10 10M110 150l10-10M110 150l-10-10'/%3E%3Cpath d='M70 110l10 10M70 110l10-10M150 110l-10 10M150 110l-10-10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 220px 220px;
+  background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
+  background-attachment: fixed;
+  background-blend-mode: normal, normal, normal, normal, normal, soft-light;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Police moderne (par défaut Next/Geist si dispo), sinon fallback system-ui */
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  animation: rb-bg-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes rb-bg-drift {
+  from {
+    /* On anime uniquement les 3 grosses "taches" (pas le grain) */
+    background-position: 0% 0%, 100% 10%, 30% 100%, 0% 0%, 50% 50%, 0 0;
+  }
+  to {
+    background-position: 100% 60%, 0% 25%, 70% 100%, 0% 0%, 50% 50%, 0 0;
+  }
+}
+
+/* Mobile: `background-attachment: fixed` est souvent désactivé -> on force scroll + motif un peu plus dense */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+    background-size: 150% 150%, 150% 150%, 150% 150%, 100% 100%, 100% 100%, 180px 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
 }
 
 /* util: hide horizontal scrollbar (carrousels) */

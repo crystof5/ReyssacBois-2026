@@ -2,6 +2,7 @@ import Link from "next/link"
 import AdminLogoutButton from "@/admin/components/AdminLogoutButton"
 import { requireAdmin } from "@/lib/adminAuth"
 import type { Metadata } from "next"
+import SearchBar from "@/components/SearchBar"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -30,7 +31,10 @@ export default async function AdminLayout({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-3">
+            <div className="w-full sm:w-[420px]">
+              <SearchBar mode="admin" />
+            </div>
             <Link
               href="/"
               className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
