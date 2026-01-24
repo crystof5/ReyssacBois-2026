@@ -332,21 +332,6 @@ export default async function AdminCategoriesPage({
           </div>
         </div>
 
-        <SortableList
-          title="Catégories parent (ordre sidebar)"
-          description="Glisse-dépose pour réordonner. Cet ordre est celui du menu catégories côté public."
-          items={parents.map((c) => ({
-            id: c.id,
-            title: c.name,
-            subtitle: `/${c.slug}`,
-            rightNote: `${c._count.children} sous-cat. • ${c._count.products} produits`,
-            isVisible: c.isVisible,
-            editHref: `/admin/categories/${c.id}`,
-            viewHref: `/categories/${c.slug}`,
-          }))}
-          saveKind="topCategories"
-        />
-
         <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
           <h3 className="text-sm font-semibold text-gray-900">Arborescence (tous niveaux)</h3>
           <p className="mt-1 text-xs text-gray-500">
@@ -424,6 +409,21 @@ export default async function AdminCategoriesPage({
             </ul>
           </div>
         </div>
+
+        <SortableList
+          title="Catégories parent (ordre sidebar)"
+          description="Glisse-dépose pour réordonner. Cet ordre est celui du menu catégories côté public."
+          items={parents.map((c) => ({
+            id: c.id,
+            title: c.name,
+            subtitle: `/${c.slug}`,
+            rightNote: `${c._count.children} sous-cat. • ${c._count.products} produits`,
+            isVisible: c.isVisible,
+            editHref: `/admin/categories/${c.id}`,
+            viewHref: `/categories/${c.slug}`,
+          }))}
+          saveKind="topCategories"
+        />
       </div>
     </div>
   )
