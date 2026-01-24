@@ -174,19 +174,6 @@ export default async function AdminCategoryEditPage({
           folder={`categories/${category.id}`}
         />
 
-        <Field label="Parent">
-          <CategoryParentSelector
-            categories={allCategories.map((c) => ({
-              id: c.id,
-              name: c.name,
-              parentId: c.parentId,
-              sortOrder: c.sortOrder ?? 0,
-            }))}
-            currentId={category.id}
-            initialParentId={(category.parentId ?? prefillParentId) || null}
-          />
-        </Field>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
           <div className="space-y-3">
             <div className="flex justify-end">
@@ -265,6 +252,19 @@ export default async function AdminCategoryEditPage({
             />
           </div>
         </div>
+
+        <Field label="Parent">
+          <CategoryParentSelector
+            categories={allCategories.map((c) => ({
+              id: c.id,
+              name: c.name,
+              parentId: c.parentId,
+              sortOrder: c.sortOrder ?? 0,
+            }))}
+            currentId={category.id}
+            initialParentId={(category.parentId ?? prefillParentId) || null}
+          />
+        </Field>
 
         <AdminStickySaveBar
           hint="Modifie, puis enregistre (la page confirme quand c’est OK)."

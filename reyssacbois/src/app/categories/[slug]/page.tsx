@@ -171,7 +171,7 @@ export default async function CategoryPage({
             </h1>
 
             {category.description ? (
-              <p className="mt-2 text-gray-700 max-w-3xl rb-clamp-3" title={category.description}>
+              <p className="mt-2 text-gray-700 max-w-3xl rb-clamp-3 whitespace-pre-line" title={category.description}>
                 {category.description}
               </p>
             ) : null}

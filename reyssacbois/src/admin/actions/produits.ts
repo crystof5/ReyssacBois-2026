@@ -29,7 +29,8 @@ async function createDraftProduct(baseName: string) {
     data: {
       name: baseName,
       slug: "draft",
-      isVisible: false,
+      // Par défaut, un nouveau produit est visible (modifiable ensuite dans la fiche).
+      isVisible: true,
       description: null,
       imageUrl: null,
       sortOrder: 0,

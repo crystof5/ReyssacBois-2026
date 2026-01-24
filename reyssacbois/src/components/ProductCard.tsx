@@ -58,7 +58,7 @@ export default function ProductCard({
         </p>
 
         <p
-          className="rb-clamp-3 mt-2 min-h-[3.75rem] text-sm leading-relaxed text-gray-700"
+          className="rb-clamp-3 mt-2 min-h-[3.75rem] whitespace-pre-line text-sm leading-relaxed text-gray-700"
           title={product.description ?? ""}
         >
           {product.description ?? ""}
