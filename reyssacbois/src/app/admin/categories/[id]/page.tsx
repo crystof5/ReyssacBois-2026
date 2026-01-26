@@ -8,6 +8,7 @@ import SlugField from "@/admin/components/SlugField"
 import SortableList from "@/admin/components/SortableList"
 import CategoryParentSelector from "@/admin/components/CategoryParentSelector"
 import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar"
+import RichTextEditor from "@/admin/components/RichTextEditor"
 
 export default async function AdminCategoryEditPage({
   params,
@@ -159,13 +160,21 @@ export default async function AdminCategoryEditPage({
           </div>
         </div>
 
-        <Field label="Description">
-          <textarea
-            name="description"
-            defaultValue={category.description ?? ""}
-            className="min-h-24 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
-          />
-        </Field>
+        <div>
+          <label className="block">
+            <span className="mb-1 block text-sm font-medium text-gray-900">Description</span>
+            <p className="mt-1 text-xs text-gray-500">
+              Mise en forme possible (gras, souligné, italique, listes, liens, couleur).
+            </p>
+          </label>
+          <div className="mt-3">
+            <RichTextEditor
+              inputName="descriptionHtml"
+              initialHtml={category.descriptionHtml ?? category.description ?? ""}
+              placeholder="Description…"
+            />
+          </div>
+        </div>
 
         <ImageUploadField
           label="Image"

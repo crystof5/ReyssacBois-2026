@@ -5,8 +5,57 @@ import { revalidatePath, revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import { slugify } from "@/lib/slugify"
 import { requireAdmin } from "@/lib/adminAuth"
+import sanitizeHtml from "sanitize-html"
 
 type ActionResult = { ok: true } | { ok: false; message: string }
+
+function sanitizeRichTextHtml(input: string) {
+  const clean = sanitizeHtml(input, {
+    allowedTags: ["p", "br", "strong", "em", "u", "span", "a", "ul", "ol", "li"],
+    allowedAttributes: {
+      a: ["href", "target", "rel"],
+      span: ["style"],
+    },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    allowProtocolRelative: false,
+    allowedStyles: {
+      span: {
+        color: [/^#[0-9a-fA-F]{3,8}$/, /^rgb\((\s*\d+\s*,){2}\s*\d+\s*\)$/],
+      },
+    },
+    transformTags: {
+      a: (tagName, attribs) => {
+        const href = String(attribs.href ?? "").trim()
+        const isInternal = href.startsWith("/")
+        const safeHref =
+          href.startsWith("/") ||
+          /^https?:\/\//i.test(href) ||
+          href.startsWith("mailto:") ||
+          href.startsWith("tel:")
+            ? href
+            : ""
+        return {
+          tagName,
+          attribs: {
+            href: safeHref,
+            ...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" }),
+          },
+        }
+      },
+    },
+  })
+  return clean.trim()
+}
+
+function richHtmlToPlainText(html: string) {
+  const withNewlines = html
+    .replace(/<\s*br\s*\/?>/gi, "\n")
+    .replace(/<\/\s*p\s*>/gi, "\n\n")
+    .replace(/<\/\s*li\s*>/gi, "\n")
+
+  const stripped = sanitizeHtml(withNewlines, { allowedTags: [], allowedAttributes: {} })
+  return stripped.replace(/\n{3,}/g, "\n\n").trim()
+}
 
 async function ensureUniqueCategorySlug(slugBase: string, id: string) {
   let candidate = slugBase
@@ -85,7 +134,7 @@ export async function updateCategoryAction(formData: FormData) {
   const id = String(formData.get("id") ?? "")
   const name = String(formData.get("name") ?? "").trim()
   const slugInput = String(formData.get("slug") ?? "").trim()
-  const description = String(formData.get("description") ?? "").trim()
+  const descriptionHtmlRaw = String(formData.get("descriptionHtml") ?? "").trim()
   const imageUrl = String(formData.get("imageUrl") ?? "").trim()
   const parentIdRaw = String(formData.get("parentId") ?? "").trim()
   const isVisible = String(formData.get("isVisible") ?? "") === "1"
@@ -131,12 +180,17 @@ export async function updateCategoryAction(formData: FormData) {
     }
   }
 
+  const descriptionHtmlClean = descriptionHtmlRaw ? sanitizeRichTextHtml(descriptionHtmlRaw) : ""
+  const descriptionPlain = descriptionHtmlClean ? richHtmlToPlainText(descriptionHtmlClean) : ""
+
   await prisma.category.update({
     where: { id },
     data: {
       name,
       slug,
-      description: description || null,
+      // On conserve un champ texte (SEO / recherche / cartes) + un champ HTML (affichage riche).
+      description: descriptionPlain || null,
+      descriptionHtml: descriptionHtmlClean || null,
       imageUrl: imageUrl || null,
       parentId,
       isVisible,
