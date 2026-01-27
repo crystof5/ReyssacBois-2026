@@ -6,6 +6,7 @@ import ImageUploadField from "@/admin/components/ImageUploadField"
 import SlugField from "@/admin/components/SlugField"
 import ProductCategoriesSelector from "@/admin/components/ProductCategoriesSelector"
 import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar"
+import RichTextEditor from "@/admin/components/RichTextEditor"
 
 export default async function AdminProduitEditPage({
   params,
@@ -199,13 +200,21 @@ export default async function AdminProduitEditPage({
           </div>
         </div>
 
-        <Field label="Description">
-          <textarea
-            name="description"
-            defaultValue={product.description ?? ""}
-            className="min-h-28 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
-          />
-        </Field>
+        <div>
+          <label className="block">
+            <span className="mb-1 block text-sm font-medium text-gray-900">Description</span>
+            <p className="mt-1 text-xs text-gray-500">
+              Mise en forme possible (gras, souligné, italique, listes, liens, couleur).
+            </p>
+          </label>
+          <div className="mt-3">
+            <RichTextEditor
+              inputName="descriptionHtml"
+              initialHtml={product.descriptionHtml ?? product.description ?? ""}
+              placeholder="Description…"
+            />
+          </div>
+        </div>
 
         <ImageUploadField
           label="Image"

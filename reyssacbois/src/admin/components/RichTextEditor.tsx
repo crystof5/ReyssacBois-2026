@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Link from "@tiptap/extension-link"
@@ -48,6 +48,10 @@ export default function RichTextEditor({
   helperText?: string
 }) {
   const [html, setHtml] = useState(initialHtml ?? "")
+  const [showLinkPanel, setShowLinkPanel] = useState(false)
+  const [linkHref, setLinkHref] = useState("")
+  const [linkError, setLinkError] = useState<string | null>(null)
+  const savedSelectionRef = useRef<{ from: number; to: number } | null>(null)
 
   const extensions = useMemo(
     () => [
@@ -109,16 +113,67 @@ export default function RichTextEditor({
     )
   }
 
-  const setLink = () => {
-    const prev = editor.getAttributes("link").href as string | undefined
-    const url = window.prompt("Lien (https://…, /page, mailto:, tel:)", prev ?? "")
-    if (url === null) return
-    const v = url.trim()
-    if (!v) {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run()
+  const openLinkPanel = () => {
+    const prev = (editor.getAttributes("link").href as string | undefined) ?? ""
+    setLinkHref(prev)
+    setLinkError(null)
+    // On sauvegarde la sélection pour pouvoir ré-appliquer le lien sans la perdre.
+    const sel = editor.state.selection
+    savedSelectionRef.current = { from: sel.from, to: sel.to }
+    setShowLinkPanel(true)
+  }
+
+  const normalizeHref = (raw: string) => raw.trim()
+
+  const isAllowedHref = (href: string) => {
+    if (!href) return true
+    if (href.startsWith("/")) return true
+    if (/^https?:\/\//i.test(href)) return true
+    if (/^mailto:/i.test(href)) return true
+    if (/^tel:/i.test(href)) return true
+    return false
+  }
+
+  const applyLink = () => {
+    const v = normalizeHref(linkHref)
+    setLinkError(null)
+
+    if (!isAllowedHref(v)) {
+      setLinkError("Lien invalide. Utilise https://…, /page, mailto:, tel:.")
       return
     }
-    editor.chain().focus().extendMarkRange("link").setLink({ href: v }).run()
+
+    // Restaure la sélection (pour permettre “clique ici” -> lien sur “ici”).
+    const saved = savedSelectionRef.current
+    if (saved) editor.commands.setTextSelection(saved)
+
+    // Si rien n'est sélectionné, on ne peut pas créer un lien “sur un mot”.
+    // On garde quand même le panneau ouvert et on affiche une aide.
+    const curSel = editor.state.selection
+    const hasSelection = curSel.to > curSel.from
+    if (!hasSelection && !editor.isActive("link")) {
+      setLinkError("Sélectionne d’abord un mot/texte dans l’éditeur, puis clique “Appliquer”.")
+      return
+    }
+
+    if (!v) {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run()
+    } else {
+      editor.chain().focus().extendMarkRange("link").setLink({ href: v }).run()
+    }
+
+    setShowLinkPanel(false)
+    savedSelectionRef.current = null
+  }
+
+  const removeLink = () => {
+    const saved = savedSelectionRef.current
+    if (saved) editor.commands.setTextSelection(saved)
+    editor.chain().focus().extendMarkRange("link").unsetLink().run()
+    setShowLinkPanel(false)
+    setLinkHref("")
+    setLinkError(null)
+    savedSelectionRef.current = null
   }
 
   return (
@@ -158,7 +213,7 @@ export default function RichTextEditor({
         <ToolbarButton
           title="Lien"
           active={editor.isActive("link")}
-          onClick={setLink}
+          onClick={openLinkPanel}
         >
           Lien
         </ToolbarButton>
@@ -186,6 +241,55 @@ export default function RichTextEditor({
           Réinitialiser
         </button>
       </div>
+
+      {showLinkPanel ? (
+        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <label className="flex-1">
+              <span className="sr-only">URL du lien</span>
+              <input
+                value={linkHref}
+                onChange={(e) => setLinkHref(e.currentTarget.value)}
+                placeholder="https://…, /page, mailto:, tel:"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              />
+            </label>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                onClick={applyLink}
+              >
+                Appliquer
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+                onClick={() => {
+                  setShowLinkPanel(false)
+                  setLinkError(null)
+                  savedSelectionRef.current = null
+                }}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
+                onClick={removeLink}
+                title="Retirer le lien"
+              >
+                Retirer
+              </button>
+            </div>
+          </div>
+          {linkError ? <p className="mt-2 text-xs text-red-700">{linkError}</p> : null}
+          <p className="mt-2 text-xs text-gray-500">
+            Astuce: sélectionne un mot (ex: “ici”), clique <span className="font-medium">Lien</span>, colle l’URL, puis{" "}
+            <span className="font-medium">Appliquer</span>.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-3 relative">
         <EditorContent editor={editor} />

@@ -9,6 +9,7 @@ import type { Metadata } from "next"
 import { buildDescription } from "@/lib/meta"
 import { getCategoriesTree } from "@/lib/categories"
 import { unstable_cache } from "next/cache"
+import RichText from "@/components/ui/RichText"
 
 type CategoryNode = {
   id: string
@@ -170,7 +171,11 @@ export default async function CategoryPage({
               {category.name}
             </h1>
 
-            {category.description ? (
+            {category.descriptionHtml ? (
+              <div className="mt-2 max-w-3xl rb-clamp-3" title={category.description ?? ""}>
+                <RichText html={category.descriptionHtml} className="text-gray-700" />
+              </div>
+            ) : category.description ? (
               <p className="mt-2 text-gray-700 max-w-3xl rb-clamp-3 whitespace-pre-line" title={category.description}>
                 {category.description}
               </p>

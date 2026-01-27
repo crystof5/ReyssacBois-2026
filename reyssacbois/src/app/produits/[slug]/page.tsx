@@ -8,6 +8,7 @@ import { buildDescription } from "@/lib/meta"
 import { prisma } from "@/lib/prisma"
 import { unstable_cache } from "next/cache"
 import { getCategoriesTree } from "@/lib/categories"
+import RichText from "@/components/ui/RichText"
 
 function normalizeSeoKeyPart(v: string | null | undefined) {
   return (v ?? "").trim().toLowerCase().replace(/\s+/g, " ")
@@ -217,14 +218,18 @@ export default async function ProduitPage({
             {product.name}
           </h1>
 
-          {product.description && (
+          {(product.descriptionHtml || product.description) && (
             <div className="mt-4 rounded-2xl border border-gray-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur">
               <h2 className="text-base font-semibold text-gray-900">
                 Description
               </h2>
-              <p className="mt-3 whitespace-pre-line text-gray-700 leading-relaxed">
-                {product.description}
-              </p>
+              {product.descriptionHtml ? (
+                <RichText html={product.descriptionHtml} className="mt-3 text-gray-700" />
+              ) : (
+                <p className="mt-3 whitespace-pre-line text-gray-700 leading-relaxed">
+                  {product.description}
+                </p>
+              )}
             </div>
           )}
 

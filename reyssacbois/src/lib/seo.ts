@@ -31,6 +31,18 @@ export function getBaseUrl(): string {
   return "http://localhost:3000"
 }
 
+function normalizeCanonicalBaseUrl(u: URL): URL {
+  // Canonical choisi: https://www.reyssacbois.fr (aligné avec ton redirect DNS)
+  const hostname = u.hostname.toLowerCase()
+  if (hostname === "reyssacbois.fr") {
+    u.hostname = "www.reyssacbois.fr"
+  }
+  if (u.hostname.toLowerCase() === "www.reyssacbois.fr") {
+    u.protocol = "https:"
+  }
+  return u
+}
+
 export function getMetadataBaseUrl(): URL {
   // Ne doit JAMAIS throw : sinon toute l'app peut tomber.
   const candidates = [
@@ -41,14 +53,15 @@ export function getMetadataBaseUrl(): URL {
 
   for (const c of candidates) {
     try {
-      return new URL(c)
+      const u = new URL(c)
+      return normalizeCanonicalBaseUrl(u)
     } catch {
       // continue
     }
   }
 
   // Dernier recours (ne devrait jamais arriver)
-  return new URL("http://localhost:3000")
+  return normalizeCanonicalBaseUrl(new URL("http://localhost:3000"))
 }
 
 export function absoluteUrl(pathname: string): string {

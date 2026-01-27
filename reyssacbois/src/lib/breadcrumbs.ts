@@ -24,6 +24,7 @@ async function getVisibleCategoryPath(leaf: Category): Promise<Category[] | null
         name: true,
         slug: true,
         description: true,
+        descriptionHtml: true,
         imageUrl: true,
         parentId: true,
         isVisible: true,
