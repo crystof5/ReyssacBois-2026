@@ -1,6 +1,7 @@
 import Link from "next/link"
 import {
   getConstructionBannerSettings,
+  ensureHomeFaqSettings,
   getProjectsCarouselSettings,
   getPromoModalSettings,
   getSiteImage,
@@ -12,13 +13,14 @@ import {
 import AdminSiteContentForm from "./AdminSiteContentForm"
 
 export default async function AdminHomePage() {
-  const [hero, family, aboutHistory, projects, homeTexts, aboutTexts, banner, promo, siteFont] = await Promise.all([
+  const [hero, family, aboutHistory, projects, homeTexts, aboutTexts, faq, banner, promo, siteFont] = await Promise.all([
     getSiteImage(SITE_KEYS.homeHero),
     getSiteImage(SITE_KEYS.homeFamily),
     getSiteImage(SITE_KEYS.aboutHistory),
     getProjectsCarouselSettings(),
     ensureHomeTexts(),
     ensureAboutTexts(),
+    ensureHomeFaqSettings(),
     getConstructionBannerSettings(),
     getPromoModalSettings(),
     ensureSiteFontSettings(),
@@ -50,6 +52,7 @@ export default async function AdminHomePage() {
         projects={{ speed: projectsSpeed, slides: projects?.slides ?? [] }}
         homeTexts={homeTexts}
         aboutTexts={aboutTexts}
+        homeFaq={faq}
         banner={banner ?? { isVisible: false, text: "", textHtml: "" }}
         siteFont={siteFont}
         promo={

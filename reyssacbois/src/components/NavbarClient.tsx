@@ -141,6 +141,11 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
               </Link>
             </li>
             <li>
+              <Link href="/#faq" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
+                FAQ
+              </Link>
+            </li>
+            <li>
               <Link href="/#contact" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
                 Contact
               </Link>
@@ -192,6 +197,11 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
                   <li>
                     <Link href="/#qui-sommes-nous" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
                       Qui sommes-nous ?
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/#faq" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      FAQ
                     </Link>
                   </li>
                   <li>

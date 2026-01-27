@@ -3,6 +3,7 @@ import ProjectsCarousel from "@/components/ProjectsCarousel"
 import RichText from "@/components/ui/RichText"
 import {
   getAboutTexts,
+  getHomeFaqSettings,
   getHomeTexts,
   getProjectsCarouselSettings,
   getSiteImage,
@@ -13,12 +14,13 @@ import Container from "@/components/ui/Container"
 import Media from "@/components/ui/Media"
 
 export default async function Home() {
-  const [family, aboutHistory, projects, homeTexts, aboutTexts] = await Promise.all([
+  const [family, aboutHistory, projects, homeTexts, aboutTexts, faq] = await Promise.all([
     getSiteImage(SITE_KEYS.homeFamily),
     getSiteImage(SITE_KEYS.aboutHistory),
     getProjectsCarouselSettings(),
     getHomeTexts(),
     getAboutTexts(),
+    getHomeFaqSettings(),
   ])
 
   // Fallbacks: utiliser un asset existant dans /public pour éviter des 404 si les settings ne sont pas encore remplis.
@@ -74,6 +76,29 @@ export default async function Home() {
           { src: "/img/placeholder.svg", alt: "Projet 3" },
         ]
   const projectsIntervalMs = projects?.intervalMs ?? 5000
+
+  const faqIsVisible = Boolean(faq?.isVisible)
+  const faqTitle = faq?.title?.trim() ? faq.title.trim() : "Questions fréquentes (livraison, agglomération d’Agen, conseils)"
+  const faqIntroHtml = (faq?.introHtml ?? "").trim()
+  const faqIntroFallback = faq?.intro?.trim()
+    ? faq.intro.trim()
+    : "Livraison de bois dans l’agglomération d’Agen, accueil des particuliers et pros, conseil personnalisé… Voici les réponses aux questions les plus courantes."
+  const faqItems = (faq?.items ?? []).filter((x) => x && x.isVisible && (x.question?.trim() || x.answer?.trim() || (x.answerHtml ?? "").trim()))
+  const faqLdJson =
+    faqIsVisible && faqItems.length
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map((it) => ({
+            "@type": "Question",
+            name: it.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: (it.answer ?? "").trim(),
+            },
+          })),
+        }
+      : null
 
   return (
     <div className="min-h-screen">
@@ -286,6 +311,69 @@ export default async function Home() {
         </Container>
       </section>
 
+      {faqIsVisible ? (
+        <section id="faq" className="py-14 sm:py-20 scroll-mt-24">
+          {faqLdJson ? (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLdJson) }}
+            />
+          ) : null}
+
+          <Container>
+            <div className="rounded-3xl border border-white/15 bg-white/50 backdrop-blur p-6 sm:p-7 shadow-sm ring-1 ring-black/5">
+              <div className="flex flex-col items-center text-center">
+                <p className="text-xs font-semibold tracking-wide text-green-800/90">FAQ</p>
+                <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
+                  {faqTitle}
+                </h2>
+                <div className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
+                  {faqIntroHtml ? (
+                    <RichText html={faqIntroHtml} />
+                  ) : (
+                    <p className="whitespace-pre-line">{faqIntroFallback}</p>
+                  )}
+                </div>
+              </div>
+
+              {faqItems.length ? (
+                <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {faqItems.map((it) => (
+                    <FaqItem
+                      key={it.id}
+                      q={it.question}
+                      a={(it.answerHtml ?? "").trim() ? (it.answerHtml ?? "") : (it.answer ?? "")}
+                      isHtml={Boolean((it.answerHtml ?? "").trim())}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-8 text-center text-sm text-gray-600">
+                  La FAQ est activée, mais aucune question n’est visible.
+                </p>
+              )}
+
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href="/#contact"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                >
+                  Poser une question
+                  <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href="/produits"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200/80 bg-white/55 px-5 py-3 text-sm font-semibold text-gray-900 backdrop-blur transition hover:bg-white/65 hover:border-gray-300"
+                >
+                  Voir le catalogue
+                  <span aria-hidden="true">↗</span>
+                </Link>
+              </div>
+            </div>
+          </Container>
+        </section>
+      ) : null}
+
       {/* CONTACT */}
       <section id="contact" className="py-14 sm:py-20 scroll-mt-24">
         <Container>
@@ -385,5 +473,40 @@ function HeroPill({ title, desc }: { title: string; desc: string }) {
       <p className="text-sm font-semibold text-white">{title}</p>
       <p className="text-xs text-white/80">{desc}</p>
     </div>
+  )
+}
+
+function FaqItem({ q, a, isHtml }: { q: string; a: string; isHtml?: boolean }) {
+  return (
+    <details className="group rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-5 shadow-sm ring-1 ring-black/5 open:bg-white/65">
+      <summary className="cursor-pointer list-none">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-800 font-bold ring-1 ring-green-700/10">
+            ?
+          </span>
+          <div className="min-w-0">
+            <p className="text-sm sm:text-base font-semibold text-gray-900 leading-snug">
+              {q}
+            </p>
+            <p className="mt-1 text-xs text-gray-500">
+              Cliquer pour afficher la réponse
+            </p>
+          </div>
+          <span
+            className="ml-auto mt-1 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-gray-200 bg-white/70 text-gray-700 transition group-open:rotate-45"
+            aria-hidden
+          >
+            +
+          </span>
+        </div>
+      </summary>
+      <div className="mt-4 pl-10 pr-2">
+        {isHtml ? (
+          <RichText html={a} className="text-sm text-gray-700" />
+        ) : (
+          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{a}</p>
+        )}
+      </div>
+    </details>
   )
 }

@@ -7,6 +7,7 @@ import ProjectsCarouselEditor from "@/admin/components/ProjectsCarouselEditor"
 import { updateSiteContentAction } from "@/admin/actions/siteContent"
 import PromoModal from "@/components/PromoModal"
 import RichTextEditor from "@/admin/components/RichTextEditor"
+import HomeFaqEditor from "@/admin/components/HomeFaqEditor"
 import { DEFAULT_SITE_FONT_KEY, getFontFamilyStackForKey, isSiteFontKey, SITE_FONTS, type SiteFontKey } from "@/lib/siteFonts"
 
 type SiteImage = { src: string; alt: string }
@@ -34,6 +35,22 @@ type AboutTexts = {
   conclusionTextHtml?: string
 }
 
+type HomeFaqItem = {
+  id: string
+  isVisible: boolean
+  question: string
+  answer: string
+  answerHtml?: string
+}
+
+type HomeFaqSettings = {
+  isVisible: boolean
+  title: string
+  intro: string
+  introHtml?: string
+  items: HomeFaqItem[]
+}
+
 export default function AdminSiteContentForm({
   hero,
   family,
@@ -41,6 +58,7 @@ export default function AdminSiteContentForm({
   projects,
   homeTexts,
   aboutTexts,
+  homeFaq,
   banner,
   siteFont,
   promo,
@@ -51,6 +69,7 @@ export default function AdminSiteContentForm({
   projects: { speed: "slow" | "normal" | "fast"; slides: Array<{ src: string; alt: string }> }
   homeTexts: HomeTexts
   aboutTexts: AboutTexts
+  homeFaq: HomeFaqSettings
   banner: { isVisible: boolean; text: string; textHtml?: string }
   siteFont: { key: string }
   promo: { isVisible: boolean; title: string; text: string; textHtml?: string; image: SiteImage }
@@ -334,6 +353,20 @@ export default function AdminSiteContentForm({
           />
         </div>
       </section>
+
+      <HomeFaqEditor
+        initial={{
+          isVisible: Boolean(homeFaq?.isVisible),
+          title: homeFaq?.title ?? "",
+          introHtml: homeFaq?.introHtml ?? homeFaq?.intro ?? "",
+          items: (homeFaq?.items ?? []).map((it) => ({
+            id: it.id,
+            isVisible: Boolean(it.isVisible),
+            question: it.question ?? "",
+            answerHtml: it.answerHtml ?? it.answer ?? "",
+          })),
+        }}
+      />
 
       <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
         <h3 className="text-sm font-semibold text-gray-900">Bannière — “Site en construction”</h3>
