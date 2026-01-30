@@ -10,6 +10,7 @@ import { buildDescription } from "@/lib/meta"
 import { getCategoriesTree } from "@/lib/categories"
 import { unstable_cache } from "next/cache"
 import RichText from "@/components/ui/RichText"
+import Media from "@/components/ui/Media"
 
 type CategoryNode = {
   id: string
@@ -164,22 +165,39 @@ export default async function CategoryPage({
       </div>
 
       <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-semibold tracking-wide text-green-800/90">CATÉGORIE</p>
-            <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
-              {category.name}
-            </h1>
-
-            {category.descriptionHtml ? (
-              <div className="mt-2 max-w-3xl rb-clamp-3" title={category.description ?? ""}>
-                <RichText html={category.descriptionHtml} className="text-gray-700" />
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
+            {category.imageUrl ? (
+              <div className="w-full sm:w-56">
+                <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 shadow-sm ring-1 ring-black/5">
+                  <div className="aspect-[4/3] w-full bg-gray-50/70 p-4">
+                    <Media
+                      src={category.imageUrl}
+                      alt={category.name}
+                      // Packshot: on affiche l’image entière (sans crop).
+                      className="h-full w-full !object-contain"
+                    />
+                  </div>
+                </div>
               </div>
-            ) : category.description ? (
-              <p className="mt-2 text-gray-700 max-w-3xl rb-clamp-3 whitespace-pre-line" title={category.description}>
-                {category.description}
-              </p>
             ) : null}
+
+            <div>
+              <p className="text-xs font-semibold tracking-wide text-green-800/90">CATÉGORIE</p>
+              <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+                {category.name}
+              </h1>
+
+              {category.descriptionHtml ? (
+                <div className="mt-2 max-w-3xl" title={category.description ?? ""}>
+                  <RichText html={category.descriptionHtml} className="text-gray-700" />
+                </div>
+              ) : category.description ? (
+                <p className="mt-2 text-gray-700 max-w-3xl whitespace-pre-line" title={category.description}>
+                  {category.description}
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <Link
@@ -194,12 +212,6 @@ export default async function CategoryPage({
       {/* SOUS-CATÉGORIES CLIQUABLES */}
       {children.length > 0 && (
         <div className="mt-10">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Sous-catégories
-            </h2>
-          </div>
-
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {children.map((child) => (
               <li key={child.id}>
@@ -213,10 +225,6 @@ export default async function CategoryPage({
       {/* PRODUITS CLIQUABLES */}
       {products.length > 0 && (
         <div className="mt-10">
-          <h2 className="text-lg font-semibold text-gray-900">
-            Catalogue
-          </h2>
-
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {products.map((product) => (
               <li key={product.id}>

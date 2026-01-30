@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 type CategoryNode = {
   id: string
@@ -82,6 +82,12 @@ export default function CategoryParentSelector({
   }, [childrenById, currentId])
 
   const [selected, setSelected] = useState<string>(() => initialParentId ?? "")
+
+  // Important: si on navigue entre catégories (App Router), le composant peut rester monté.
+  // On resynchronise la sélection quand l'initial change (sinon ça peut afficher “Aucun parent” à tort).
+  useEffect(() => {
+    setSelected(initialParentId ?? "")
+  }, [initialParentId])
 
   const renderNode = (node: CategoryNode, level: number) => {
     const children = childrenById.get(node.id) ?? []

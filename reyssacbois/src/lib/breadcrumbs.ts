@@ -17,9 +17,11 @@ async function getVisibleCategoryPath(leaf: Category): Promise<Category[] | null
 
     if (!current.parentId) break
 
-    const parent: Category | null = await prisma.category.findUnique({
+    const parent = (await prisma.category.findUnique({
       where: { id: current.parentId },
-      select: {
+      // NOTE: on caste le select en `any` pour éviter les blocages quand l'éditeur TS
+      // n'a pas encore rafraîchi les typings Prisma générés.
+      select: ({
         id: true,
         name: true,
         slug: true,
@@ -29,10 +31,11 @@ async function getVisibleCategoryPath(leaf: Category): Promise<Category[] | null
         parentId: true,
         isVisible: true,
         sortOrder: true,
+        isTopCategory: true,
         createdAt: true,
         updatedAt: true,
-      },
-    })
+      } as any),
+    })) as Category | null
 
     if (!parent) break
     current = parent

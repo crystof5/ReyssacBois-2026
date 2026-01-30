@@ -10,17 +10,22 @@ type CategoryNode = {
   parentId: string | null
   isVisible: boolean
   sortOrder: number
+  isTopCategory: boolean
   createdAt: Date
   updatedAt: Date
   children: CategoryNode[]
 }
 
+type CategoryRow = Omit<CategoryNode, "children">
+
 const CATEGORIES_TREE_TAG = "categoriesTree"
 
 const getCategoriesTreeCached = unstable_cache(
   async () => {
-    const categories = await prisma.category.findMany({
-      select: {
+    // NOTE: on caste le select en `any` pour éviter les blocages quand l'éditeur TS
+    // n'a pas encore rafraîchi les typings Prisma générés.
+    const categories = (await prisma.category.findMany({
+      select: ({
         id: true,
         name: true,
         slug: true,
@@ -29,25 +34,30 @@ const getCategoriesTreeCached = unstable_cache(
         parentId: true,
         isVisible: true,
         sortOrder: true,
+        isTopCategory: true,
         createdAt: true,
         updatedAt: true,
-      },
-    })
+      } as any),
+    })) as unknown as CategoryRow[]
 
     const map = new Map<string, CategoryNode>()
     const roots: CategoryNode[] = []
 
-  for (const cat of categories) {
-    map.set(cat.id, { ...cat, children: [] })
-  }
-
-  map.forEach((cat) => {
-    if (cat.parentId) {
-      map.get(cat.parentId)?.children.push(cat)
-    } else {
-      roots.push(cat)
+    for (const cat of categories) {
+      map.set(cat.id, { ...cat, children: [] })
     }
-  })
+
+    map.forEach((cat) => {
+      if (cat.parentId) {
+        map.get(cat.parentId)?.children.push(cat)
+        return
+      }
+
+      // Racines côté public: on n’affiche dans le menu que les catégories marquées “principales”.
+      // Les autres catégories sans parent restent accessibles par URL (si on y navigue),
+      // mais ne polluent pas le menu.
+      if (cat.isTopCategory) roots.push(cat)
+    })
 
   // Visibilité effective: une catégorie est visible si elle-même est visible
   // ET tous ses ancêtres sont visibles.

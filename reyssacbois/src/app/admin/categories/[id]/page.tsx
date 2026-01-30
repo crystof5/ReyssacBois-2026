@@ -56,6 +56,8 @@ export default async function AdminCategoryEditPage({
     parentsChain.reverse()
   }
 
+  const effectiveParentId = (category.parentId ?? prefillParentId) || null
+
   return (
     <div>
       <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
@@ -152,6 +154,25 @@ export default async function AdminCategoryEditPage({
               <option value="0">Cachée</option>
             </select>
           </Field>
+          {effectiveParentId ? null : (
+            <div className="rounded-2xl border border-white/25 bg-white/60 p-3 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
+              <label className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  name="isTopCategory"
+                  value="1"
+                  defaultChecked={category.isTopCategory}
+                  className="mt-0.5"
+                />
+                <span>
+                  <span className="font-semibold text-gray-900">Catégorie principale</span>
+                  <span className="block mt-0.5">
+                    Affichée dans le menu catégories (sidebar) côté public.
+                  </span>
+                </span>
+              </label>
+            </div>
+          )}
           <div className="rounded-2xl border border-white/25 bg-white/60 p-3 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
             <p className="font-semibold text-gray-900">Ordre d’affichage</p>
             <p className="mt-1">
@@ -271,7 +292,7 @@ export default async function AdminCategoryEditPage({
               sortOrder: c.sortOrder ?? 0,
             }))}
             currentId={category.id}
-            initialParentId={(category.parentId ?? prefillParentId) || null}
+            initialParentId={effectiveParentId}
           />
         </Field>
 

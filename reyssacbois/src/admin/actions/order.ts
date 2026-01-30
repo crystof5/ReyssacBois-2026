@@ -18,15 +18,15 @@ export async function reorderTopCategoriesAction(ids: string[]): Promise<ActionR
   const unique = normalizeIds(ids)
   if (unique.length === 0) return { ok: false, message: "Liste vide." }
 
-  // Vérifie que ce sont bien des catégories parent (parentId null)
+  // Vérifie que ce sont bien des catégories “principales” (parentId null + isTopCategory true)
   const cats = await prisma.category.findMany({
     where: { id: { in: unique } },
-    select: { id: true, parentId: true },
+    select: { id: true, parentId: true, isTopCategory: true },
   })
 
   if (cats.length !== unique.length) return { ok: false, message: "Catégories introuvables." }
-  if (cats.some((c) => c.parentId != null)) {
-    return { ok: false, message: "Seulement les catégories parent peuvent être réordonnées ici." }
+  if (cats.some((c) => c.parentId != null || !c.isTopCategory)) {
+    return { ok: false, message: "Seulement les catégories principales (sans parent) peuvent être réordonnées ici." }
   }
 
   await prisma.$transaction(
