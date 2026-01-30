@@ -19,6 +19,7 @@ export const SITE_KEYS = {
   aboutHistory: "about.history",
   homeTexts: "home.texts",
   aboutTexts: "about.texts",
+  homeFaq: "home.faq",
   promoModal: "site.promoModal",
   constructionBanner: "site.constructionBanner",
   siteFont: "site.font",
@@ -204,6 +205,49 @@ export async function getAboutTexts(): Promise<AboutTexts | null> {
   }
 }
 
+export type HomeFaqItem = {
+  id: string
+  isVisible: boolean
+  question: string
+  answer: string
+  answerHtml?: string
+}
+
+export type HomeFaqSettings = {
+  isVisible: boolean
+  title: string
+  intro: string
+  introHtml?: string
+  items: HomeFaqItem[]
+}
+
+export async function getHomeFaqSettings(): Promise<HomeFaqSettings | null> {
+  const setting = await getSetting(SITE_KEYS.homeFaq)
+  if (!setting) return null
+
+  const value = setting.value as unknown as Partial<HomeFaqSettings>
+  const itemsRaw = Array.isArray((value as { items?: unknown }).items) ? ((value as { items: unknown[] }).items) : []
+  const items: HomeFaqItem[] = itemsRaw
+    .filter((it) => it && typeof it === "object")
+    .map((it, idx) => {
+      const o = it as Record<string, unknown>
+      const id = typeof o.id === "string" && o.id.trim() ? o.id.trim() : `faq-${idx + 1}`
+      const question = typeof o.question === "string" ? o.question : ""
+      const answer = typeof o.answer === "string" ? o.answer : ""
+      const answerHtml = typeof o.answerHtml === "string" ? String(o.answerHtml) : ""
+      const isVisible = typeof o.isVisible === "boolean" ? o.isVisible : Boolean(o.isVisible)
+      return { id, isVisible, question, answer, answerHtml: answerHtml || undefined }
+    })
+
+  return {
+    isVisible: Boolean(value.isVisible),
+    title: typeof value.title === "string" ? value.title : "",
+    intro: typeof value.intro === "string" ? value.intro : "",
+    introHtml: typeof (value as { introHtml?: unknown }).introHtml === "string" ? String((value as { introHtml: string }).introHtml) : undefined,
+    items,
+  }
+}
+
 export type SiteFontSettings = {
   key: string
 }
@@ -240,6 +284,50 @@ export const DEFAULT_ABOUT_TEXTS: AboutTexts = {
     "Notre connaissance du bois transmise de générations en générations nous permet de conseiller, guider et accompagner chaque personne dans ses projets. Notre localisation est une force, aux portes d'Agen et à mi-chemin entre Bordeaux et Toulouse, nous sommes au coeur du Sud-Ouest. Aujourd'hui, nous sommes fiers d'être indépendants et sommes excités pour nos futurs projets, notamment la rénovation de nos bâtiments historiques.",
   conclusionText:
     "173 années d'existence font de l'entreprise familiale le plus vieux commerce d'Agen. Hâte de vous recevoir dans nos locaux !",
+}
+
+export const DEFAULT_HOME_FAQ: HomeFaqSettings = {
+  isVisible: true,
+  title: "Questions fréquentes (livraison, agglomération d’Agen, conseils)",
+  intro:
+    "Livraison de bois dans l’agglomération d’Agen, accueil des particuliers et pros, conseil personnalisé… Voici les réponses aux questions les plus courantes.",
+  items: [
+    {
+      id: "faq-1",
+      isVisible: true,
+      question: "Livrez-vous du bois dans l’agglomération d’Agen ?",
+      answer:
+        "Oui. Nous pouvons organiser la livraison de bois dans l’agglomération d’Agen (Agen, Boé, Bon-Encontre, Le Passage… selon le type de produit, le volume et la tournée). Pour un besoin précis, le plus simple est de nous contacter pour vérifier la disponibilité et le délai.",
+    },
+    {
+      id: "faq-2",
+      isVisible: true,
+      question: "Jusqu’où livrez-vous (Agen, Toulouse, Bordeaux) ?",
+      answer:
+        "Nous livrons principalement dans l’agglomération d’Agen. Pour des livraisons plus éloignées (Toulouse, Bordeaux…), c’est possible sur demande pour une commande adaptée (volume, accessibilité, planning).",
+    },
+    {
+      id: "faq-3",
+      isVisible: true,
+      question: "Vendez-vous aux particuliers et aux professionnels ?",
+      answer:
+        "Oui. Nous accueillons particuliers et professionnels : construction, terrasse, bardage, menuiserie, quincaillerie… On vous aide à choisir les bons produits et quantités selon le projet.",
+    },
+    {
+      id: "faq-4",
+      isVisible: true,
+      question: "Proposez-vous du conseil personnalisé pour mon projet ?",
+      answer:
+        "Oui. Notre équipe vous conseille sur les sections, les usages, le traitement (autoclave, saturateur…), les fixations et les bonnes pratiques de pose. Si besoin, on vous accompagne pour cadrer la commande.",
+    },
+    {
+      id: "faq-5",
+      isVisible: true,
+      question: "Avez-vous du stock et du sur-mesure ?",
+      answer:
+        "Nous avons un stock important sur de nombreuses références. Pour certains besoins spécifiques, nous pouvons aussi étudier une commande sur mesure (produit, dimensions, quantité).",
+    },
+  ],
 }
 
 export const DEFAULT_SITE_FONT: SiteFontSettings = {
@@ -296,6 +384,30 @@ export async function ensureAboutTexts(): Promise<AboutTexts> {
     missionTextHtml: typeof (value as { missionTextHtml?: unknown }).missionTextHtml === "string" ? String((value as { missionTextHtml: string }).missionTextHtml) : undefined,
     locationTextHtml: typeof (value as { locationTextHtml?: unknown }).locationTextHtml === "string" ? String((value as { locationTextHtml: string }).locationTextHtml) : undefined,
     conclusionTextHtml: typeof (value as { conclusionTextHtml?: unknown }).conclusionTextHtml === "string" ? String((value as { conclusionTextHtml: string }).conclusionTextHtml) : undefined,
+  }
+}
+
+export async function ensureHomeFaqSettings(): Promise<HomeFaqSettings> {
+  const value = await ensureSettingValue<HomeFaqSettings>(SITE_KEYS.homeFaq, DEFAULT_HOME_FAQ)
+  const itemsRaw = Array.isArray((value as { items?: unknown }).items) ? ((value as { items: unknown[] }).items) : []
+  const items: HomeFaqItem[] = itemsRaw
+    .filter((it) => it && typeof it === "object")
+    .map((it, idx) => {
+      const o = it as Record<string, unknown>
+      const id = typeof o.id === "string" && o.id.trim() ? o.id.trim() : `faq-${idx + 1}`
+      const question = typeof o.question === "string" ? o.question : ""
+      const answer = typeof o.answer === "string" ? o.answer : ""
+      const answerHtml = typeof o.answerHtml === "string" ? String(o.answerHtml) : ""
+      const isVisible = typeof o.isVisible === "boolean" ? o.isVisible : Boolean(o.isVisible)
+      return { id, isVisible, question, answer, answerHtml: answerHtml || undefined }
+    })
+
+  return {
+    isVisible: typeof (value as { isVisible?: unknown }).isVisible === "boolean" ? Boolean((value as { isVisible: boolean }).isVisible) : DEFAULT_HOME_FAQ.isVisible,
+    title: typeof (value as { title?: unknown }).title === "string" ? (value as { title: string }).title : DEFAULT_HOME_FAQ.title,
+    intro: typeof (value as { intro?: unknown }).intro === "string" ? (value as { intro: string }).intro : DEFAULT_HOME_FAQ.intro,
+    introHtml: typeof (value as { introHtml?: unknown }).introHtml === "string" ? String((value as { introHtml: string }).introHtml) : undefined,
+    items: items.length ? items : DEFAULT_HOME_FAQ.items,
   }
 }
 

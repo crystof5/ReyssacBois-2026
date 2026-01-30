@@ -117,7 +117,7 @@ export default async function RootLayout({
         ) : null}
         <Navbar />
         <HashScroll offsetPx={96} />
-        <HashSections ids={["accueil", "catalogue", "qui-sommes-nous", "contact", "projets"]} offsetPx={96} />
+        <HashSections ids={["accueil", "catalogue", "qui-sommes-nous", "faq", "contact", "projets"]} offsetPx={96} />
         <PromoModal promo={promo} />
         <div className="flex-1">{children}</div>
 

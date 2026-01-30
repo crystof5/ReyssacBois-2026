@@ -179,6 +179,50 @@ export async function updateSiteContentAction(
       image: { src: promoImageSrc, alt: promoImageAlt },
     }
 
+    // Home FAQ (section + questions)
+    const faqVisible = parseVisibleFlag(formData.get("faqVisible"))
+    const faqTitle = normalizeText(formData.get("faqTitle"))
+    const faqIntroHtmlRaw = normalizeText(formData.get("faqIntroHtml"))
+    const faqIntroHtml = faqIntroHtmlRaw ? sanitizeRichTextHtml(faqIntroHtmlRaw) : ""
+    const faqIntro = faqIntroHtml ? richHtmlToPlainText(faqIntroHtml) : normalizeText(formData.get("faqIntro"))
+
+    const faqIdsRaw = normalizeText(formData.get("faqIds"))
+    let faqIds: string[] = []
+    try {
+      const parsed: unknown = JSON.parse(faqIdsRaw || "[]")
+      if (Array.isArray(parsed)) {
+        faqIds = parsed.map((v) => String(v ?? "").trim()).filter(Boolean).slice(0, 30)
+      }
+    } catch {
+      faqIds = []
+    }
+
+    const faqItems = faqIds
+      .map((id) => {
+        const question = normalizeText(formData.get(`faqQuestion_${id}`))
+        const answerHtmlRaw = normalizeText(formData.get(`faqAnswerHtml_${id}`))
+        const answerHtml = answerHtmlRaw ? sanitizeRichTextHtml(answerHtmlRaw) : ""
+        const answer = answerHtml ? richHtmlToPlainText(answerHtml) : normalizeText(formData.get(`faqAnswer_${id}`))
+        const isVisible = parseVisibleFlag(formData.get(`faqItemVisible_${id}`))
+        return {
+          id,
+          isVisible,
+          question,
+          answer,
+          answerHtml: answerHtml || undefined,
+        }
+      })
+      // garde-fou: ignore les lignes totalement vides
+      .filter((x) => x.question.trim() || x.answer.trim() || (x.answerHtml ?? "").trim())
+
+    const faq = {
+      isVisible: faqVisible,
+      title: faqTitle,
+      intro: faqIntro,
+      introHtml: faqIntroHtml || undefined,
+      items: faqItems,
+    }
+
     await prisma.$transaction([
       prisma.siteSetting.upsert({
         where: { key: SITE_KEYS.siteFont },
@@ -224,6 +268,11 @@ export async function updateSiteContentAction(
         where: { key: SITE_KEYS.promoModal },
         create: { key: SITE_KEYS.promoModal, value: promo },
         update: { value: promo },
+      }),
+      prisma.siteSetting.upsert({
+        where: { key: SITE_KEYS.homeFaq },
+        create: { key: SITE_KEYS.homeFaq, value: faq },
+        update: { value: faq },
       }),
     ])
 
