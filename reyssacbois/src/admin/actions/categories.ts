@@ -138,6 +138,7 @@ export async function updateCategoryAction(formData: FormData) {
   const imageUrl = String(formData.get("imageUrl") ?? "").trim()
   const parentIdRaw = String(formData.get("parentId") ?? "").trim()
   const isVisible = String(formData.get("isVisible") ?? "") === "1"
+  const isTopCategoryRequested = String(formData.get("isTopCategory") ?? "") === "1"
   const sortOrderRaw = String(formData.get("sortOrder") ?? "").trim()
   const sortOrder = Number.isFinite(Number(sortOrderRaw)) ? Number(sortOrderRaw) : 0
 
@@ -146,7 +147,7 @@ export async function updateCategoryAction(formData: FormData) {
 
   const current = await prisma.category.findUnique({
     where: { id },
-    select: { slug: true },
+    select: { slug: true, isTopCategory: true, parentId: true, sortOrder: true },
   })
   if (!current) throw new Error("Catégorie introuvable")
 
@@ -155,6 +156,22 @@ export async function updateCategoryAction(formData: FormData) {
   const base = slugInput ? slugify(slugInput) : current.slug
   const slug = await ensureUniqueCategorySlug(base, id)
   const parentId = parentIdRaw ? parentIdRaw : null
+  const isTopCategory = parentId ? false : isTopCategoryRequested
+
+  // Quand on coche “catégorie principale” sur une racine, on la place à la fin des catégories principales
+  // pour éviter les collisions (les autres restent réordonnables via le drag&drop).
+  let nextSortOrder = sortOrder
+  if (!parentId && isTopCategory && !current.isTopCategory) {
+    const maxTop = await prisma.category.aggregate({
+      where: { parentId: null, isTopCategory: true },
+      _max: { sortOrder: true },
+    })
+    nextSortOrder = (maxTop._max.sortOrder ?? -1) + 1
+  }
+  if (!parentId && !isTopCategory && current.isTopCategory) {
+    // Retirée du menu: l’ordre sidebar n’a plus de sens, on remet à 0.
+    nextSortOrder = 0
+  }
 
   if (parentId === id) {
     throw new Error("Une catégorie ne peut pas être son propre parent.")
@@ -194,7 +211,8 @@ export async function updateCategoryAction(formData: FormData) {
       imageUrl: imageUrl || null,
       parentId,
       isVisible,
-      sortOrder,
+      sortOrder: nextSortOrder,
+      isTopCategory,
     },
   })
 

@@ -24,25 +24,12 @@ export default function CategoryCard({
   return (
     <CardLink href={href} className="self-stretch h-full overflow-hidden bg-white/75 hover:bg-white/85">
       <div className="flex h-full flex-col">
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-50/80 p-4 sm:p-5">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-black/[0.03] p-4 sm:p-5">
         <Media
           src={category.imageUrl}
           alt={category.name}
           // Packshots: on évite le crop -> on “recule” l’image.
           className="h-full w-full !object-contain"
-        />
-        {/* Reflet / texture légère pour donner du relief */}
-        <div
-          className="pointer-events-none absolute inset-0
-          bg-[radial-gradient(800px_circle_at_20%_0%,rgba(255,255,255,0.75),transparent_55%)]
-          opacity-60"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-0
-          bg-[linear-gradient(180deg,rgba(255,255,255,0.08),transparent_40%,rgba(0,0,0,0.04))]
-          opacity-100"
-          aria-hidden
         />
       </div>
 

@@ -8,6 +8,39 @@ import Underline from "@tiptap/extension-underline"
 import { TextStyle } from "@tiptap/extension-text-style"
 import Color from "@tiptap/extension-color"
 
+type SearchCategory = {
+  id: string
+  name: string
+  slug: string
+  isVisible: boolean
+  parent: { name: string; slug: string } | null
+}
+
+type SearchProduct = {
+  id: string
+  name: string
+  slug: string
+  isVisible: boolean
+  section: string | null
+  length: string | null
+  width: string | null
+  type: string | null
+  categories: { category: { name: string; slug: string } }[]
+}
+
+type SearchApiResponse =
+  | { ok: true; q: string; categories: SearchCategory[]; products: SearchProduct[] }
+  | { ok: false; error: string }
+
+function useDebouncedValue<T>(value: T, delayMs: number) {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const t = window.setTimeout(() => setDebounced(value), delayMs)
+    return () => window.clearTimeout(t)
+  }, [value, delayMs])
+  return debounced
+}
+
 function ToolbarButton({
   active,
   onClick,
@@ -53,6 +86,17 @@ export default function RichTextEditor({
   const [linkError, setLinkError] = useState<string | null>(null)
   const savedSelectionRef = useRef<{ from: number; to: number } | null>(null)
 
+  // Recherche “lien interne” (produit/catégorie) via /api/search
+  const [internalQ, setInternalQ] = useState("")
+  const [internalEnabled, setInternalEnabled] = useState(false)
+  const internalDebounced = useDebouncedValue(internalQ, 220)
+  const [internalLoading, setInternalLoading] = useState(false)
+  const [internalError, setInternalError] = useState<string | null>(null)
+  const [internalCats, setInternalCats] = useState<SearchCategory[]>([])
+  const [internalProds, setInternalProds] = useState<SearchProduct[]>([])
+  const internalAbortRef = useRef<AbortController | null>(null)
+  const internalCacheRef = useRef<Map<string, { c: SearchCategory[]; p: SearchProduct[] }>>(new Map())
+
   const extensions = useMemo(
     () => [
       StarterKit.configure({
@@ -91,7 +135,15 @@ export default function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "min-h-28 w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-600/20",
+          [
+            "min-h-28 w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-600/20",
+            // Important: Tailwind reset enlève les styles de listes dans le contentEditable.
+            // On ré-applique un rendu clair dans l’éditeur.
+            "[&_p]:my-0 [&_p+p]:mt-3",
+            "[&_ul]:my-0 [&_ul]:pl-5 [&_ul]:list-disc",
+            "[&_ol]:my-0 [&_ol]:pl-5 [&_ol]:list-decimal",
+            "[&_li]:my-1",
+          ].join(" "),
       },
     },
   })
@@ -105,6 +157,59 @@ export default function RichTextEditor({
     }
   }, [editor, initialHtml])
 
+  // Recherche de liens internes (produits / catégories)
+  // IMPORTANT: doit être déclaré AVANT tout return conditionnel pour respecter l'ordre des hooks React.
+  const internalTrimmed = internalDebounced.trim()
+  const internalHasQuery = internalTrimmed.length >= 2
+  useEffect(() => {
+    if (!showLinkPanel) return
+    if (!internalEnabled) return
+    if (!internalHasQuery) {
+      setInternalCats([])
+      setInternalProds([])
+      setInternalError(null)
+      setInternalLoading(false)
+      if (internalAbortRef.current) internalAbortRef.current.abort()
+      return
+    }
+
+    const key = internalTrimmed.toLowerCase()
+    const cached = internalCacheRef.current.get(key)
+    if (cached) {
+      setInternalCats(cached.c)
+      setInternalProds(cached.p)
+      setInternalError(null)
+      setInternalLoading(false)
+      return
+    }
+
+    const controller = new AbortController()
+    if (internalAbortRef.current) internalAbortRef.current.abort()
+    internalAbortRef.current = controller
+
+    setInternalLoading(true)
+    setInternalError(null)
+
+    const url = `/api/search?q=${encodeURIComponent(internalTrimmed)}&limit=8&admin=1`
+    fetch(url, { signal: controller.signal })
+      .then((r) => r.json() as Promise<SearchApiResponse>)
+      .then((json) => {
+        if (!json || typeof json !== "object") throw new Error("Réponse invalide")
+        if (json.ok !== true) throw new Error("Recherche indisponible.")
+        internalCacheRef.current.set(key, { c: json.categories, p: json.products })
+        setInternalCats(json.categories)
+        setInternalProds(json.products)
+        setInternalError(null)
+      })
+      .catch((e: unknown) => {
+        if (e instanceof DOMException && e.name === "AbortError") return
+        setInternalCats([])
+        setInternalProds([])
+        setInternalError(e instanceof Error ? e.message : "Recherche indisponible.")
+      })
+      .finally(() => setInternalLoading(false))
+  }, [internalEnabled, internalHasQuery, internalTrimmed, showLinkPanel])
+
   if (!editor) {
     return (
       <div className="rounded-xl border border-gray-200 bg-white p-3 text-sm text-gray-600">
@@ -117,6 +222,13 @@ export default function RichTextEditor({
     const prev = (editor.getAttributes("link").href as string | undefined) ?? ""
     setLinkHref(prev)
     setLinkError(null)
+    setInternalError(null)
+    setInternalLoading(false)
+    setInternalCats([])
+    setInternalProds([])
+    setInternalQ("")
+    setInternalEnabled(false)
+    if (internalAbortRef.current) internalAbortRef.current.abort()
     // On sauvegarde la sélection pour pouvoir ré-appliquer le lien sans la perdre.
     const sel = editor.state.selection
     savedSelectionRef.current = { from: sel.from, to: sel.to }
@@ -134,8 +246,14 @@ export default function RichTextEditor({
     return false
   }
 
-  const applyLink = () => {
-    const v = normalizeHref(linkHref)
+  const applyLink = ({
+    href,
+    insertTextIfEmptySelection,
+  }: {
+    href: string
+    insertTextIfEmptySelection?: string
+  }) => {
+    const v = normalizeHref(href)
     setLinkError(null)
 
     if (!isAllowedHref(v)) {
@@ -147,12 +265,32 @@ export default function RichTextEditor({
     const saved = savedSelectionRef.current
     if (saved) editor.commands.setTextSelection(saved)
 
-    // Si rien n'est sélectionné, on ne peut pas créer un lien “sur un mot”.
-    // On garde quand même le panneau ouvert et on affiche une aide.
     const curSel = editor.state.selection
     const hasSelection = curSel.to > curSel.from
+
+    // Si rien n'est sélectionné, on peut soit refuser (URL manuelle), soit insérer un texte cliquable (lien interne).
     if (!hasSelection && !editor.isActive("link")) {
-      setLinkError("Sélectionne d’abord un mot/texte dans l’éditeur, puis clique “Appliquer”.")
+      const label = (insertTextIfEmptySelection ?? "").trim()
+      if (!label) {
+        setLinkError("Sélectionne d’abord un mot/texte dans l’éditeur, puis clique “Appliquer”.")
+        return
+      }
+      if (!v) {
+        setLinkError("Choisis un lien interne (produit/catégorie) ou saisis une URL.")
+        return
+      }
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: "text",
+          text: label,
+          marks: [{ type: "link", attrs: { href: v } }],
+        } as any)
+        .run()
+
+      setShowLinkPanel(false)
+      savedSelectionRef.current = null
       return
     }
 
@@ -244,6 +382,111 @@ export default function RichTextEditor({
 
       {showLinkPanel ? (
         <div className="mt-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
+          <div className="mb-3 rounded-lg border border-gray-200 bg-gray-50/60 p-3">
+            <p className="text-xs font-semibold text-gray-900">Lien interne (produit / catégorie)</p>
+            <p className="mt-1 text-xs text-gray-600">
+              Tape au moins 2 caractères, puis clique un résultat pour insérer le lien (sur la sélection, ou en insérant le nom si rien n’est sélectionné).
+            </p>
+
+            <div className="mt-2 flex items-center gap-2">
+              <input
+                value={internalQ}
+                onChange={(e) => {
+                  setInternalEnabled(true)
+                  setInternalQ(e.currentTarget.value)
+                }}
+                placeholder="Rechercher un produit ou une catégorie…"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              />
+              {internalLoading ? (
+                <span className="text-xs text-gray-500">Recherche…</span>
+              ) : internalHasQuery ? (
+                <span className="text-xs text-gray-500">
+                  {internalCats.length + internalProds.length} résultat
+                  {internalCats.length + internalProds.length > 1 ? "s" : ""}
+                </span>
+              ) : (
+                <span className="text-xs text-gray-500">2+ car.</span>
+              )}
+            </div>
+
+            {internalError ? <p className="mt-2 text-xs text-red-700">{internalError}</p> : null}
+
+            {internalHasQuery && !internalLoading && !internalError ? (
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Catégories</p>
+                  <ul className="space-y-1">
+                    {internalCats.length ? (
+                      internalCats.map((c) => {
+                        const href = `/categories/${c.slug}`
+                        return (
+                          <li key={`c:${c.id}`}>
+                            <button
+                              type="button"
+                              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                              onClick={() => {
+                                setLinkHref(href)
+                                applyLink({ href, insertTextIfEmptySelection: c.name })
+                              }}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-semibold text-gray-900 truncate">{c.name}</span>
+                                <span className="text-xs text-gray-400">→</span>
+                              </div>
+                              <div className="mt-0.5 text-xs text-gray-500 truncate">
+                                {c.parent?.name ? `${c.parent.name} · ` : ""}/{c.slug}
+                                {!c.isVisible ? " · cachée" : ""}
+                              </div>
+                            </button>
+                          </li>
+                        )
+                      })
+                    ) : (
+                      <li className="px-2 py-2 text-xs text-gray-500">Aucune catégorie.</li>
+                    )}
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Produits</p>
+                  <ul className="space-y-1">
+                    {internalProds.length ? (
+                      internalProds.map((p) => {
+                        const href = `/produits/${p.slug}`
+                        const meta = [p.section, p.width, p.length, p.type].filter(Boolean).join(" • ")
+                        const catHint = p.categories[0]?.category?.name
+                        return (
+                          <li key={`p:${p.id}`}>
+                            <button
+                              type="button"
+                              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                              onClick={() => {
+                                setLinkHref(href)
+                                applyLink({ href, insertTextIfEmptySelection: p.name })
+                              }}
+                            >
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-semibold text-gray-900 truncate">{p.name}</span>
+                                <span className="text-xs text-gray-400">→</span>
+                              </div>
+                              <div className="mt-0.5 text-xs text-gray-500 truncate">
+                                {meta || catHint ? `${meta || catHint} · ` : ""}/{p.slug}
+                                {!p.isVisible ? " · caché" : ""}
+                              </div>
+                            </button>
+                          </li>
+                        )
+                      })
+                    ) : (
+                      <li className="px-2 py-2 text-xs text-gray-500">Aucun produit.</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <label className="flex-1">
               <span className="sr-only">URL du lien</span>
@@ -258,7 +501,7 @@ export default function RichTextEditor({
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-                onClick={applyLink}
+                onClick={() => applyLink({ href: linkHref })}
               >
                 Appliquer
               </button>

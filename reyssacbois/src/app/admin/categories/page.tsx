@@ -17,9 +17,13 @@ export default async function AdminCategoriesPage({
   const vis = typeof sp.vis === "string" ? sp.vis : "all"
 
   const [categories, diag] = await Promise.all([getAdminCategories(), getDbDiagnostics()])
-  const parents = categories.filter((c) => !c.parentId)
+  // Racines (sans parent)
+  const rootsAll = categories.filter((c) => !c.parentId)
+  // Catégories principales (affichées dans la sidebar)
+  const parents = categories.filter((c) => !c.parentId && c.isTopCategory)
   const children = categories.filter((c) => !!c.parentId)
-  const orphans = categories.filter((c) => c._count.children === 0 && c._count.products === 0)
+  // Catégories “hors menu” = sans parent mais non marquées “principales”
+  const orphans = categories.filter((c) => !c.parentId && !c.isTopCategory)
   const brokenParents = categories.filter((c) => !!c.parentId && !c.parent)
 
   const qLower = q.toLowerCase()
@@ -57,7 +61,7 @@ export default async function AdminCategoriesPage({
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
             <p className="mt-1 text-sm text-gray-700">
-              L’ordre des <span className="font-medium">catégories parent</span> correspond à la sidebar.
+              L’ordre des <span className="font-medium">catégories principales</span> correspond à la sidebar.
             </p>
 
             <nav aria-label="Fil d’Ariane admin" className="mt-3">
@@ -198,11 +202,9 @@ export default async function AdminCategoriesPage({
         <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">
-                Catégories orphelines (vides)
-              </h3>
+              <h3 className="text-sm font-semibold text-gray-900">Catégories sans parent (hors menu)</h3>
               <p className="mt-1 text-xs text-gray-500">
-                Catégories sans sous-catégorie et sans produit rattaché (souvent invisibles côté public).
+                Catégories avec <span className="font-medium">aucun parent</span> et non marquées “catégorie principale”.
               </p>
             </div>
             <span className="text-xs text-gray-500">
@@ -221,6 +223,9 @@ export default async function AdminCategoriesPage({
                       <p className="mt-1 text-xs text-gray-600">
                         Parent: <span className="font-medium">{c.parent?.name ?? "—"}</span>
                       </p>
+                      <p className="mt-1 text-xs text-gray-600">
+                        {c._count.children} sous-cat. • {c._count.products} produits
+                      </p>
                     </div>
                     <span
                       className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -238,21 +243,29 @@ export default async function AdminCategoriesPage({
                     >
                       Éditer
                     </Link>
-                    <form action={deleteCategoryIfOrphanAction}>
-                      <input type="hidden" name="id" value={c.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
-                      >
-                        Supprimer
-                      </button>
-                    </form>
+                    <Link
+                      href={`/categories/${c.slug}`}
+                      className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                    >
+                      Voir →
+                    </Link>
+                    {c._count.children === 0 && c._count.products === 0 ? (
+                      <form action={deleteCategoryIfOrphanAction}>
+                        <input type="hidden" name="id" value={c.id} />
+                        <button
+                          type="submit"
+                          className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                        >
+                          Supprimer
+                        </button>
+                      </form>
+                    ) : null}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="mt-3 text-sm text-gray-600">Aucune catégorie orpheline détectée.</p>
+            <p className="mt-3 text-sm text-gray-600">Aucune catégorie sans parent (hors menu) détectée.</p>
           )}
         </div>
 
@@ -340,7 +353,7 @@ export default async function AdminCategoriesPage({
 
           <div className="mt-4 rounded-2xl border border-white/25 bg-white/75 shadow-sm ring-1 ring-black/5 backdrop-blur">
             <ul className="divide-y divide-black/5">
-              {parents.map((root) => {
+              {rootsAll.map((root) => {
                 const render = (
                   node: (typeof categories)[number],
                   level: number,
@@ -411,7 +424,7 @@ export default async function AdminCategoriesPage({
         </div>
 
         <SortableList
-          title="Catégories parent (ordre sidebar)"
+          title="Catégories principales (ordre sidebar)"
           description="Glisse-dépose pour réordonner. Cet ordre est celui du menu catégories côté public."
           items={parents.map((c) => ({
             id: c.id,

@@ -38,6 +38,7 @@ async function main() {
       slug: "bois-de-menuiserie-de-pays",
       description:
         "Bois massifs Français secs - Avivés ou plots - Différentes épaisseurs disponibles",
+      isTopCategory: true,
     },
   })
 
@@ -47,6 +48,7 @@ async function main() {
       slug: "charpente",
       description:
         "Bois massif traditionnel - Epicéa du Jura - Brut - Traité CL2",
+      isTopCategory: true,
     },
   })
 
@@ -55,6 +57,7 @@ async function main() {
       name: "Lame de terrasse",
       slug: "lame-de-terrasse",
       description: "Pin Sylvestre traité CL4 - Exotique - Bambou",
+      isTopCategory: true,
     },
   })
 
