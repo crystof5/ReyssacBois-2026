@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
+import type { Content } from "@tiptap/core"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Link from "@tiptap/extension-link"
@@ -286,7 +287,7 @@ export default function RichTextEditor({
           type: "text",
           text: label,
           marks: [{ type: "link", attrs: { href: v } }],
-        } as any)
+        } as Content)
         .run()
 
       setShowLinkPanel(false)
