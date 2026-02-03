@@ -8,6 +8,7 @@ import { updateSiteContentAction } from "@/admin/actions/siteContent";
 import PromoModal from "@/components/PromoModal";
 import RichTextEditor from "@/admin/components/RichTextEditor";
 import HomeFaqEditor from "@/admin/components/HomeFaqEditor";
+import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
 import {
   DEFAULT_SITE_FONT_KEY,
   getFontFamilyStackForKey,
@@ -418,10 +419,7 @@ export default function AdminSiteContentForm({
   } | null>;
 }) {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(
-    updateSiteContentAction,
-    null
-  );
+  const [state, formAction] = useActionState(updateSiteContentAction, null);
   const formRef = useRef<HTMLFormElement | null>(null);
   const [promoPreview, setPromoPreview] = useState<{
     title: string;
@@ -448,7 +446,7 @@ export default function AdminSiteContentForm({
       key={version}
       ref={formRef}
       action={formAction}
-      className="mt-6 space-y-10"
+      className="mt-6 space-y-10 pb-28"
     >
       {state?.message && (
         <div
@@ -1141,21 +1139,7 @@ export default function AdminSiteContentForm({
         />
       ) : null}
 
-      <div className="sticky bottom-4 z-10">
-        <div className="rounded-2xl border border-gray-200 bg-white/90 backdrop-blur p-3 shadow-sm flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <p className="text-xs text-gray-600">
-            Pense à cliquer <span className="font-medium">Enregistrer</span>{" "}
-            après tes modifications.
-          </p>
-          <button
-            type="submit"
-            disabled={isPending}
-            className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
-          >
-            {isPending ? "Enregistrement…" : "Enregistrer"}
-          </button>
-        </div>
-      </div>
+      <AdminFloatingSaveButton />
     </form>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import RichTextEditor from "@/admin/components/RichTextEditor";
+import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
 import { updateContactInfoAction } from "@/admin/actions/siteContentSections";
 
 export default function ContactInfoForm({
@@ -13,10 +13,7 @@ export default function ContactInfoForm({
   initial: { title: string; text: string; textHtml?: string };
   version: string;
 }) {
-  const [state, formAction, isPending] = useActionState(
-    updateContactInfoAction,
-    null
-  );
+  const [state, formAction] = useActionState(updateContactInfoAction, null);
 
   const router = useRouter();
   useEffect(() => {
@@ -24,7 +21,7 @@ export default function ContactInfoForm({
   }, [router, state?.ok]);
 
   return (
-    <form key={version} action={formAction} className="mt-6 space-y-6">
+    <form key={version} action={formAction} className="mt-6 space-y-6 pb-28">
       {state?.message ? (
         <div
           className={`rounded-xl border p-3 text-sm ${
@@ -75,24 +72,7 @@ export default function ContactInfoForm({
         </div>
       </section>
 
-      <div className="sticky bottom-4 z-10">
-        <div className="rounded-2xl border border-gray-200 bg-white/90 backdrop-blur p-3 shadow-sm flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <p className="text-xs text-gray-600">
-            Retour au{" "}
-            <Link href="/admin/home" className="underline">
-              menu Home
-            </Link>
-            .
-          </p>
-          <button
-            type="submit"
-            disabled={isPending}
-            className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
-          >
-            {isPending ? "Enregistrement…" : "Enregistrer"}
-          </button>
-        </div>
-      </div>
+      <AdminFloatingSaveButton />
     </form>
   );
 }

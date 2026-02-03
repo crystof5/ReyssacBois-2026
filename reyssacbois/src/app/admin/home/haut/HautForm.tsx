@@ -1,9 +1,9 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ImageUploadField from "@/admin/components/ImageUploadField";
+import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
 import { updateHomeHeaderAction } from "@/admin/actions/siteContentSections";
 import {
   DEFAULT_SITE_FONT_KEY,
@@ -30,10 +30,7 @@ export default function HautForm({
   };
   version: string;
 }) {
-  const [state, formAction, isPending] = useActionState(
-    updateHomeHeaderAction,
-    null
-  );
+  const [state, formAction] = useActionState(updateHomeHeaderAction, null);
 
   const router = useRouter();
   useEffect(() => {
@@ -52,7 +49,7 @@ export default function HautForm({
   ];
 
   return (
-    <form key={version} action={formAction} className="mt-6 space-y-6">
+    <form key={version} action={formAction} className="mt-6 space-y-6 pb-28">
       {state?.message ? (
         <div
           className={`rounded-xl border p-3 text-sm ${
@@ -237,24 +234,7 @@ export default function HautForm({
         </div>
       </section>
 
-      <div className="sticky bottom-4 z-10">
-        <div className="rounded-2xl border border-gray-200 bg-white/90 backdrop-blur p-3 shadow-sm flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <p className="text-xs text-gray-600">
-            Tu peux retourner au{" "}
-            <Link href="/admin/home" className="underline">
-              menu Home
-            </Link>
-            .
-          </p>
-          <button
-            type="submit"
-            disabled={isPending}
-            className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
-          >
-            {isPending ? "Enregistrement…" : "Enregistrer"}
-          </button>
-        </div>
-      </div>
+      <AdminFloatingSaveButton />
     </form>
   );
 }
