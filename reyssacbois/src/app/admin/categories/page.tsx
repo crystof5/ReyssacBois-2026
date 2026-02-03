@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Fragment } from "react"
+import { Fragment, type ReactNode } from "react"
 import { getAdminCategories } from "@/admin/queries/categories"
 import { getDbDiagnostics } from "@/admin/queries/diagnostics"
 import SortableList from "@/admin/components/SortableList"
@@ -361,7 +361,7 @@ export default async function AdminCategoriesPage({
                 ) => {
                   const nextPath = [...path, node.name]
                   const kids = childrenByParentId.get(node.id) ?? []
-                  const blocks: any[] = []
+                  const blocks: ReactNode[] = []
 
                   blocks.push(
                     <li

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import type { Prisma } from "@prisma/client"
 import { unstable_cache } from "next/cache"
 
 type CategoryNode = {
@@ -22,22 +23,22 @@ const CATEGORIES_TREE_TAG = "categoriesTree"
 
 const getCategoriesTreeCached = unstable_cache(
   async () => {
-    // NOTE: on caste le select en `any` pour éviter les blocages quand l'éditeur TS
-    // n'a pas encore rafraîchi les typings Prisma générés.
+    const categorySelect = {
+      id: true,
+      name: true,
+      slug: true,
+      description: true,
+      imageUrl: true,
+      parentId: true,
+      isVisible: true,
+      sortOrder: true,
+      isTopCategory: true,
+      createdAt: true,
+      updatedAt: true,
+    } satisfies Prisma.CategorySelect
+
     const categories = (await prisma.category.findMany({
-      select: ({
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        imageUrl: true,
-        parentId: true,
-        isVisible: true,
-        sortOrder: true,
-        isTopCategory: true,
-        createdAt: true,
-        updatedAt: true,
-      } as any),
+      select: categorySelect,
     })) as unknown as CategoryRow[]
 
     const map = new Map<string, CategoryNode>()

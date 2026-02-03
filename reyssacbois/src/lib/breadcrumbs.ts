@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import type { Category } from "@prisma/client"
+import type { Prisma } from "@prisma/client"
 import { unstable_cache } from "next/cache"
 
 async function getVisibleCategoryPath(leaf: Category): Promise<Category[] | null> {
@@ -17,24 +18,24 @@ async function getVisibleCategoryPath(leaf: Category): Promise<Category[] | null
 
     if (!current.parentId) break
 
+    const categorySelect = {
+      id: true,
+      name: true,
+      slug: true,
+      description: true,
+      descriptionHtml: true,
+      imageUrl: true,
+      parentId: true,
+      isVisible: true,
+      sortOrder: true,
+      isTopCategory: true,
+      createdAt: true,
+      updatedAt: true,
+    } satisfies Prisma.CategorySelect
+
     const parent = (await prisma.category.findUnique({
       where: { id: current.parentId },
-      // NOTE: on caste le select en `any` pour éviter les blocages quand l'éditeur TS
-      // n'a pas encore rafraîchi les typings Prisma générés.
-      select: ({
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        descriptionHtml: true,
-        imageUrl: true,
-        parentId: true,
-        isVisible: true,
-        sortOrder: true,
-        isTopCategory: true,
-        createdAt: true,
-        updatedAt: true,
-      } as any),
+      select: categorySelect,
     })) as Category | null
 
     if (!parent) break
