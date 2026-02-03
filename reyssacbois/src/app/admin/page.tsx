@@ -3,7 +3,7 @@ import Link from "next/link"
 export default function AdminPage() {
   const items = [
     {
-      title: "Accueil / Carrousel",
+      title: "Accueil",
       desc: "Gérer les images du hero et la vitesse.",
       href: "/admin/home",
     },
