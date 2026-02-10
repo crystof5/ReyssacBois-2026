@@ -8,7 +8,7 @@ import { updateSiteContentAction } from "@/admin/actions/siteContent";
 import PromoModal from "@/components/PromoModal";
 import RichTextEditor from "@/admin/components/RichTextEditor";
 import HomeFaqEditor from "@/admin/components/HomeFaqEditor";
-import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
+import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar";
 import {
   DEFAULT_SITE_FONT_KEY,
   getFontFamilyStackForKey,
@@ -446,7 +446,7 @@ export default function AdminSiteContentForm({
       key={version}
       ref={formRef}
       action={formAction}
-      className="mt-6 space-y-10 pb-28"
+      className="mt-6 space-y-10"
     >
       {state?.message && (
         <div
@@ -1139,7 +1139,7 @@ export default function AdminSiteContentForm({
         />
       ) : null}
 
-      <AdminFloatingSaveButton />
+      <AdminStickySaveBar hint="Modifie, puis enregistre (la page confirme quand c’est OK)." />
     </form>
   );
 }

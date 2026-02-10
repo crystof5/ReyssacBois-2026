@@ -1,9 +1,9 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploadField from "@/admin/components/ImageUploadField";
-import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
+import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar";
 import { updateHomeHeaderAction } from "@/admin/actions/siteContentSections";
 import {
   DEFAULT_SITE_FONT_KEY,
@@ -40,7 +40,8 @@ export default function HautForm({
   const initialFontKey: SiteFontKey = isSiteFontKey(siteFont?.key)
     ? (siteFont.key as SiteFontKey)
     : DEFAULT_SITE_FONT_KEY;
-  const fontKey = initialFontKey;
+  const [fontPreviewKey, setFontPreviewKey] =
+    useState<SiteFontKey>(initialFontKey);
 
   const highlights = homeTexts.heroHighlights ?? [
     { isVisible: true, title: "Depuis 1850", desc: "Entreprise familiale" },
@@ -49,7 +50,7 @@ export default function HautForm({
   ];
 
   return (
-    <form key={version} action={formAction} className="mt-6 space-y-6 pb-28">
+    <form key={version} action={formAction} className="mt-6 space-y-6">
       {state?.message ? (
         <div
           className={`rounded-xl border p-3 text-sm ${
@@ -73,8 +74,12 @@ export default function HautForm({
             </span>
             <select
               name="siteFontKey"
-              defaultValue={fontKey}
+              value={fontPreviewKey}
               className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              onChange={(e) => {
+                const v = e.currentTarget.value;
+                setFontPreviewKey(isSiteFontKey(v) ? v : DEFAULT_SITE_FONT_KEY);
+              }}
             >
               {SITE_FONTS.map((f) => (
                 <option key={f.key} value={f.key}>
@@ -87,7 +92,7 @@ export default function HautForm({
             <p className="text-xs text-gray-500">Aperçu</p>
             <div
               className="mt-2 rounded-lg border border-gray-200 bg-white p-4"
-              style={{ fontFamily: getFontFamilyStackForKey(fontKey) }}
+              style={{ fontFamily: getFontFamilyStackForKey(fontPreviewKey) }}
             >
               <p className="text-sm font-semibold text-gray-900">
                 Reyssac Bois
@@ -234,7 +239,7 @@ export default function HautForm({
         </div>
       </section>
 
-      <AdminFloatingSaveButton />
+      <AdminStickySaveBar hint="Modifie, puis enregistre (la page confirme quand c’est OK)." />
     </form>
   );
 }

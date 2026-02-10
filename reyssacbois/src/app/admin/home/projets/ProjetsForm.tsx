@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ProjectsCarouselEditor from "@/admin/components/ProjectsCarouselEditor";
-import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
+import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar";
 import { updateHomeProjectsAction } from "@/admin/actions/siteContentSections";
 
 export default function ProjetsForm({
@@ -24,7 +24,7 @@ export default function ProjetsForm({
   }, [router, state?.ok]);
 
   return (
-    <form key={version} action={formAction} className="mt-6 space-y-6 pb-28">
+    <form key={version} action={formAction} className="mt-6 space-y-6">
       {state?.message ? (
         <div
           className={`rounded-xl border p-3 text-sm ${
@@ -49,7 +49,7 @@ export default function ProjetsForm({
         </div>
       </section>
 
-      <AdminFloatingSaveButton />
+      <AdminStickySaveBar hint="Modifie, puis enregistre (la page confirme quand c’est OK)." />
     </form>
   );
 }

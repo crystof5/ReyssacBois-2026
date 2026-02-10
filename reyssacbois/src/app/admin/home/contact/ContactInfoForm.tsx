@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import RichTextEditor from "@/admin/components/RichTextEditor";
-import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
+import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar";
 import { updateContactInfoAction } from "@/admin/actions/siteContentSections";
 
 export default function ContactInfoForm({
@@ -21,7 +21,7 @@ export default function ContactInfoForm({
   }, [router, state?.ok]);
 
   return (
-    <form key={version} action={formAction} className="mt-6 space-y-6 pb-28">
+    <form key={version} action={formAction} className="mt-6 space-y-6">
       {state?.message ? (
         <div
           className={`rounded-xl border p-3 text-sm ${
@@ -72,7 +72,7 @@ export default function ContactInfoForm({
         </div>
       </section>
 
-      <AdminFloatingSaveButton />
+      <AdminStickySaveBar hint="Modifie, puis enregistre (la page confirme quand c’est OK)." />
     </form>
   );
 }

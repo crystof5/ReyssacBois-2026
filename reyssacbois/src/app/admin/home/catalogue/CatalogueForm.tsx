@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import AdminFloatingSaveButton from "@/admin/components/AdminFloatingSaveButton";
+import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar";
 import { updateHomeCatalogueAction } from "@/admin/actions/siteContentSections";
 
 type PreviewItem = {
@@ -326,7 +326,7 @@ export default function CatalogueForm({
   const items: CatalogueSlotItem[] = homeTexts.catalogueItems ?? [];
 
   return (
-    <form key={version} action={formAction} className="mt-6 space-y-6 pb-28">
+    <form key={version} action={formAction} className="mt-6 space-y-6">
       {state?.message ? (
         <div
           className={`rounded-xl border p-3 text-sm ${
@@ -385,7 +385,7 @@ export default function CatalogueForm({
         </div>
       </section>
 
-      <AdminFloatingSaveButton />
+      <AdminStickySaveBar hint="Modifie, puis enregistre (la page confirme quand c’est OK)." />
     </form>
   );
 }
