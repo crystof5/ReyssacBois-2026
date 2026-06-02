@@ -173,18 +173,18 @@ export default function SearchBar({
 
   const headerClass =
     mode === "admin"
-      ? "bg-white border border-gray-200 text-gray-900"
+      ? "bg-white border border-line text-ink"
       : "bg-white/10 border border-white/20 text-white placeholder:text-white/70"
 
   const inputClass =
     mode === "admin"
-      ? "placeholder:text-gray-400"
+      ? "placeholder:text-line-strong"
       : "placeholder:text-white/70"
 
   const panelClass =
     mode === "admin"
-      ? "border-gray-200 bg-white text-gray-900"
-      : "border-white/15 bg-white/95 text-gray-900"
+      ? "border-line bg-surface text-ink"
+      : "border-line bg-surface text-ink"
 
   const rightHint = useMemo(() => {
     if (!hasQuery) return "Tape au moins 2 caractères"
@@ -199,7 +199,7 @@ export default function SearchBar({
       <div
         className={`flex items-center gap-2 rounded-xl px-3 py-2 backdrop-blur ${headerClass}`}
       >
-        <span className={mode === "admin" ? "text-gray-500" : "text-white/90"}>
+        <span className={mode === "admin" ? "text-ink-400" : "text-white/90"}>
           <MagnifierIcon />
         </span>
         <input
@@ -226,11 +226,11 @@ export default function SearchBar({
         />
         {showHint ? (
           loading ? (
-            <span className={mode === "admin" ? "text-gray-500" : "text-white/80"} aria-label="Recherche en cours">
+            <span className={mode === "admin" ? "text-ink-400" : "text-white/80"} aria-label="Recherche en cours">
               <Spinner />
             </span>
           ) : (
-            <span className={mode === "admin" ? "text-xs text-gray-500" : "text-xs text-white/80"}>
+            <span className={mode === "admin" ? "text-xs text-ink-400" : "text-xs text-white/80"}>
               {rightHint}
             </span>
           )
@@ -243,7 +243,7 @@ export default function SearchBar({
         >
           <div className="max-h-[60vh] overflow-y-auto p-2">
             {cats.length > 0 && (
-              <div className="px-2 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              <div className="px-2 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
                 Catégories
               </div>
             )}
@@ -255,7 +255,7 @@ export default function SearchBar({
                   <li key={`c:${c.id}`}>
                     <Link
                       href={mode === "admin" ? adminHref : viewHref}
-                      className="flex items-start justify-between gap-3 rounded-xl px-3 py-2 hover:bg-gray-50"
+                      className="flex items-start justify-between gap-3 rounded-xl px-3 py-2 hover:bg-surface-2"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => {
                         setOpen(false)
@@ -264,23 +264,23 @@ export default function SearchBar({
                     >
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-green-800">
+                          <span className="inline-flex items-center rounded-sm bg-forest-050 px-2 py-0.5 text-[11px] font-medium text-forest-800">
                             Catégorie
                           </span>
                           {!c.isVisible && (
-                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-700">
+                            <span className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-ink-600">
                               Cachée
                             </span>
                           )}
                         </div>
-                        <div className="mt-1 truncate text-sm font-semibold text-gray-900">
+                        <div className="mt-1 truncate text-sm font-semibold text-ink">
                           {c.name}
                         </div>
-                        <div className="mt-0.5 truncate text-xs text-gray-500">
+                        <div className="mt-0.5 truncate text-xs text-ink-400">
                           {c.parent?.name ? `${c.parent.name} · ` : ""}/{c.slug}
                         </div>
                       </div>
-                      <span className="text-sm text-gray-400">→</span>
+                      <span className="text-sm text-line-strong">→</span>
                     </Link>
                   </li>
                 )
@@ -288,7 +288,7 @@ export default function SearchBar({
             </ul>
 
             {prods.length > 0 && (
-              <div className="mt-3 px-2 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              <div className="mt-3 px-2 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
                 Produits
               </div>
             )}
@@ -302,7 +302,7 @@ export default function SearchBar({
                   <li key={`p:${p.id}`}>
                     <Link
                       href={mode === "admin" ? adminHref : viewHref}
-                      className="flex items-start justify-between gap-3 rounded-xl px-3 py-2 hover:bg-gray-50"
+                      className="flex items-start justify-between gap-3 rounded-xl px-3 py-2 hover:bg-surface-2"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => {
                         setOpen(false)
@@ -315,19 +315,19 @@ export default function SearchBar({
                             Produit
                           </span>
                           {!p.isVisible && (
-                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-700">
+                            <span className="inline-flex items-center rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-ink-600">
                               Caché
                             </span>
                           )}
                         </div>
-                        <div className="mt-1 truncate text-sm font-semibold text-gray-900">
+                        <div className="mt-1 truncate text-sm font-semibold text-ink">
                           {p.name}
                         </div>
-                        <div className="mt-0.5 truncate text-xs text-gray-500">
+                        <div className="mt-0.5 truncate text-xs text-ink-400">
                           {meta || catHint ? `${meta || catHint} · ` : ""}/{p.slug}
                         </div>
                       </div>
-                      <span className="text-sm text-gray-400">→</span>
+                      <span className="text-sm text-line-strong">→</span>
                     </Link>
                   </li>
                 )
@@ -340,7 +340,7 @@ export default function SearchBar({
               </div>
             )}
             {empty && (
-              <div className="px-3 py-3 text-sm text-gray-600">
+              <div className="px-3 py-3 text-sm text-ink-600">
                 Aucun résultat.
               </div>
             )}

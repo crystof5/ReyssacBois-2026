@@ -33,7 +33,7 @@ function formatPromoTextToSafeHtml(text: string) {
     const safeHref = sanitizeHref(String(url))
     const safeLabel = String(label)
     if (!safeHref) return safeLabel
-    return `<a href="${escapeHtml(safeHref)}" target="_blank" rel="noopener noreferrer" class="font-semibold text-green-800 underline underline-offset-4 hover:text-green-900">${safeLabel}</a>`
+    return `<a href="${escapeHtml(safeHref)}" target="_blank" rel="noopener noreferrer" class="font-semibold text-forest-700 underline underline-offset-4 hover:text-forest-800">${safeLabel}</a>`
   })
 
   // 3) gras **...**
@@ -154,7 +154,7 @@ export default function PromoModal({ promo, mode = "public", onRequestClose }: P
     <div className="fixed inset-0 z-50">
       <button
         type="button"
-        className="absolute inset-0 bg-[radial-gradient(1200px_circle_at_50%_15%,rgba(0,0,0,0.35),rgba(0,0,0,0.78))] backdrop-blur-[3px]"
+        className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
         aria-label="Fermer la promo"
         onClick={() => {
           dismiss()
@@ -173,122 +173,111 @@ export default function PromoModal({ promo, mode = "public", onRequestClose }: P
           aria-label="Promo"
           className={[
             "relative w-full max-w-2xl pointer-events-auto",
-            "rounded-[36px] p-[1px]",
-            "bg-[conic-gradient(from_180deg_at_50%_50%,#15803d,#16a34a,#f59e0b,#15803d)]",
-            "shadow-[0_40px_120px_-55px_rgba(0,0,0,0.85)]",
+            "overflow-hidden rounded-lg border border-line bg-surface",
+            "shadow-[var(--shadow-pop)]",
             "transition duration-200 ease-out will-change-transform",
             entered ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-4 scale-[0.98]",
           ].join(" ")}
         >
-          {/* fondu autour du cadre (évite l’arrêt “abrupt”) */}
-          <div className="pointer-events-none absolute -inset-8 rounded-[44px] bg-[conic-gradient(from_180deg_at_50%_50%,#15803d,#16a34a,#f59e0b,#15803d)] opacity-35 blur-2xl" />
+          {/* accent haut */}
+          <div className="absolute inset-x-0 top-0 z-20 h-1 bg-forest-700" />
 
-          <div className="relative overflow-hidden rounded-[35px] bg-white/90 ring-1 ring-black/10 backdrop-blur">
-            {/* fondu sur les bords internes */}
-            <div className="pointer-events-none absolute inset-0 rounded-[35px] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]" />
-            <div className="pointer-events-none absolute inset-0 rounded-[35px] bg-[radial-gradient(120%_120%_at_50%_50%,transparent_68%,rgba(0,0,0,0.10)_100%)]" />
+          {/* sticker */}
+          <div className="absolute left-5 top-5 z-20">
+            <div className="inline-flex items-center gap-2 rounded-sm bg-forest-700 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">
+              <span className="relative inline-flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/70" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
+              </span>
+              Nouveau
+            </div>
+          </div>
 
-            {/* sticker */}
-            <div className="absolute left-5 top-5 z-20">
-              <div className="inline-flex items-center gap-2 rounded-full bg-black/80 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-white shadow-sm ring-1 ring-black/10">
-                <span className="relative inline-flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                </span>
-                Nouveau
+          {/* close */}
+          <div className="absolute right-4 top-4 z-20">
+            <button
+              type="button"
+              aria-label="Fermer"
+              className="inline-flex h-10 w-10 items-center justify-center rounded border border-line bg-surface text-ink shadow-sm transition-colors hover:border-forest-700 hover:text-forest-700 focus:outline-none focus:ring-2 focus:ring-forest-700/40"
+              onClick={() => {
+                dismiss()
+                setOpen(false)
+                onRequestClose?.()
+              }}
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* hero */}
+          <div className="relative">
+            {promo.image?.src?.trim() ? (
+              <div className="h-56 sm:h-64 w-full overflow-hidden border-b border-line">
+                <Media
+                  src={promo.image.src}
+                  alt={promo.image.alt || promo.title || "Promo"}
+                  className="h-full w-full"
+                />
               </div>
-            </div>
+            ) : (
+              <div className="rb-grid-bg h-40 sm:h-48 w-full border-b border-line bg-surface-2" />
+            )}
+          </div>
 
-            {/* close */}
-            <div className="absolute right-4 top-4 z-20">
-              <button
-                type="button"
-                aria-label="Fermer"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-900 shadow-sm ring-1 ring-black/10 hover:bg-white focus:outline-none focus:ring-2 focus:ring-green-600/30"
-                onClick={() => {
-                  dismiss()
-                  setOpen(false)
-                  onRequestClose?.()
-                }}
-              >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
-                  <path
-                    d="M6 6l12 12M18 6L6 18"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
+          {/* content */}
+          <div className="px-5 pb-5 pt-5 sm:px-6 sm:pb-6">
+            {isPreview ? (
+              <span className="rb-badge rb-badge-timber">
+                Aperçu admin (non visible publiquement)
+              </span>
+            ) : null}
 
-            {/* hero */}
-            <div className="relative">
-              {promo.image?.src?.trim() ? (
-                <div className="h-56 sm:h-64 w-full overflow-hidden">
-                  <Media
-                    src={promo.image.src}
-                    alt={promo.image.alt || promo.title || "Promo"}
-                    className="h-full w-full"
-                  />
-                  {/* voile très léger, pas blanc */}
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.00),rgba(0,0,0,0.18))]" />
-                </div>
+            <h3 className="mt-2 font-display text-xl font-extrabold tracking-tight text-ink">
+              {promo.title.trim() ? promo.title : "Information"}
+            </h3>
+
+            {promo.image?.alt?.trim() ? (
+              <p className="mt-1 text-xs text-ink-400">{promo.image.alt}</p>
+            ) : null}
+
+            <div className="mt-4 max-h-[45vh] overflow-y-auto pr-1">
+              {richHtml.trim() ? (
+                <div
+                  className={[
+                    "text-[15px] leading-relaxed text-ink-600",
+                    "space-y-3",
+                    "[&_p]:m-0",
+                    "[&_strong]:font-extrabold [&_strong]:text-ink",
+                    "[&_em]:italic",
+                    "[&_a]:font-extrabold [&_a]:text-forest-700 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-forest-800",
+                  ].join(" ")}
+                  dangerouslySetInnerHTML={{ __html: richHtml }}
+                />
               ) : (
-                <div className="h-44 sm:h-52 w-full bg-[radial-gradient(900px_circle_at_30%_10%,rgba(22,163,74,0.35),transparent_55%),radial-gradient(900px_circle_at_70%_10%,rgba(245,158,11,0.25),transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.8),rgba(255,255,255,0.55))]" />
+                <p className="text-sm text-ink-600">—</p>
               )}
             </div>
 
-            {/* content */}
-            <div className="px-5 pb-5 pt-4 sm:px-6 sm:pb-6">
-              <div className="flex items-center gap-2">
-                {isPreview ? (
-                  <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-900 ring-1 ring-amber-200">
-                    Aperçu admin (non visible publiquement)
-                  </span>
-                ) : null}
+            {/* footer */}
+            {firstHref ? (
+              <div className="mt-5 flex">
+                <a
+                  href={firstHref}
+                  {...(isInternalCta ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                  className="rb-btn rb-btn-primary w-full sm:w-auto"
+                >
+                  En profiter →
+                </a>
               </div>
-
-              <h3 className="mt-2 text-xl font-extrabold tracking-tight text-gray-900">
-                {promo.title.trim() ? promo.title : "Information"}
-              </h3>
-
-              {promo.image?.alt?.trim() ? (
-                <p className="mt-1 text-xs text-gray-600">{promo.image.alt}</p>
-              ) : null}
-
-              <div className="mt-4 max-h-[45vh] overflow-y-auto pr-1">
-                {richHtml.trim() ? (
-                  <div
-                    className={[
-                      "text-[15px] leading-relaxed text-gray-800",
-                      "space-y-3",
-                      "[&_p]:m-0",
-                      "[&_strong]:font-extrabold [&_strong]:text-gray-900",
-                      "[&_em]:italic",
-                      "[&_a]:font-extrabold [&_a]:text-green-800 [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-green-900",
-                    ].join(" ")}
-                    dangerouslySetInnerHTML={{ __html: richHtml }}
-                  />
-                ) : (
-                  <p className="text-sm text-gray-600">—</p>
-                )}
-              </div>
-
-              {/* footer */}
-              {firstHref ? (
-                <div className="mt-5 flex">
-                  <a
-                    href={firstHref}
-                    {...(isInternalCta ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                    className="inline-flex w-full items-center justify-center rounded-full bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 sm:w-auto"
-                  >
-                    En profiter →
-                  </a>
-                </div>
-              ) : null}
-            </div>
+            ) : null}
           </div>
         </div>
       </div>
