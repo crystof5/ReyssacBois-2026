@@ -164,7 +164,7 @@ export default async function CategoryPage({
         />
       </div>
 
-      <div className="rb-surface rb-grid-bg p-6 sm:p-7">
+      <div className="rb-surface p-6 sm:p-7">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
             {category.imageUrl ? (

@@ -228,7 +228,7 @@ export default function PromoModal({ promo, mode = "public", onRequestClose }: P
                 />
               </div>
             ) : (
-              <div className="rb-grid-bg h-40 sm:h-48 w-full border-b border-line bg-surface-2" />
+              <div className="h-40 sm:h-48 w-full border-b border-line bg-surface-2" />
             )}
           </div>
 
