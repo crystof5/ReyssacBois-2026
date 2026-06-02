@@ -108,7 +108,7 @@ export default function CategoryParentSelector({
             className="mt-0.5"
             disabled={isDisabled}
           />
-          <span className={level === 0 ? "font-semibold text-gray-900" : "text-gray-900"}>
+          <span className={level === 0 ? "font-semibold text-ink" : "text-ink"}>
             {node.name}
           </span>
         </label>
@@ -124,8 +124,8 @@ export default function CategoryParentSelector({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-white/25 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
-        <label className="flex items-start gap-2 text-sm font-medium text-gray-900">
+      <div className="rounded-2xl border border-line bg-surface p-3 shadow-sm ring-1 ring-black/5">
+        <label className="flex items-start gap-2 text-sm font-medium text-ink">
           <input
             type="radio"
             name={inputName}
@@ -136,7 +136,7 @@ export default function CategoryParentSelector({
           />
           <span>(Aucun parent)</span>
         </label>
-        <p className="mt-1 text-xs text-gray-600">
+        <p className="mt-1 text-xs text-ink-600">
           Astuce: pour réordonner les sous-catégories, utilise le glisser-déposer dans la page du parent.
         </p>
       </div>
@@ -145,7 +145,7 @@ export default function CategoryParentSelector({
         {roots.map((root) => (
           <div
             key={root.id}
-            className="rounded-2xl border border-white/25 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur"
+            className="rounded-2xl border border-line bg-surface p-3 shadow-sm ring-1 ring-black/5"
           >
             {renderNode(root, 0)}
           </div>
@@ -153,7 +153,7 @@ export default function CategoryParentSelector({
       </div>
 
       {orphans.length ? (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50/40 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50/40 p-3 shadow-sm ring-1 ring-black/5">
           <p className="text-xs font-semibold text-amber-900">
             Catégories orphelines (parent manquant)
           </p>

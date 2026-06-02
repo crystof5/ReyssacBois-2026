@@ -125,13 +125,13 @@ export default async function AdminHomeCompletPage() {
 
   return (
     <div>
-      <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+      <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-ink">
               Contenu du site (page complète)
             </h2>
-            <p className="mt-1 text-sm text-gray-700">
+            <p className="mt-1 text-sm text-ink-600">
               Cette page regroupe tous les blocs. Si tu préfères, utilise plutôt
               le menu `/admin/home`.
             </p>
@@ -139,13 +139,13 @@ export default async function AdminHomeCompletPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/admin/home"
-              className="text-sm text-gray-700 hover:underline"
+              className="text-sm text-ink-600 hover:underline"
             >
               ← Menu Home
             </Link>
             <Link
               href="/admin"
-              className="text-sm text-gray-700 hover:underline"
+              className="text-sm text-ink-600 hover:underline"
             >
               ← Dashboard
             </Link>

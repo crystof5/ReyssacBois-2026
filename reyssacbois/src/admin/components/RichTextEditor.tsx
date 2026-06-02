@@ -61,8 +61,8 @@ function ToolbarButton({
       className={[
         "inline-flex items-center justify-center rounded-lg border px-2.5 py-2 text-sm font-semibold",
         active
-          ? "border-green-300 bg-green-50 text-green-900"
-          : "border-gray-200 bg-white text-gray-900 hover:bg-gray-50",
+          ? "border-green-300 bg-forest-050 text-forest-800"
+          : "border-line bg-white text-ink hover:bg-surface-2",
       ].join(" ")}
     >
       {children}
@@ -117,7 +117,7 @@ export default function RichTextEditor({
           rel: "noopener noreferrer",
           target: "_blank",
           class:
-            "font-extrabold text-green-800 underline underline-offset-4 hover:text-green-900",
+            "font-extrabold text-forest-800 underline underline-offset-4 hover:text-forest-800",
         },
       }),
     ],
@@ -137,7 +137,7 @@ export default function RichTextEditor({
       attributes: {
         class:
           [
-            "min-h-28 w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-green-600/20",
+            "min-h-28 w-full rounded-xl border border-line bg-white px-3 py-3 text-sm text-ink outline-none focus:ring-2 focus:ring-forest-700/20",
             // Important: Tailwind reset enlève les styles de listes dans le contentEditable.
             // On ré-applique un rendu clair dans l’éditeur.
             "[&_p]:my-0 [&_p+p]:mt-3",
@@ -213,7 +213,7 @@ export default function RichTextEditor({
 
   if (!editor) {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-3 text-sm text-gray-600">
+      <div className="rounded-xl border border-line bg-white p-3 text-sm text-ink-600">
         Chargement de l’éditeur…
       </div>
     )
@@ -316,7 +316,7 @@ export default function RichTextEditor({
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-3 sm:p-4">
+    <div className="rounded-2xl border border-line bg-white p-3 sm:p-4">
       {/* Valeur envoyée au serveur */}
       <input type="hidden" name={inputName} value={html} />
 
@@ -357,7 +357,7 @@ export default function RichTextEditor({
           Lien
         </ToolbarButton>
 
-        <label className="ml-1 inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2.5 py-2 text-sm font-semibold text-gray-900">
+        <label className="ml-1 inline-flex items-center gap-2 rounded-lg border border-line bg-white px-2.5 py-2 text-sm font-semibold text-ink">
           Couleur
           <input
             type="color"
@@ -370,7 +370,7 @@ export default function RichTextEditor({
 
         <button
           type="button"
-          className="ml-auto inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+          className="ml-auto inline-flex items-center justify-center rounded-lg border border-line bg-white px-3 py-2 text-sm font-semibold text-ink hover:bg-surface-2"
           onClick={() => {
             editor.chain().focus().unsetAllMarks().clearNodes().run()
             editor.commands.setContent("", { emitUpdate: false })
@@ -382,10 +382,10 @@ export default function RichTextEditor({
       </div>
 
       {showLinkPanel ? (
-        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
-          <div className="mb-3 rounded-lg border border-gray-200 bg-gray-50/60 p-3">
-            <p className="text-xs font-semibold text-gray-900">Lien interne (produit / catégorie)</p>
-            <p className="mt-1 text-xs text-gray-600">
+        <div className="mt-3 rounded-xl border border-line bg-white p-3 shadow-sm">
+          <div className="mb-3 rounded-lg border border-line bg-surface-2/60 p-3">
+            <p className="text-xs font-semibold text-ink">Lien interne (produit / catégorie)</p>
+            <p className="mt-1 text-xs text-ink-600">
               Tape au moins 2 caractères, puis clique un résultat pour insérer le lien (sur la sélection, ou en insérant le nom si rien n’est sélectionné).
             </p>
 
@@ -397,17 +397,17 @@ export default function RichTextEditor({
                   setInternalQ(e.currentTarget.value)
                 }}
                 placeholder="Rechercher un produit ou une catégorie…"
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               />
               {internalLoading ? (
-                <span className="text-xs text-gray-500">Recherche…</span>
+                <span className="text-xs text-ink-400">Recherche…</span>
               ) : internalHasQuery ? (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-ink-400">
                   {internalCats.length + internalProds.length} résultat
                   {internalCats.length + internalProds.length > 1 ? "s" : ""}
                 </span>
               ) : (
-                <span className="text-xs text-gray-500">2+ car.</span>
+                <span className="text-xs text-ink-400">2+ car.</span>
               )}
             </div>
 
@@ -416,7 +416,7 @@ export default function RichTextEditor({
             {internalHasQuery && !internalLoading && !internalError ? (
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
-                  <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Catégories</p>
+                  <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">Catégories</p>
                   <ul className="space-y-1">
                     {internalCats.length ? (
                       internalCats.map((c) => {
@@ -425,17 +425,17 @@ export default function RichTextEditor({
                           <li key={`c:${c.id}`}>
                             <button
                               type="button"
-                              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-left text-sm hover:bg-surface-2"
                               onClick={() => {
                                 setLinkHref(href)
                                 applyLink({ href, insertTextIfEmptySelection: c.name })
                               }}
                             >
                               <div className="flex items-center justify-between gap-2">
-                                <span className="font-semibold text-gray-900 truncate">{c.name}</span>
-                                <span className="text-xs text-gray-400">→</span>
+                                <span className="font-semibold text-ink truncate">{c.name}</span>
+                                <span className="text-xs text-line-strong">→</span>
                               </div>
-                              <div className="mt-0.5 text-xs text-gray-500 truncate">
+                              <div className="mt-0.5 text-xs text-ink-400 truncate">
                                 {c.parent?.name ? `${c.parent.name} · ` : ""}/{c.slug}
                                 {!c.isVisible ? " · cachée" : ""}
                               </div>
@@ -444,13 +444,13 @@ export default function RichTextEditor({
                         )
                       })
                     ) : (
-                      <li className="px-2 py-2 text-xs text-gray-500">Aucune catégorie.</li>
+                      <li className="px-2 py-2 text-xs text-ink-400">Aucune catégorie.</li>
                     )}
                   </ul>
                 </div>
 
                 <div>
-                  <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Produits</p>
+                  <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">Produits</p>
                   <ul className="space-y-1">
                     {internalProds.length ? (
                       internalProds.map((p) => {
@@ -461,17 +461,17 @@ export default function RichTextEditor({
                           <li key={`p:${p.id}`}>
                             <button
                               type="button"
-                              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-left text-sm hover:bg-surface-2"
                               onClick={() => {
                                 setLinkHref(href)
                                 applyLink({ href, insertTextIfEmptySelection: p.name })
                               }}
                             >
                               <div className="flex items-center justify-between gap-2">
-                                <span className="font-semibold text-gray-900 truncate">{p.name}</span>
-                                <span className="text-xs text-gray-400">→</span>
+                                <span className="font-semibold text-ink truncate">{p.name}</span>
+                                <span className="text-xs text-line-strong">→</span>
                               </div>
-                              <div className="mt-0.5 text-xs text-gray-500 truncate">
+                              <div className="mt-0.5 text-xs text-ink-400 truncate">
                                 {meta || catHint ? `${meta || catHint} · ` : ""}/{p.slug}
                                 {!p.isVisible ? " · caché" : ""}
                               </div>
@@ -480,7 +480,7 @@ export default function RichTextEditor({
                         )
                       })
                     ) : (
-                      <li className="px-2 py-2 text-xs text-gray-500">Aucun produit.</li>
+                      <li className="px-2 py-2 text-xs text-ink-400">Aucun produit.</li>
                     )}
                   </ul>
                 </div>
@@ -495,20 +495,20 @@ export default function RichTextEditor({
                 value={linkHref}
                 onChange={(e) => setLinkHref(e.currentTarget.value)}
                 placeholder="https://…, /page, mailto:, tel:"
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               />
             </label>
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-sm font-semibold text-white hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                className="inline-flex items-center justify-center rounded-lg bg-forest-700 px-3 py-2 text-sm font-semibold text-white hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
                 onClick={() => applyLink({ href: linkHref })}
               >
                 Appliquer
               </button>
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50"
+                className="inline-flex items-center justify-center rounded-lg border border-line bg-white px-3 py-2 text-sm font-semibold text-ink hover:bg-surface-2"
                 onClick={() => {
                   setShowLinkPanel(false)
                   setLinkError(null)
@@ -528,7 +528,7 @@ export default function RichTextEditor({
             </div>
           </div>
           {linkError ? <p className="mt-2 text-xs text-red-700">{linkError}</p> : null}
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="mt-2 text-xs text-ink-400">
             Astuce: sélectionne un mot (ex: “ici”), clique <span className="font-medium">Lien</span>, colle l’URL, puis{" "}
             <span className="font-medium">Appliquer</span>.
           </p>
@@ -538,13 +538,13 @@ export default function RichTextEditor({
       <div className="mt-3 relative">
         <EditorContent editor={editor} />
         {placeholder && !editor.getText().trim() ? (
-          <p className="pointer-events-none absolute left-3 top-3 text-sm text-gray-400">
+          <p className="pointer-events-none absolute left-3 top-3 text-sm text-line-strong">
             {placeholder}
           </p>
         ) : null}
       </div>
 
-      {helperText ? <p className="mt-2 text-xs text-gray-500">{helperText}</p> : null}
+      {helperText ? <p className="mt-2 text-xs text-ink-400">{helperText}</p> : null}
     </div>
   )
 }

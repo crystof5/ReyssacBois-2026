@@ -126,8 +126,8 @@ function CatalogueItemPicker({
       : null;
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white/70 p-4">
-      <p className="text-xs font-semibold text-gray-700">Carte {slot}</p>
+    <div className="rounded-2xl border border-line bg-surface p-4">
+      <p className="text-xs font-semibold text-ink-600">Carte {slot}</p>
 
       <input
         type="hidden"
@@ -141,14 +141,14 @@ function CatalogueItemPicker({
       />
 
       {selectedKind && selectedId ? (
-        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-3">
+        <div className="mt-3 rounded-xl border border-line bg-white p-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-sm font-semibold text-ink">
                 {resolved?.name || `${selectedKind} • ${selectedId}`}
               </p>
               {resolved ? (
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-ink-600">
                   {resolved.isVisible ? "Visible" : "Caché"} • /
                   {resolved.kind === "category" ? "categories" : "produits"}/
                   {resolved.slug}
@@ -168,7 +168,7 @@ function CatalogueItemPicker({
             </button>
           </div>
           {resolved ? (
-            <p className="mt-2 text-xs text-gray-700">
+            <p className="mt-2 text-xs text-ink-600">
               {resolved.description?.trim()
                 ? resolved.description
                 : "Aucune description."}
@@ -176,31 +176,31 @@ function CatalogueItemPicker({
           ) : null}
         </div>
       ) : (
-        <p className="mt-2 text-xs text-gray-600">Aucun élément sélectionné.</p>
+        <p className="mt-2 text-xs text-ink-600">Aucun élément sélectionné.</p>
       )}
 
       <div className="mt-3">
         <label className="block">
-          <span className="mb-1 block text-sm font-medium text-gray-900">
+          <span className="mb-1 block text-sm font-medium text-ink">
             Rechercher (produit ou catégorie)
           </span>
           <input
             value={q}
             onChange={(e) => setQ(e.currentTarget.value)}
             placeholder="Tape 2+ caractères…"
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
           />
         </label>
 
         {loading ? (
-          <p className="mt-2 text-xs text-gray-500">Recherche…</p>
+          <p className="mt-2 text-xs text-ink-400">Recherche…</p>
         ) : null}
         {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
 
         {hasQuery && !loading && !error ? (
           <div className="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
             <div>
-              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
                 Catégories
               </p>
               <ul className="space-y-1">
@@ -209,7 +209,7 @@ function CatalogueItemPicker({
                     <li key={`c:${c.id}`}>
                       <button
                         type="button"
-                        className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                        className="w-full rounded-lg border border-line bg-white px-3 py-2 text-left text-sm hover:bg-surface-2"
                         onClick={() => {
                           setSelectedKind("category");
                           setSelectedId(c.id);
@@ -225,12 +225,12 @@ function CatalogueItemPicker({
                         }}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="font-semibold text-gray-900 truncate">
+                          <span className="font-semibold text-ink truncate">
                             {c.name}
                           </span>
-                          <span className="text-xs text-gray-400">→</span>
+                          <span className="text-xs text-line-strong">→</span>
                         </div>
-                        <div className="mt-0.5 text-xs text-gray-500 truncate">
+                        <div className="mt-0.5 text-xs text-ink-400 truncate">
                           {c.parent?.name ? `${c.parent.name} · ` : ""}/{c.slug}
                           {!c.isVisible ? " · cachée" : ""}
                         </div>
@@ -238,7 +238,7 @@ function CatalogueItemPicker({
                     </li>
                   ))
                 ) : (
-                  <li className="px-2 py-2 text-xs text-gray-500">
+                  <li className="px-2 py-2 text-xs text-ink-400">
                     Aucune catégorie.
                   </li>
                 )}
@@ -246,7 +246,7 @@ function CatalogueItemPicker({
             </div>
 
             <div>
-              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
                 Produits
               </p>
               <ul className="space-y-1">
@@ -260,7 +260,7 @@ function CatalogueItemPicker({
                       <li key={`p:${p.id}`}>
                         <button
                           type="button"
-                          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                          className="w-full rounded-lg border border-line bg-white px-3 py-2 text-left text-sm hover:bg-surface-2"
                           onClick={() => {
                             setSelectedKind("product");
                             setSelectedId(p.id);
@@ -276,12 +276,12 @@ function CatalogueItemPicker({
                           }}
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="font-semibold text-gray-900 truncate">
+                            <span className="font-semibold text-ink truncate">
                               {p.name}
                             </span>
-                            <span className="text-xs text-gray-400">→</span>
+                            <span className="text-xs text-line-strong">→</span>
                           </div>
-                          <div className="mt-0.5 text-xs text-gray-500 truncate">
+                          <div className="mt-0.5 text-xs text-ink-400 truncate">
                             {meta || catHint ? `${meta || catHint} · ` : ""}/
                             {p.slug}
                             {!p.isVisible ? " · caché" : ""}
@@ -291,7 +291,7 @@ function CatalogueItemPicker({
                     );
                   })
                 ) : (
-                  <li className="px-2 py-2 text-xs text-gray-500">
+                  <li className="px-2 py-2 text-xs text-ink-400">
                     Aucun produit.
                   </li>
                 )}
@@ -331,7 +331,7 @@ export default function CatalogueForm({
         <div
           className={`rounded-xl border p-3 text-sm ${
             state.ok
-              ? "border-green-200 bg-green-50 text-green-900"
+              ? "border-green-200 bg-forest-050 text-forest-800"
               : "border-red-200 bg-red-50 text-red-900"
           }`}
         >
@@ -339,29 +339,29 @@ export default function CatalogueForm({
         </div>
       ) : null}
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — Catalogue
         </h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre
             </span>
             <input
               name="homeCatalogueTitle"
               defaultValue={homeTexts.catalogueTitle ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte
             </span>
             <input
               name="homeCatalogueIntro"
               defaultValue={homeTexts.catalogueIntro ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             />
           </label>
         </div>

@@ -34,11 +34,11 @@ export default function AdminStickySaveBar({
 
   return (
     <div className="sticky bottom-4 z-10">
-      <div className="rounded-2xl border border-white/20 bg-white/80 backdrop-blur-xl p-3 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-        <p className="text-xs text-gray-700">
+      <div className="rounded-2xl border border-line bg-surface p-3 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        <p className="text-xs text-ink-600">
           {hint}
           {pending ? (
-            <span className="ml-2 inline-flex items-center gap-2 font-medium text-gray-900">
+            <span className="ml-2 inline-flex items-center gap-2 font-medium text-ink">
               <Spinner className="h-4 w-4 animate-spin" /> Enregistrement…
             </span>
           ) : null}
@@ -48,7 +48,7 @@ export default function AdminStickySaveBar({
           {secondaryHref && secondaryLabel ? (
             <Link
               href={secondaryHref}
-              className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-white"
+              className="inline-flex items-center justify-center rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink hover:bg-white"
             >
               {secondaryLabel}
             </Link>
@@ -57,7 +57,7 @@ export default function AdminStickySaveBar({
           <button
             type="submit"
             disabled={pending}
-            className="inline-flex items-center justify-center rounded-full bg-green-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
+            className="inline-flex items-center justify-center rounded-full bg-forest-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30 disabled:opacity-60"
           >
             {pending ? (
               <span className="inline-flex items-center gap-2">

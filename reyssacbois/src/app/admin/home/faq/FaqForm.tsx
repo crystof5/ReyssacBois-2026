@@ -39,7 +39,7 @@ export default function FaqForm({
         <div
           className={`rounded-xl border p-3 text-sm ${
             state.ok
-              ? "border-green-200 bg-green-50 text-green-900"
+              ? "border-green-200 bg-forest-050 text-forest-800"
               : "border-red-200 bg-red-50 text-red-900"
           }`}
         >

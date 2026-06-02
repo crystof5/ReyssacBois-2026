@@ -60,47 +60,47 @@ export default async function AdminCategoryEditPage({
 
   return (
     <div>
-      <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+      <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Éditer la catégorie</h2>
-            <p className="mt-1 text-sm text-gray-700">
+            <h2 className="text-lg font-semibold text-ink">Éditer la catégorie</h2>
+            <p className="mt-1 text-sm text-ink-600">
               Modifie les champs puis enregistre.
             </p>
           </div>
           <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
-            <Link href="/admin" className="text-sm text-gray-700 hover:underline">
+            <Link href="/admin" className="text-sm text-ink-600 hover:underline">
               ← Administration
             </Link>
-            <Link href="/admin/categories" className="text-sm text-gray-700 hover:underline">
+            <Link href="/admin/categories" className="text-sm text-ink-600 hover:underline">
               ← Catégories
             </Link>
           </div>
         </div>
 
         <nav aria-label="Fil d’Ariane admin" className="mt-4">
-          <ol className="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-white/20 bg-white/65 px-3 py-2 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
+          <ol className="inline-flex max-w-full flex-wrap items-center gap-2 border-b border-line pb-2 text-xs text-ink-600">
             <li className="min-w-0">
-              <Link href="/admin" className="font-medium text-gray-900 hover:underline underline-offset-4">
+              <Link href="/admin" className="font-medium text-ink hover:underline underline-offset-4">
                 Administration
               </Link>
             </li>
             <li className="flex min-w-0 items-center gap-1">
-              <span className="text-gray-400" aria-hidden>
+              <span className="text-line-strong" aria-hidden>
                 /
               </span>
-              <Link href="/admin/categories" className="font-medium text-gray-700 hover:underline underline-offset-4">
+              <Link href="/admin/categories" className="font-medium text-ink-600 hover:underline underline-offset-4">
                 Catégories
               </Link>
             </li>
             {parentsChain.map((p) => (
               <li key={p.id} className="flex min-w-0 items-center gap-1">
-                <span className="text-gray-400" aria-hidden>
+                <span className="text-line-strong" aria-hidden>
                   /
                 </span>
                 <Link
                   href={`/admin/categories/${p.id}`}
-                  className="rb-clamp-1 max-w-[40ch] font-medium text-gray-700 hover:text-gray-900 hover:underline underline-offset-4"
+                  className="rb-clamp-1 max-w-[40ch] font-medium text-ink-600 hover:text-ink hover:underline underline-offset-4"
                   title={p.name}
                 >
                   {p.name}
@@ -108,10 +108,10 @@ export default async function AdminCategoryEditPage({
               </li>
             ))}
             <li className="flex min-w-0 items-center gap-1">
-              <span className="text-gray-400" aria-hidden>
+              <span className="text-line-strong" aria-hidden>
                 /
               </span>
-              <span className="rb-clamp-1 max-w-[40ch] font-semibold text-gray-900" title={category.name}>
+              <span className="rb-clamp-1 max-w-[40ch] font-semibold text-ink" title={category.name}>
                 {category.name}
               </span>
             </li>
@@ -120,12 +120,12 @@ export default async function AdminCategoryEditPage({
       </div>
 
       {saved ? (
-        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <div className="mt-4 rounded-xl border border-green-200 bg-forest-050 px-4 py-3 text-sm text-forest-800">
           Enregistré.
         </div>
       ) : null}
 
-      <form action={updateCategoryAction} className="mt-6 space-y-4 rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+      <form action={updateCategoryAction} className="mt-6 space-y-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <input type="hidden" name="id" value={category.id} />
         {/* Ordre géré par le glisser-déposer (sidebar / sous-catégories). On conserve la valeur sans l’afficher. */}
         <input type="hidden" name="sortOrder" value={String(category.sortOrder ?? 0)} />
@@ -135,7 +135,7 @@ export default async function AdminCategoryEditPage({
             <input
               name="name"
               defaultValue={category.name}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               required
             />
           </Field>
@@ -148,14 +148,14 @@ export default async function AdminCategoryEditPage({
             <select
               name="isVisible"
               defaultValue={category.isVisible ? "1" : "0"}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             >
               <option value="1">Visible</option>
               <option value="0">Cachée</option>
             </select>
           </Field>
           {effectiveParentId ? null : (
-            <div className="rounded-2xl border border-white/25 bg-white/60 p-3 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="rounded-2xl border border-line bg-surface p-3 text-xs text-ink-600 shadow-sm ring-1 ring-black/5">
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"
@@ -165,7 +165,7 @@ export default async function AdminCategoryEditPage({
                   className="mt-0.5"
                 />
                 <span>
-                  <span className="font-semibold text-gray-900">Catégorie principale</span>
+                  <span className="font-semibold text-ink">Catégorie principale</span>
                   <span className="block mt-0.5">
                     Affichée dans le menu catégories (sidebar) côté public.
                   </span>
@@ -173,8 +173,8 @@ export default async function AdminCategoryEditPage({
               </label>
             </div>
           )}
-          <div className="rounded-2xl border border-white/25 bg-white/60 p-3 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
-            <p className="font-semibold text-gray-900">Ordre d’affichage</p>
+          <div className="rounded-2xl border border-line bg-surface p-3 text-xs text-ink-600 shadow-sm ring-1 ring-black/5">
+            <p className="font-semibold text-ink">Ordre d’affichage</p>
             <p className="mt-1">
               Géré automatiquement via le glisser-déposer (sidebar / page du parent).
             </p>
@@ -183,8 +183,8 @@ export default async function AdminCategoryEditPage({
 
         <div>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">Description</span>
-            <p className="mt-1 text-xs text-gray-500">
+            <span className="mb-1 block text-sm font-medium text-ink">Description</span>
+            <p className="mt-1 text-xs text-ink-400">
               Mise en forme possible (gras, souligné, italique, listes, liens, couleur).
             </p>
           </label>
@@ -211,7 +211,7 @@ export default async function AdminCategoryEditPage({
               <button
                 type="submit"
                 formAction={startSubCategoryFromCategoryAction}
-                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                className="inline-flex items-center justify-center rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-surface-2"
               >
                 + Ajouter une sous-catégorie
               </button>
@@ -251,7 +251,7 @@ export default async function AdminCategoryEditPage({
               <button
                 type="submit"
                 formAction={startProduitFromCategoryAction}
-                className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+                className="inline-flex items-center justify-center rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-surface-2"
               >
                 + Ajouter un produit à cette catégorie
               </button>
@@ -317,7 +317,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-gray-900">
+      <span className="mb-1 block text-sm font-medium text-ink">
         {label} {required ? <span className="text-red-600">*</span> : null}
       </span>
       {children}

@@ -23,31 +23,31 @@ export default function ProjectsCarouselEditor({
   return (
     <div className="space-y-6">
       <label className="block">
-        <span className="mb-1 block text-sm font-medium text-gray-900">
+        <span className="mb-1 block text-sm font-medium text-ink">
           Vitesse du carrousel “Nos Projets”
         </span>
         <select
           name="projectsSpeed"
           value={speed}
           onChange={(e) => setSpeed(e.target.value as "slow" | "normal" | "fast")}
-          className="w-full max-w-xs rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+          className="w-full max-w-xs rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
         >
           <option value="slow">Lent</option>
           <option value="normal">Normal</option>
           <option value="fast">Rapide</option>
         </select>
-        <p className="mt-2 text-xs text-gray-500">Lent = 8s, Normal = 5s, Rapide = 3s.</p>
+        <p className="mt-2 text-xs text-ink-400">Lent = 8s, Normal = 5s, Rapide = 3s.</p>
       </label>
 
       <input type="hidden" name="projectsSlidesJson" value={slidesJson} />
 
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900">
+        <h3 className="text-sm font-semibold text-ink">
           Photos projets ({items.filter((s) => s.src.trim()).length})
         </h3>
         <button
           type="button"
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+          className="rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-surface-2"
           onClick={addPhoto}
         >
           + Ajouter une photo
@@ -56,9 +56,9 @@ export default function ProjectsCarouselEditor({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {items.map((it, idx) => (
-          <div key={idx} className="rounded-2xl border border-gray-200 bg-white p-4">
+          <div key={idx} className="rounded-2xl border border-line bg-white p-4">
             <div className="flex items-center justify-between gap-3">
-              <h4 className="text-sm font-semibold text-gray-900">Projet {idx + 1}</h4>
+              <h4 className="text-sm font-semibold text-ink">Projet {idx + 1}</h4>
               <button
                 type="button"
                 className="text-sm text-red-700 hover:underline"
@@ -83,7 +83,7 @@ export default function ProjectsCarouselEditor({
             </div>
 
             <label className="mt-4 block">
-              <span className="mb-1 block text-sm font-medium text-gray-900">
+              <span className="mb-1 block text-sm font-medium text-ink">
                 Texte alternatif
               </span>
               <input
@@ -91,7 +91,7 @@ export default function ProjectsCarouselEditor({
                 onChange={(e) =>
                   setItems((arr) => arr.map((s, i) => (i === idx ? { ...s, alt: e.target.value } : s)))
                 }
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
                 placeholder={`Projet ${idx + 1}`}
               />
             </label>
@@ -100,12 +100,12 @@ export default function ProjectsCarouselEditor({
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-ink-400">
           Astuce: tu peux ajouter autant de photos que tu veux (on garde un garde-fou à 50 en base).
         </p>
         <button
           type="button"
-          className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+          className="rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-surface-2"
           onClick={addPhoto}
         >
           + Ajouter une photo

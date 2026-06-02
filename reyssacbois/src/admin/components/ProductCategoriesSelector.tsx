@@ -94,7 +94,7 @@ export default function ProductCategoriesSelector({
             onChange={(e) => toggle(node.id, e.currentTarget.checked)}
             className="mt-0.5"
           />
-          <span className={level === 0 ? "font-semibold text-gray-900" : "text-gray-900"}>
+          <span className={level === 0 ? "font-semibold text-ink" : "text-ink"}>
             {node.name}
           </span>
         </label>
@@ -114,7 +114,7 @@ export default function ProductCategoriesSelector({
         {roots.map((root) => (
           <div
             key={root.id}
-            className="rounded-xl border border-gray-200 bg-white p-3"
+            className="rounded-xl border border-line bg-white p-3"
           >
             {renderNode(root, 0)}
           </div>

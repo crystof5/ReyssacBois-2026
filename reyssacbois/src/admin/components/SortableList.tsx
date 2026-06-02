@@ -156,13 +156,13 @@ export default function SortableList({
   }
 
   return (
-    <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+    <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-          {description ? <p className="mt-1 text-xs text-gray-500">{description}</p> : null}
+          <h3 className="text-sm font-semibold text-ink">{title}</h3>
+          {description ? <p className="mt-1 text-xs text-ink-400">{description}</p> : null}
           {isCoarsePointer ? (
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-ink-400">
               Sur mobile, utilisez les boutons <span className="font-medium">↑</span> / <span className="font-medium">↓</span> (le glisser-déposer n’est pas fiable).
             </p>
           ) : null}
@@ -187,7 +187,7 @@ export default function SortableList({
             type="button"
             onClick={onSave}
             disabled={isPending}
-            className="inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30 disabled:opacity-60"
+            className="inline-flex items-center justify-center rounded-lg bg-forest-700 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30 disabled:opacity-60"
           >
             {isPending ? "Enregistrement…" : "Enregistrer l’ordre"}
           </button>
@@ -197,7 +197,7 @@ export default function SortableList({
       {state?.message ? (
         <div
           className={`mt-3 rounded-xl border p-3 text-xs ${
-            state.ok ? "border-green-200 bg-green-50 text-green-900" : "border-red-200 bg-red-50 text-red-900"
+            state.ok ? "border-green-200 bg-forest-050 text-forest-800" : "border-red-200 bg-red-50 text-red-900"
           }`}
         >
           {state.message}
@@ -205,7 +205,7 @@ export default function SortableList({
       ) : null}
 
       {selectionEnabled ? (
-        <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-white/30 bg-white/60 px-3 py-2 text-xs text-gray-700 backdrop-blur">
+        <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3 py-2 text-xs text-ink-600">
           <div className="flex items-center gap-3">
             <label className="inline-flex items-center gap-2">
               <input
@@ -217,23 +217,23 @@ export default function SortableList({
               Tout sélectionner {saveKind === "categoryChildren" ? "(vides)" : ""}
             </label>
             {saveKind === "categoryChildren" ? (
-              <span className="hidden sm:inline text-[11px] text-gray-600">
+              <span className="hidden sm:inline text-[11px] text-ink-600">
                 Seules les sous-catégories <span className="font-semibold">vides</span> sont détachables.
               </span>
             ) : null}
           </div>
           <span>
-            Sélection: <span className="font-medium text-gray-900">{selectedIds.size}</span> / {selectableIds.length}
+            Sélection: <span className="font-medium text-ink">{selectedIds.size}</span> / {selectableIds.length}
           </span>
         </div>
       ) : null}
 
-      <ul className="mt-4 divide-y divide-black/5 rounded-2xl border border-white/25 bg-white/75 shadow-sm ring-1 ring-black/5 backdrop-blur">
+      <ul className="mt-4 divide-y divide-black/5 rounded-2xl border border-line bg-surface shadow-sm ring-1 ring-black/5">
         {items.map((it, idx) => (
           <li
             key={it.id}
             className={`px-3 py-2.5 transition-colors ${
-              dragId === it.id ? "bg-green-50/60" : "bg-white hover:bg-gray-50/60"
+              dragId === it.id ? "bg-forest-050/60" : "bg-white hover:bg-surface-2/60"
             }`}
             draggable={!isCoarsePointer}
             onDragStart={
@@ -296,7 +296,7 @@ export default function SortableList({
                 })()
               ) : null}
               <span
-                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-gray-700 ${
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface-2 text-ink-600 ${
                   isCoarsePointer ? "cursor-default" : "cursor-grab"
                 }`}
                 title={isCoarsePointer ? undefined : "Glisser pour réordonner"}
@@ -307,11 +307,11 @@ export default function SortableList({
 
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-medium text-gray-900 truncate">{it.title}</p>
+                  <p className="font-medium text-ink truncate">{it.title}</p>
                   {typeof it.isVisible === "boolean" ? (
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                        it.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
+                        it.isVisible ? "bg-forest-050 text-forest-800" : "bg-surface-2 text-ink-600"
                       }`}
                     >
                       {it.isVisible ? "Visible" : "Caché"}
@@ -319,17 +319,17 @@ export default function SortableList({
                   ) : null}
                 </div>
                 {it.subtitle ? (
-                  <p className="mt-0.5 text-xs text-gray-500 truncate">{it.subtitle}</p>
+                  <p className="mt-0.5 text-xs text-ink-400 truncate">{it.subtitle}</p>
                 ) : null}
                 {it.rightNote ? (
-                  <p className="mt-1 text-[11px] text-gray-600 sm:hidden">
+                  <p className="mt-1 text-[11px] text-ink-600 sm:hidden">
                     {it.rightNote}
                   </p>
                 ) : null}
               </div>
 
               {it.rightNote ? (
-                <span className="hidden sm:inline text-xs text-gray-500">
+                <span className="hidden sm:inline text-xs text-ink-400">
                   {it.rightNote}
                 </span>
               ) : null}
@@ -339,7 +339,7 @@ export default function SortableList({
                   <>
                     <button
                       type="button"
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-50"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-white text-xs text-ink-600 hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-forest-700/20 disabled:opacity-50"
                       onClick={() => move(idx, idx - 1)}
                       disabled={idx === 0}
                       aria-label="Monter"
@@ -349,7 +349,7 @@ export default function SortableList({
                     </button>
                     <button
                       type="button"
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-xs text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/20 disabled:opacity-50"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-white text-xs text-ink-600 hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-forest-700/20 disabled:opacity-50"
                       onClick={() => move(idx, idx + 1)}
                       disabled={idx === items.length - 1}
                       aria-label="Descendre"
@@ -362,7 +362,7 @@ export default function SortableList({
 
                 {it.editHref ? (
                   <Link
-                    className="ml-0.5 inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                    className="ml-0.5 inline-flex items-center justify-center rounded-full bg-forest-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
                     href={it.editHref}
                   >
                     Éditer
@@ -370,7 +370,7 @@ export default function SortableList({
                 ) : null}
                 {it.viewHref ? (
                   <Link
-                    className="hidden sm:inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                    className="hidden sm:inline-flex items-center justify-center rounded border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface-2"
                     href={it.viewHref}
                   >
                     Voir →
