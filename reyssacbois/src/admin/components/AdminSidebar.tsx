@@ -184,7 +184,7 @@ export default function AdminSidebar() {
             className="absolute left-0 top-0 flex h-[100dvh] w-[85vw] max-w-sm flex-col border-r border-line bg-surface shadow-[var(--shadow-pop)]"
           >
             <div className="flex items-center justify-between border-b border-line p-4">
-              <p className="font-display font-bold text-ink">Administration</p>
+              <p className="font-heading font-bold text-ink">Administration</p>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}

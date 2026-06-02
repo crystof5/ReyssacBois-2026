@@ -240,7 +240,7 @@ export default function PromoModal({ promo, mode = "public", onRequestClose }: P
               </span>
             ) : null}
 
-            <h3 className="mt-2 font-display text-xl font-extrabold tracking-tight text-ink">
+            <h3 className="mt-2 font-heading text-xl font-extrabold tracking-tight text-ink">
               {promo.title.trim() ? promo.title : "Information"}
             </h3>
 

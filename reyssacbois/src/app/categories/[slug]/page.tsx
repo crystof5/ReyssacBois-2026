@@ -184,7 +184,7 @@ export default async function CategoryPage({
 
             <div>
               <p className="rb-kicker">Catégorie</p>
-              <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+              <h1 className="mt-3 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
                 {category.name}
               </h1>
 

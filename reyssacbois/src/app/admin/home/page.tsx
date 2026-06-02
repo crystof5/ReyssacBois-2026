@@ -59,7 +59,7 @@ export default function AdminHomeMenuPage() {
       <div className="rb-surface p-4 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="font-display text-lg font-bold text-ink">
+            <h2 className="font-heading text-lg font-bold text-ink">
               Accueil
             </h2>
             <p className="mt-1 text-sm text-ink-600">
@@ -80,7 +80,7 @@ export default function AdminHomeMenuPage() {
             className="rb-card-interactive group p-4"
           >
             <div className="flex items-start justify-between gap-3">
-              <h3 className="font-display font-bold text-ink group-hover:text-forest-700">
+              <h3 className="font-heading font-bold text-ink group-hover:text-forest-700">
                 {it.title}
               </h3>
               <span className="text-line-strong transition-transform group-hover:translate-x-0.5 group-hover:text-forest-700">

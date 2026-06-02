@@ -209,7 +209,7 @@ export default async function Home() {
       {/* ACCUEIL / HERO */}
       <section
         id="accueil"
-        className="relative overflow-hidden scroll-mt-24 min-h-[58vh]"
+        className="relative flex items-center overflow-hidden scroll-mt-24 min-h-[68vh] bg-forest-800 sm:min-h-[80vh]"
       >
         {/* Image hero (pilotée par la DB via --rb-bg-image) portée par la section elle-même */}
         <div
@@ -217,16 +217,18 @@ export default async function Home() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "var(--rb-bg-image)" }}
         />
-        {/* Voile sombre sobre — lisibilité du texte blanc (avec ou sans photo) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/25" />
+        {/* Voile pour la lisibilité (plus dense à gauche où est le texte, plus clair à droite) */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-black/15" />
+        {/* Fondu doux vers la page (bas) — transition éclaircie, pas de coupe brutale */}
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-b from-transparent to-bg" />
 
-        <Container className="relative z-10 py-16 sm:py-24 lg:py-28">
+        <Container className="relative z-10 w-full py-16 sm:py-24 lg:py-28">
           <div className="max-w-3xl">
             {heroBadgeVisible ? (
               <p className="rb-kicker text-white/90">{heroBadgeText}</p>
             ) : null}
 
-            <h1 className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white text-balance">
+            <h1 className="mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white text-balance">
               {heroTitle}
             </h1>
             <p className="mt-5 max-w-xl text-lg sm:text-xl leading-relaxed text-white/85">
@@ -269,7 +271,7 @@ export default async function Home() {
                 </div>
               </div>
               <div className="absolute -bottom-3 -right-2 border border-forest-800/40 bg-forest-800 px-4 py-3 text-white shadow-[var(--shadow-pop)] sm:-bottom-4 sm:-right-4">
-                <p className="font-display text-xl font-extrabold leading-none sm:text-2xl">
+                <p className="font-heading text-xl font-extrabold leading-none sm:text-2xl">
                   Depuis 1850
                 </p>
                 <p className="mt-1 text-xs text-white/85">Entreprise familiale</p>
@@ -278,7 +280,7 @@ export default async function Home() {
 
             <div>
               <p className="rb-kicker">Reyssac Bois</p>
-              <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-ink text-balance sm:text-4xl">
+              <h2 className="mt-3 font-heading text-3xl font-extrabold tracking-tight text-ink text-balance sm:text-4xl">
                 {familyTitle}
               </h2>
 
@@ -395,7 +397,7 @@ export default async function Home() {
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
             <div className="rb-surface p-6 sm:p-7">
-              <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
+              <h3 className="font-heading text-xl font-bold text-ink sm:text-2xl">
                 {aboutHistoryTitle}
               </h3>
               {aboutHistoryTextHtml ? (
@@ -424,7 +426,7 @@ export default async function Home() {
 
             <div className="space-y-6 lg:space-y-8">
               <div className="rb-surface p-6 sm:p-7">
-                <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
+                <h3 className="font-heading text-xl font-bold text-ink sm:text-2xl">
                   {aboutMissionTitle}
                 </h3>
                 {aboutMissionTextHtml ? (
@@ -442,7 +444,7 @@ export default async function Home() {
               </div>
 
               <div className="rb-surface p-6 sm:p-7">
-                <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
+                <h3 className="font-heading text-xl font-bold text-ink sm:text-2xl">
                   {aboutLocationTitle}
                 </h3>
                 {aboutLocationTextHtml ? (
@@ -629,7 +631,7 @@ function TeaserCard({
           <rect x="3" y="15.6" width="13" height="3.4" />
         </svg>
       </div>
-      <h3 className="mt-4 font-display text-xl font-bold text-ink">{title}</h3>
+      <h3 className="mt-4 font-heading text-xl font-bold text-ink">{title}</h3>
       <p className="mt-2 leading-relaxed text-ink-600">{desc}</p>
       {href ? (
         <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-forest-700">

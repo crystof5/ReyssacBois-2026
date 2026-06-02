@@ -219,7 +219,7 @@ export default async function ProduitPage({
 
         <div>
           <p className="rb-kicker">{categoryHint ?? "Produit"}</p>
-          <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+          <h1 className="mt-3 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
             {product.name}
           </h1>
 

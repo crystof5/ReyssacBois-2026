@@ -22,7 +22,7 @@ export default async function CategoriesIndexPage() {
 
       <div className="rb-surface rb-grid-bg p-6 sm:p-7">
         <p className="rb-kicker">Catalogue</p>
-        <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+        <h1 className="mt-3 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
           Catégories
         </h1>
         <p className="mt-2 text-ink-600">

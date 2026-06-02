@@ -25,7 +25,7 @@ export default async function ProduitsPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="rb-kicker">Catalogue</p>
-            <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+            <h1 className="mt-3 font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
               Catalogue
             </h1>
             <p className="mt-2 text-ink-600">

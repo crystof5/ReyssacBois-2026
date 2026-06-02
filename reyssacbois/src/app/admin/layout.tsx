@@ -30,7 +30,7 @@ export default async function AdminLayout({
         <div className="rb-surface relative z-40 mb-6 p-4 sm:p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink">
+              <h1 className="font-heading text-2xl font-extrabold tracking-tight text-ink">
                 Administration
               </h1>
               <p className="mt-1 text-sm text-ink-600">

@@ -2,9 +2,9 @@
 
 :root {
   /* ===== Surfaces & fond — neutre pierre "Charpente / Industriel-pro" ===== */
-  --bg: #f5f4f1;          /* fond de page (gris-pierre clair, légèrement chaud) */
+  --bg: #f1ebe0;          /* fond de page (papier chaud "bois", sobre — pas de blanc froid) */
   --surface: #ffffff;     /* cartes / panneaux (OPAQUE, zéro glassmorphisme) */
-  --surface-2: #faf9f7;   /* zones secondaires / spec strip / en-têtes de table */
+  --surface-2: #f4efe6;   /* zones secondaires / spec strip / packshots (teinte chaude) */
   --ink: #15171a;         /* texte principal */
   --ink-600: #4d5358;     /* texte secondaire */
   --ink-400: #8a8f93;     /* meta / placeholder / désactivé */
@@ -32,15 +32,15 @@
 
   /* Police du CORPS pilotée par l'admin (data-rb-font). Police des TITRES = display dédiée. */
   --rb-font-sans: var(--font-inter);
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
   /* On force un rendu "light" (évite les inversions désagréables en mode sombre mobile). */
   color-scheme: light;
 
   /* ===== Ombres réalistes, basses (remplacent le glassmorphisme) ===== */
-  --shadow-sm: 0 1px 0 rgba(21, 23, 26, 0.04), 0 1px 2px rgba(21, 23, 26, 0.06);
-  --shadow-card: 0 1px 2px rgba(21, 23, 26, 0.05), 0 10px 30px -20px rgba(21, 23, 26, 0.30);
-  --shadow-pop: 0 8px 18px -6px rgba(21, 23, 26, 0.18), 0 24px 50px -30px rgba(21, 23, 26, 0.40);
+  --shadow-sm: 0 1px 0 rgba(21, 23, 26, 0.04), 0 1px 2px rgba(21, 23, 26, 0.07);
+  --shadow-card: 0 1px 2px rgba(21, 23, 26, 0.06), 0 14px 34px -18px rgba(21, 23, 26, 0.36);
+  --shadow-pop: 0 10px 22px -8px rgba(21, 23, 26, 0.22), 0 28px 56px -28px rgba(21, 23, 26, 0.46);
 
   /* Anneau focus accessible (blanc + vert) : visible sur fond clair ET sur photo */
   --ring-focus: 0 0 0 2px #ffffff, 0 0 0 4px var(--forest-700);
@@ -105,7 +105,7 @@ html[data-rb-font="playfair"] {
 
   /* Polices : corps = admin-driven ; titres = display dédiée */
   --font-sans: var(--rb-font-sans);
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   /* ===== Échelle de rayons "anti-IA" : on aplatit TOUTE la gamme =====
@@ -128,12 +128,19 @@ html {
   scroll-padding-top: var(--rb-scroll-offset);
 }
 
-/* Fond UNI — on supprime les dégradés radiaux or/marron/vert + grain + attachment:fixed.
-   La profondeur vient désormais des bordures franches et des ombres réalistes des cartes. */
+/* Fond papier chaud : un voile chaud très doux en haut + un grain papier discret
+   (pas de dégradés multicolores ni d'attachment:fixed). Donne chaleur "bois" et
+   profondeur sans le look "IA". La profondeur principale vient des cartes. */
 body {
   position: relative;
   isolation: isolate;
   background-color: var(--bg);
+  background-image:
+    radial-gradient(1100px 560px at 50% -8%, rgba(169, 119, 47, 0.06), transparent 62%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 160px 160px;
+  background-repeat: no-repeat, repeat;
+  background-attachment: scroll, scroll;
   color: var(--ink);
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
@@ -163,6 +170,11 @@ body {
     border-radius: var(--radius);
   }
 
+  /* Police des titres (garantie même si l'utilitaire Tailwind n'est pas généré) */
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
   /* ---- Cartes ---- */
   .rb-card {
     position: relative;
@@ -170,7 +182,7 @@ body {
     background-color: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
   }
   .rb-card-interactive {
     position: relative;
@@ -179,7 +191,7 @@ body {
     background-color: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
     transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
   }
   /* Liseré vert gauche au survol (signature "fiche technique"), au-dessus du contenu */
@@ -198,8 +210,8 @@ body {
   }
   .rb-card-interactive:hover {
     border-color: var(--forest-700);
-    box-shadow: var(--shadow-card);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-pop);
+    transform: translateY(-3px);
   }
   .rb-card-interactive:hover::after {
     transform: scaleX(1);

@@ -137,7 +137,7 @@ export default async function RootLayout({
                   className="h-9 w-9 rounded-sm bg-white p-0.5"
                 />
                 <div className="text-center sm:text-left">
-                  <p className="font-display text-sm font-bold leading-tight text-white">Reyssac Bois</p>
+                  <p className="font-heading text-sm font-bold leading-tight text-white">Reyssac Bois</p>
                   <p className="text-xs leading-tight text-white/70">
                     <a className="underline-offset-4 hover:text-white hover:underline" href="tel:0553961597">05 53 96 15 97</a>
                   </p>

@@ -28,7 +28,7 @@ export default function SectionHeading({
       ) : null}
       <Tag
         id={id}
-        className="mt-3 font-display text-3xl font-extrabold tracking-tight text-ink text-balance sm:text-4xl"
+        className="mt-3 font-heading text-3xl font-extrabold tracking-tight text-ink text-balance sm:text-4xl"
       >
         {title}
       </Tag>
