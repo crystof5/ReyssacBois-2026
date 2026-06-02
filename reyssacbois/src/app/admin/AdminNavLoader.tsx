@@ -76,16 +76,16 @@ export default function AdminNavLoader() {
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center">
-      <div className="absolute inset-0 bg-white/35 backdrop-blur-[2px]" />
-      <div className="relative rounded-2xl border border-white/30 bg-white/80 px-5 py-4 shadow-[0_40px_120px_-80px_rgba(0,0,0,0.7)] ring-1 ring-black/10">
+      <div className="absolute inset-0 bg-bg/60 backdrop-blur-[2px]" />
+      <div className="relative rb-surface px-5 py-4 shadow-[var(--shadow-pop)]">
         <div className="flex items-center gap-3">
           <div
-            className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-green-700"
+            className="h-5 w-5 animate-spin rounded-full border-2 border-line border-t-forest-700"
             aria-hidden
           />
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-gray-900">Chargement…</p>
-            <p className="text-xs text-gray-600">La section admin arrive.</p>
+            <p className="text-sm font-semibold text-ink">Chargement…</p>
+            <p className="text-xs text-ink-600">La section admin arrive.</p>
           </div>
         </div>
       </div>
