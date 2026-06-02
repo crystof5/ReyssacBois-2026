@@ -14,6 +14,7 @@ import HashScroll from "@/components/HashScroll"
 import HashSections from "../components/HashSections"
 import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
 import {
+  Archivo,
   DM_Sans,
   Inter,
   Lato,
@@ -40,6 +41,9 @@ const montserrat = Montserrat({ subsets: ["latin"], display: "swap", variable: "
 const raleway = Raleway({ subsets: ["latin"], display: "swap", variable: "--font-raleway", weight: ["400", "600", "700"] })
 const merriweather = Merriweather({ subsets: ["latin"], display: "swap", variable: "--font-merriweather", weight: ["400", "700"] })
 const playfair = Playfair_Display({ subsets: ["latin"], display: "swap", variable: "--font-playfair", weight: ["400", "600", "700"] })
+// Police des TITRES (display) — grotesque technique "Charpente / Industriel-pro".
+// N'affecte PAS le corps de texte, qui reste piloté par l'admin via data-rb-font.
+const archivo = Archivo({ subsets: ["latin"], display: "swap", variable: "--font-archivo", weight: ["600", "700", "800", "900"] })
 
 // Les réglages (promo/bannière) viennent de la DB et doivent refléter
 // immédiatement les changements admin (sans rebuild). On force donc du SSR.
@@ -109,6 +113,7 @@ export default async function RootLayout({
         raleway.variable,
         merriweather.variable,
         playfair.variable,
+        archivo.variable,
       ].join(" ")}
     >
       <body className="min-h-screen antialiased flex flex-col">

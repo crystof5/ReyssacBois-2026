@@ -1,23 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  /* Blanc cassé / beige très clair (plus premium que blanc pur) */
-  --background: #f6f1e7;
-  --foreground: #171717;
+  /* ===== Surfaces & fond — neutre pierre "Charpente / Industriel-pro" ===== */
+  --bg: #f5f4f1;          /* fond de page (gris-pierre clair, légèrement chaud) */
+  --surface: #ffffff;     /* cartes / panneaux (OPAQUE, zéro glassmorphisme) */
+  --surface-2: #faf9f7;   /* zones secondaires / spec strip / en-têtes de table */
+  --ink: #15171a;         /* texte principal */
+  --ink-600: #4d5358;     /* texte secondaire */
+  --ink-400: #8a8f93;     /* meta / placeholder / désactivé */
+  --line: #e2e1dd;        /* bordures de cartes */
+  --line-strong: #cfcdc7; /* séparateurs forts / grille / bordures de badges */
 
-  /* Photo de fond (optionnelle) — mettez votre image dans /public puis remplacez par ex:
-     --rb-bg-image: url("/img/mon-fond.jpg"); */
+  /* ===== Vert de marque — forêt profond (couleur imposée par le client, raffinée) ===== */
+  --forest-800: #173d27;  /* fonds vert, footer, navbar pleine */
+  --forest-700: #1d5236;  /* action principale (AA sur blanc ≈ 8:1) */
+  --forest-600: #2a6e49;  /* hover */
+  --forest-050: #eef3ef;  /* fond badge vert clair */
+
+  /* ===== Accent bois — signalétique uniquement (jamais texte courant) ===== */
+  --timber: #a9772f;
+  --timber-050: #f6efe2;
+
+  /* ===== Compat anciennes variables ===== */
+  --background: var(--bg);
+  --foreground: var(--ink);
+
+  /* Photo de fond du hero (consommée par la section hero, plus par le body) */
   --rb-bg-image: none;
   --rb-bg-image-opacity: 0.55;
   --rb-scroll-offset: 96px;
 
-  /* Police (pilotée par l'admin via l'attribut `data-rb-font` sur <html>) */
+  /* Police du CORPS pilotée par l'admin (data-rb-font). Police des TITRES = display dédiée. */
   --rb-font-sans: var(--font-inter);
-  /* On force un rendu "light" pour éviter les inversions/contrastes
-     désagréables sur mobile quand le système est en mode sombre. */
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  /* On force un rendu "light" (évite les inversions désagréables en mode sombre mobile). */
   color-scheme: light;
+
+  /* ===== Ombres réalistes, basses (remplacent le glassmorphisme) ===== */
+  --shadow-sm: 0 1px 0 rgba(21, 23, 26, 0.04), 0 1px 2px rgba(21, 23, 26, 0.06);
+  --shadow-card: 0 1px 2px rgba(21, 23, 26, 0.05), 0 10px 30px -20px rgba(21, 23, 26, 0.30);
+  --shadow-pop: 0 8px 18px -6px rgba(21, 23, 26, 0.18), 0 24px 50px -30px rgba(21, 23, 26, 0.40);
+
+  /* Anneau focus accessible (blanc + vert) : visible sur fond clair ET sur photo */
+  --ring-focus: 0 0 0 2px #ffffff, 0 0 0 4px var(--forest-700);
 }
 
+/* ===== Police du corps pilotée par l'admin via data-rb-font sur <html> — inchangé ===== */
 html[data-rb-font="inter"] {
   --rb-font-sans: var(--font-inter);
 }
@@ -56,87 +85,319 @@ html[data-rb-font="playfair"] {
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Couleurs exposées => génèrent bg-*, text-*, border-*, ring-* et suivent les vars :root */
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-600: var(--ink-600);
+  --color-ink-400: var(--ink-400);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-forest-800: var(--forest-800);
+  --color-forest-700: var(--forest-700);
+  --color-forest-600: var(--forest-600);
+  --color-forest-050: var(--forest-050);
+  --color-timber: var(--timber);
+  --color-timber-050: var(--timber-050);
+
+  /* Polices : corps = admin-driven ; titres = display dédiée */
   --font-sans: var(--rb-font-sans);
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  /* Couleurs gradient (ancien site) */
-  --color-gradient-start: #eabf70;
-  --color-gradient-end: #875d11;
+  /* ===== Échelle de rayons "anti-IA" : on aplatit TOUTE la gamme =====
+     Mixte : badges (rounded-sm/xs) = 0px ; cartes/boutons (rounded/-md/-lg) = 3px ;
+     grands conteneurs (xl/2xl/3xl) = 4px. `rounded-full` reste plein (cercles légitimes :
+     logos, pastilles, chevrons). Ceci dé-arrondit instantanément tout résidu rounded-2xl/3xl. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius: 3px;
+  --radius-md: 3px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
 }
 
 html {
-  background: var(--background);
+  background: var(--bg);
   scroll-behavior: smooth;
   scroll-padding-top: var(--rb-scroll-offset);
 }
 
+/* Fond UNI — on supprime les dégradés radiaux or/marron/vert + grain + attachment:fixed.
+   La profondeur vient désormais des bordures franches et des ombres réalistes des cartes. */
 body {
   position: relative;
   isolation: isolate;
-  background-color: var(--background);
-  background-image:
-    /* 1) Photo optionnelle (peut rester fixe derrière la navbar) */
-    linear-gradient(0deg, rgba(246, 241, 231, var(--rb-bg-image-opacity)), rgba(246, 241, 231, var(--rb-bg-image-opacity))),
-    var(--rb-bg-image),
-    /* 2) Nuances premium */
-    radial-gradient(900px circle at 15% 0%, rgba(234, 191, 112, 0.28), transparent 62%),
-    radial-gradient(820px circle at 90% 18%, rgba(135, 93, 17, 0.18), transparent 66%),
-    radial-gradient(980px circle at 45% 110%, rgba(22, 163, 74, 0.10), transparent 64%),
-    /* 3) Grain léger (noise) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-  background-size: 100% 100%, cover, 160% 160%, 160% 160%, 160% 160%, 140px 140px;
-  background-position: 0 0, 50% 0%, 0% 0%, 100% 10%, 30% 100%, 0 0;
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat;
-  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
-  background-blend-mode: normal, normal, normal, normal, normal, soft-light;
-  color: var(--foreground);
-  /* Police moderne (par défaut Next/Geist si dispo), sinon fallback system-ui */
+  background-color: var(--bg);
+  color: var(--ink);
   font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
 }
 
-/* Mobile: `background-attachment: fixed` est souvent désactivé -> on force scroll + motif un peu plus dense */
-@media (max-width: 768px) {
-  body {
-    /* Sur mobile, l'image de fond peut être trop petite -> pixellisation.
-       On remplace la couche photo par une version dédiée (body::before) floutée. */
-    background-image:
-      /* 1) Voile (sans la photo) */
-      linear-gradient(0deg, rgba(246, 241, 231, var(--rb-bg-image-opacity)), rgba(246, 241, 231, var(--rb-bg-image-opacity))),
-      /* 2) Nuances premium */
-      radial-gradient(900px circle at 15% 0%, rgba(234, 191, 112, 0.28), transparent 62%),
-      radial-gradient(820px circle at 90% 18%, rgba(135, 93, 17, 0.18), transparent 66%),
-      radial-gradient(980px circle at 45% 110%, rgba(22, 163, 74, 0.10), transparent 64%),
-      /* 3) Grain léger (noise) */
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-    background-attachment: scroll, scroll, scroll, scroll, scroll;
-    background-size: 100% 100%, 160% 160%, 160% 160%, 160% 160%, 120px 120px;
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    /* On dépasse l'écran pour éviter les bords visibles après blur */
-    inset: -24px;
-    z-index: -1;
-    pointer-events: none;
-
-    background-image: var(--rb-bg-image);
-    background-size: cover;
-    background-position: 50% 10%;
-    background-repeat: no-repeat;
-
-    /* Le blur masque la pixellisation, et le scale évite les bords */
-    filter: blur(14px) saturate(1.05);
-    transform: scale(1.08);
-    opacity: 0.9;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+/* ============================================================
+   Classes composant (layer "components" => les utilitaires Tailwind
+   peuvent les surcharger au cas par cas).
+   ============================================================ */
+@layer components {
+  /* ---- Surfaces ---- */
+  .rb-surface {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+  }
+  .rb-surface-muted {
+    background-color: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  /* ---- Cartes ---- */
+  .rb-card {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .rb-card-interactive {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  /* Liseré vert gauche au survol (signature "fiche technique"), au-dessus du contenu */
+  .rb-card-interactive::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 3px;
+    background-color: var(--forest-700);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.18s ease;
+    z-index: 30;
+    pointer-events: none;
+  }
+  .rb-card-interactive:hover {
+    border-color: var(--forest-700);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+  .rb-card-interactive:hover::after {
+    transform: scaleX(1);
+  }
+  .rb-card-interactive:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rb-card-interactive:hover {
+      transform: none;
+    }
+  }
+
+  /* ---- Boutons ---- */
+  .rb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .rb-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+  }
+  .rb-btn-primary {
+    background-color: var(--forest-700);
+    color: #ffffff;
+    box-shadow: var(--shadow-sm);
+  }
+  .rb-btn-primary:hover {
+    background-color: var(--forest-600);
+  }
+  .rb-btn-primary:active {
+    background-color: var(--forest-800);
+  }
+  .rb-btn-secondary {
+    background-color: var(--surface);
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+  .rb-btn-secondary:hover {
+    border-color: var(--forest-700);
+    color: var(--forest-700);
+  }
+  .rb-btn-ghost-dark {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.30);
+  }
+  .rb-btn-ghost-dark:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+  .rb-btn-danger {
+    background-color: #b42318;
+    color: #ffffff;
+  }
+  .rb-btn-danger:hover {
+    background-color: #912018;
+  }
+
+  /* ---- Badges / tags (arête vive 0px = look étiquette) ---- */
+  .rb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-2);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+  }
+  .rb-badge-green {
+    border-color: color-mix(in srgb, var(--forest-700) 25%, transparent);
+    background-color: var(--forest-050);
+    color: var(--forest-800);
+  }
+  .rb-badge-timber {
+    border-color: color-mix(in srgb, var(--timber) 40%, transparent);
+    background-color: var(--timber-050);
+    color: #82591f;
+  }
+
+  /* ---- Kicker (titre de section) + filet bois — "one memorable thing" ---- */
+  .rb-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest-700);
+  }
+  .rb-kicker::before {
+    content: "";
+    width: 28px;
+    height: 2px;
+    flex: none;
+    background-color: var(--timber);
+  }
+  .rb-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest-700);
+  }
+
+  /* ---- Focus utilitaire (remplace les ring verts translucides) ---- */
+  .rb-focus:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+  }
+
+  /* ---- Formulaires (admin + public) ---- */
+  .rb-input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--ink);
+  }
+  .rb-input::placeholder {
+    color: var(--ink-400);
+  }
+  .rb-input:focus-visible {
+    outline: none;
+    border-color: var(--forest-700);
+    box-shadow: var(--ring-focus);
+  }
+  .rb-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+
+  /* ---- Tableaux admin denses ---- */
+  .rb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .rb-th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+    background-color: var(--surface-2);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .rb-td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .rb-thead-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .rb-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg);
+  }
+
+  /* ---- Grille de chantier (fond léger des en-têtes catalogue) ---- */
+  .rb-grid-bg {
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    -webkit-mask-image: radial-gradient(120% 80% at 50% 0%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(120% 80% at 50% 0%, #000 35%, transparent 100%);
+  }
 }
 
 /* util: hide horizontal scrollbar (carrousels) */
