@@ -35,13 +35,21 @@ function InstagramIcon() {
 
 export default function SocialLinks({
   className = "",
+  variant = "light",
 }: {
   className?: string
+  variant?: "light" | "dark"
 }) {
   const facebook = normalizeUrl(process.env.NEXT_PUBLIC_FACEBOOK_URL)
   const instagram = normalizeUrl(process.env.NEXT_PUBLIC_INSTAGRAM_URL)
 
   if (!facebook && !instagram) return null
+
+  const base =
+    variant === "dark"
+      ? "border-white/25 text-white/85 hover:border-white/55 hover:bg-white/10 hover:text-white"
+      : "border-line text-ink-600 hover:border-forest-700 hover:text-forest-700"
+  const cls = `inline-flex h-9 w-9 items-center justify-center rounded border transition-colors ${base}`
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -50,7 +58,7 @@ export default function SocialLinks({
           href={facebook}
           target="_blank"
           rel="me noopener noreferrer"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white/70 text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white hover:text-gray-900"
+          className={cls}
           aria-label="Facebook Reyssac Bois"
           title="Facebook"
         >
@@ -62,7 +70,7 @@ export default function SocialLinks({
           href={instagram}
           target="_blank"
           rel="me noopener noreferrer"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white/70 text-gray-700 shadow-sm ring-1 ring-black/5 hover:bg-white hover:text-gray-900"
+          className={cls}
           aria-label="Instagram Reyssac Bois"
           title="Instagram"
         >

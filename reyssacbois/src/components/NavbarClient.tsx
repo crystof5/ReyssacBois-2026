@@ -153,7 +153,7 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
             <li className="ml-2">
               <Link
                 href="/produits"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold tracking-wide hover:bg-white/15"
+                className="inline-flex items-center gap-2 rounded border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white transition-colors hover:border-white/55 hover:bg-white/15"
               >
                 Catalogue
                 <span aria-hidden="true">→</span>

@@ -126,37 +126,37 @@ export default async function RootLayout({
         <PromoModal promo={promo} />
         <div className="flex-1">{children}</div>
 
-        <footer className="mt-8 border-t border-gray-200/70 bg-white/60 backdrop-blur">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <footer className="mt-16 border-t border-forest-800 bg-forest-800 text-white/75">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center justify-center gap-3 sm:justify-start">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/img/android-chrome-192x192.png"
                   alt="Reyssac Bois"
-                  className="h-8 w-8 rounded-full bg-white shadow-sm ring-1 ring-black/5"
+                  className="h-9 w-9 rounded-sm bg-white p-0.5"
                 />
                 <div className="text-center sm:text-left">
-                  <p className="text-sm font-semibold text-gray-900 leading-tight">Reyssac Bois</p>
-                  <p className="text-xs text-gray-600 leading-tight">
-                    <a className="hover:underline underline-offset-4" href="tel:0553961597">05 53 96 15 97</a>
+                  <p className="font-display text-sm font-bold leading-tight text-white">Reyssac Bois</p>
+                  <p className="text-xs leading-tight text-white/70">
+                    <a className="underline-offset-4 hover:text-white hover:underline" href="tel:0553961597">05 53 96 15 97</a>
                   </p>
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-600 sm:justify-end">
-                <Link className="hover:text-gray-900 underline-offset-4 hover:underline" href="/mentions-legales">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-white/70 sm:justify-end">
+                <Link className="underline-offset-4 hover:text-white hover:underline" href="/mentions-legales">
                   Mentions légales
                 </Link>
-                <Link className="hover:text-gray-900 underline-offset-4 hover:underline" href="/politique-de-confidentialite">
+                <Link className="underline-offset-4 hover:text-white hover:underline" href="/politique-de-confidentialite">
                   Confidentialité & cookies
                 </Link>
-                <CookieSettingsButton className="hover:text-gray-900 underline-offset-4 hover:underline">
+                <CookieSettingsButton className="underline-offset-4 hover:text-white hover:underline">
                   Cookies
                 </CookieSettingsButton>
-                <SocialLinks />
-                <span className="text-gray-400">|</span>
-                <span className="text-xs text-gray-500">
+                <SocialLinks variant="dark" />
+                <span className="text-white/30">|</span>
+                <span className="text-xs text-white/60">
                   © {new Date().getFullYear()} Reyssac Bois
                 </span>
               </div>

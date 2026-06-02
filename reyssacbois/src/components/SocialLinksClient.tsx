@@ -45,8 +45,9 @@ export default function SocialLinksClient({
 
   const base =
     variant === "dark"
-      ? "border-white/20 bg-white/10 text-white hover:bg-white/15"
-      : "border-gray-200 bg-white/70 text-gray-700 hover:bg-white hover:text-gray-900"
+      ? "border-white/25 text-white/85 hover:border-white/55 hover:bg-white/10 hover:text-white"
+      : "border-line text-ink-600 hover:border-forest-700 hover:text-forest-700"
+  const cls = `inline-flex h-9 w-9 items-center justify-center rounded border transition-colors ${base}`
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
@@ -55,7 +56,7 @@ export default function SocialLinksClient({
           href={facebook}
           target="_blank"
           rel="me noopener noreferrer"
-          className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border shadow-sm ring-1 ring-black/5 ${base}`}
+          className={cls}
           aria-label="Facebook Reyssac Bois"
           title="Facebook"
         >
@@ -67,7 +68,7 @@ export default function SocialLinksClient({
           href={instagram}
           target="_blank"
           rel="me noopener noreferrer"
-          className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border shadow-sm ring-1 ring-black/5 ${base}`}
+          className={cls}
           aria-label="Instagram Reyssac Bois"
           title="Instagram"
         >
