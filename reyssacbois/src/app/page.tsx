@@ -14,6 +14,8 @@ import {
 import ContactForm from "@/components/ContactForm";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
+import { ButtonLink } from "@/components/ui/Button";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 export default async function Home() {
   const [
@@ -209,41 +211,36 @@ export default async function Home() {
         id="accueil"
         className="relative overflow-hidden scroll-mt-24 min-h-[58vh]"
       >
-        {/* Le fond d'écran (photo hero DB) est désormais géré globalement via CSS var --rb-bg-image */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/40 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(900px_circle_at_20%_15%,rgba(34,197,94,0.20),transparent_60%)]" />
+        {/* Image hero (pilotée par la DB via --rb-bg-image) portée par la section elle-même */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "var(--rb-bg-image)" }}
+        />
+        {/* Voile sombre sobre — lisibilité du texte blanc (avec ou sans photo) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/25" />
 
         <Container className="relative z-10 py-16 sm:py-24 lg:py-28">
-          <div className="max-w-3xl rounded-3xl border border-white/10 bg-black/25 p-6 sm:p-8 backdrop-blur shadow-[0_18px_45px_-30px_rgba(0,0,0,0.9)]">
+          <div className="max-w-3xl">
             {heroBadgeVisible ? (
-              <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold tracking-wide text-white/90 backdrop-blur">
-                <span className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_0_6px_rgba(34,197,94,0.15)]" />
-                {heroBadgeText}
-              </p>
+              <p className="rb-kicker text-white/90">{heroBadgeText}</p>
             ) : null}
 
-            <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+            <h1 className="mt-5 font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white text-balance">
               {heroTitle}
             </h1>
-            <p className="mt-5 text-lg sm:text-xl text-white/90 leading-relaxed">
+            <p className="mt-5 max-w-xl text-lg sm:text-xl leading-relaxed text-white/85">
               {heroSubtitle}
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/produits"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-gray-900 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] ring-1 ring-white/30 transition hover:-translate-y-0.5 hover:bg-white/95 hover:ring-white/50"
-              >
+              <ButtonLink href="/produits" variant="secondary">
                 Aller au catalogue
                 <span aria-hidden="true">→</span>
-              </Link>
-              <Link
-                href="/#contact"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 hover:border-white/35"
-              >
+              </ButtonLink>
+              <ButtonLink href="/#contact" variant="ghost-dark">
                 Demander un devis
-                <span aria-hidden="true">✦</span>
-              </Link>
+              </ButtonLink>
             </div>
 
             {heroHighlights.length ? (
@@ -262,7 +259,7 @@ export default async function Home() {
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="relative">
-              <div className="overflow-hidden rounded-3xl border border-white/20 bg-white/10 backdrop-blur shadow-[0_20px_60px_-40px_rgba(0,0,0,0.45)] ring-1 ring-black/5">
+              <div className="rb-surface overflow-hidden">
                 <div className="aspect-[4/3] w-full">
                   <Media
                     src={familyImage.src}
@@ -271,71 +268,53 @@ export default async function Home() {
                   />
                 </div>
               </div>
-              <div className="absolute -bottom-4 -right-2 sm:-bottom-6 sm:-right-6 rounded-2xl bg-green-700 px-4 py-3 text-white shadow-xl ring-1 ring-black/10">
-                <p className="text-xl sm:text-2xl font-bold leading-none">
+              <div className="absolute -bottom-3 -right-2 border border-forest-800/40 bg-forest-800 px-4 py-3 text-white shadow-[var(--shadow-pop)] sm:-bottom-4 sm:-right-4">
+                <p className="font-display text-xl font-extrabold leading-none sm:text-2xl">
                   Depuis 1850
                 </p>
-                <p className="text-xs mt-1 text-white/90">
-                  Entreprise familiale
-                </p>
+                <p className="mt-1 text-xs text-white/85">Entreprise familiale</p>
               </div>
             </div>
 
-            <div className="space-y-6 rounded-3xl border border-white/10 bg-white/35 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
-              <div>
-                <p className="text-xs font-semibold tracking-wide text-green-800/90">
-                  REYSSAC BOIS
-                </p>
-                <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
-                  {familyTitle}
-                </h2>
-              </div>
+            <div>
+              <p className="rb-kicker">Reyssac Bois</p>
+              <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-ink text-balance sm:text-4xl">
+                {familyTitle}
+              </h2>
 
-              <div className="space-y-4 text-gray-700">
+              <div className="mt-5 space-y-4 text-ink-600">
                 {familyP1Html ? (
-                  <RichText
-                    html={familyP1Html}
-                    className="text-base sm:text-lg"
-                  />
+                  <RichText html={familyP1Html} className="text-base sm:text-lg" />
                 ) : (
-                  <p className="text-base sm:text-lg leading-relaxed">
+                  <p className="text-base leading-relaxed sm:text-lg">
                     {familyP1Fallback}
                   </p>
                 )}
                 {familyP2Html ? (
-                  <RichText
-                    html={familyP2Html}
-                    className="text-base sm:text-lg"
-                  />
+                  <RichText html={familyP2Html} className="text-base sm:text-lg" />
                 ) : (
-                  <p className="text-base sm:text-lg leading-relaxed">
+                  <p className="text-base leading-relaxed sm:text-lg">
                     {familyP2Fallback}
                   </p>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-2 text-xs">
+              <div className="mt-5 flex flex-wrap gap-2">
                 <Badge>Expertise</Badge>
                 <Badge>Sur-mesure</Badge>
                 <Badge>Conseil</Badge>
                 <Badge>Livraison</Badge>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Link
-                  href="/#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-                >
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <ButtonLink href="/#contact">
                   Nous contacter
                   <span aria-hidden="true">→</span>
-                </Link>
-                <Link
-                  href="/produits"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200/80 bg-white/55 px-5 py-3 text-sm font-semibold text-gray-900 backdrop-blur transition hover:bg-white/65 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600/20"
-                >
+                </ButtonLink>
+                <ButtonLink href="/produits" variant="secondary">
                   Voir le catalogue
                   <span aria-hidden="true">↗</span>
-                </Link>
+                </ButtonLink>
               </div>
             </div>
           </div>
@@ -345,17 +324,12 @@ export default async function Home() {
       {/* PRODUITS */}
       <section id="catalogue" className="py-14 sm:py-20 scroll-mt-24">
         <Container>
-          <div className="flex flex-col items-center text-center">
-            <p className="text-xs font-semibold tracking-wide text-green-800/90">
-              CATALOGUE
-            </p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
-              {catalogueTitle}
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
-              {catalogueIntro}
-            </p>
-          </div>
+          <SectionHeading
+            align="center"
+            kicker="Catalogue"
+            title={catalogueTitle}
+            intro={catalogueIntro}
+          />
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
             {catalogueCards.length ? (
@@ -394,21 +368,14 @@ export default async function Home() {
             )}
           </div>
 
-          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/produits"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-green-700 text-white px-7 py-3 text-sm font-semibold hover:bg-green-800 transition shadow-lg"
-            >
+          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+            <ButtonLink href="/produits">
               Aller au catalogue
               <span aria-hidden="true">→</span>
-            </Link>
-            <Link
-              href="/#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-200/80 bg-white/55 px-7 py-3 text-sm font-semibold text-gray-900 backdrop-blur transition hover:bg-white/65 hover:border-gray-300"
-            >
+            </ButtonLink>
+            <ButtonLink href="/#contact" variant="secondary">
               Poser une question
-              <span aria-hidden="true">✦</span>
-            </Link>
+            </ButtonLink>
           </div>
         </Container>
       </section>
@@ -416,41 +383,35 @@ export default async function Home() {
       {/* QUI SOMMES-NOUS */}
       <section
         id="qui-sommes-nous"
-        className="py-14 sm:py-20 border-y border-white/10 bg-white/30 backdrop-blur scroll-mt-24"
+        className="border-y border-line bg-surface-2 py-14 sm:py-20 scroll-mt-24"
       >
         <Container>
-          <div className="flex flex-col items-center text-center">
-            <p className="text-xs font-semibold tracking-wide text-green-800/90">
-              À PROPOS
-            </p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
-              {aboutPageTitle}
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
-              Une entreprise familiale, une expertise transmise, et une exigence
-              de qualité au quotidien.
-            </p>
-          </div>
+          <SectionHeading
+            align="center"
+            kicker="À propos"
+            title={aboutPageTitle}
+            intro="Une entreprise familiale, une expertise transmise, et une exigence de qualité au quotidien."
+          />
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            <div className="rounded-3xl border border-white/20 bg-white/55 backdrop-blur shadow-sm ring-1 ring-black/5 p-6 sm:p-7">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <div className="rb-surface p-6 sm:p-7">
+              <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
                 {aboutHistoryTitle}
               </h3>
               {aboutHistoryTextHtml ? (
                 <div className="mt-4">
                   <RichText
                     html={aboutHistoryTextHtml}
-                    className="text-gray-700 text-base sm:text-lg"
+                    className="text-base text-ink-600 sm:text-lg"
                   />
                 </div>
               ) : (
-                <p className="mt-4 text-gray-700 text-base sm:text-lg leading-relaxed">
+                <p className="mt-4 text-base leading-relaxed text-ink-600 sm:text-lg">
                   {aboutHistoryText}
                 </p>
               )}
 
-              <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50">
+              <div className="mt-6 overflow-hidden rounded border border-line bg-surface-2">
                 <div className="aspect-[4/3] w-full">
                   <Media
                     src={aboutHistoryImage.src}
@@ -461,51 +422,51 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="space-y-6">
-              <div className="rounded-3xl border border-white/20 bg-white/55 backdrop-blur shadow-sm ring-1 ring-black/5 p-6 sm:p-7">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+            <div className="space-y-6 lg:space-y-8">
+              <div className="rb-surface p-6 sm:p-7">
+                <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
                   {aboutMissionTitle}
                 </h3>
                 {aboutMissionTextHtml ? (
                   <div className="mt-4">
                     <RichText
                       html={aboutMissionTextHtml}
-                      className="text-gray-700 text-base sm:text-lg"
+                      className="text-base text-ink-600 sm:text-lg"
                     />
                   </div>
                 ) : (
-                  <p className="mt-4 text-gray-700 text-base sm:text-lg leading-relaxed">
+                  <p className="mt-4 text-base leading-relaxed text-ink-600 sm:text-lg">
                     {aboutMissionText}
                   </p>
                 )}
               </div>
 
-              <div className="rounded-3xl border border-white/20 bg-white/55 backdrop-blur shadow-sm ring-1 ring-black/5 p-6 sm:p-7">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <div className="rb-surface p-6 sm:p-7">
+                <h3 className="font-display text-xl font-bold text-ink sm:text-2xl">
                   {aboutLocationTitle}
                 </h3>
                 {aboutLocationTextHtml ? (
                   <div className="mt-4">
                     <RichText
                       html={aboutLocationTextHtml}
-                      className="text-gray-700 text-base sm:text-lg"
+                      className="text-base text-ink-600 sm:text-lg"
                     />
                   </div>
                 ) : (
-                  <p className="mt-4 text-gray-700 text-base sm:text-lg leading-relaxed">
+                  <p className="mt-4 text-base leading-relaxed text-ink-600 sm:text-lg">
                     {aboutLocationText}
                   </p>
                 )}
               </div>
 
-              <div className="rounded-3xl border border-white/20 bg-white/55 backdrop-blur shadow-sm ring-1 ring-black/5 p-6 sm:p-7">
+              <div className="rb-surface p-6 sm:p-7">
                 {aboutConclusionTextHtml ? (
                   <RichText
                     html={aboutConclusionTextHtml}
-                    className="text-gray-800 text-base sm:text-lg text-center"
+                    className="text-center text-base text-ink sm:text-lg"
                   />
                 ) : (
-                  <p className="text-gray-800 text-base sm:text-lg text-center">
+                  <p className="text-center text-base text-ink sm:text-lg">
                     {aboutConclusionText}
                   </p>
                 )}
@@ -525,22 +486,19 @@ export default async function Home() {
           ) : null}
 
           <Container>
-            <div className="rounded-3xl border border-white/15 bg-white/50 backdrop-blur p-6 sm:p-7 shadow-sm ring-1 ring-black/5">
-              <div className="flex flex-col items-center text-center">
-                <p className="text-xs font-semibold tracking-wide text-green-800/90">
-                  FAQ
-                </p>
-                <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
-                  {faqTitle}
-                </h2>
-                <div className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
-                  {faqIntroHtml ? (
+            <div className="rb-surface p-6 sm:p-7">
+              <SectionHeading
+                align="center"
+                kicker="FAQ"
+                title={faqTitle}
+                intro={
+                  faqIntroHtml ? (
                     <RichText html={faqIntroHtml} />
                   ) : (
-                    <p className="whitespace-pre-line">{faqIntroFallback}</p>
-                  )}
-                </div>
-              </div>
+                    <span className="whitespace-pre-line">{faqIntroFallback}</span>
+                  )
+                }
+              />
 
               {faqItems.length ? (
                 <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -558,26 +516,20 @@ export default async function Home() {
                   ))}
                 </div>
               ) : (
-                <p className="mt-8 text-center text-sm text-gray-600">
+                <p className="mt-8 text-center text-sm text-ink-600">
                   La FAQ est activée, mais aucune question n’est visible.
                 </p>
               )}
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-                <Link
-                  href="/#contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-                >
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                <ButtonLink href="/#contact">
                   Poser une question
                   <span aria-hidden="true">→</span>
-                </Link>
-                <Link
-                  href="/produits"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200/80 bg-white/55 px-5 py-3 text-sm font-semibold text-gray-900 backdrop-blur transition hover:bg-white/65 hover:border-gray-300"
-                >
+                </ButtonLink>
+                <ButtonLink href="/produits" variant="secondary">
                   Voir le catalogue
                   <span aria-hidden="true">↗</span>
-                </Link>
+                </ButtonLink>
               </div>
             </div>
           </Container>
@@ -587,26 +539,20 @@ export default async function Home() {
       {/* CONTACT */}
       <section id="contact" className="py-14 sm:py-20 scroll-mt-24">
         <Container>
-          <div className="flex flex-col items-center text-center">
-            <p className="text-xs font-semibold tracking-wide text-green-800/90">
-              CONTACT
-            </p>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
-              Parlons de votre projet
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
-              Disponibilité, devis, conseil, commande: décrivez votre besoin et
-              nous vous répondons rapidement.
-            </p>
-          </div>
+          <SectionHeading
+            align="center"
+            kicker="Contact"
+            title="Parlons de votre projet"
+            intro="Disponibilité, devis, conseil, commande : décrivez votre besoin et nous vous répondons rapidement."
+          />
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <div className="space-y-6">
-              <div className="rounded-3xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm ring-1 ring-black/5">
-                <h3 className="text-base font-semibold text-gray-900">
+              <div className="rb-surface p-6">
+                <h3 className="text-base font-semibold text-ink">
                   {contactInfoTitle}
                 </h3>
-                <div className="mt-3 text-sm text-gray-700">
+                <div className="mt-3 text-sm text-ink-600">
                   {contactInfoHtml ? (
                     <RichText html={contactInfoHtml} />
                   ) : (
@@ -615,7 +561,7 @@ export default async function Home() {
                 </div>
               </div>
 
-              <div className="overflow-hidden rounded-3xl border border-gray-200/70 bg-white/55 shadow-sm ring-1 ring-black/5">
+              <div className="rb-surface overflow-hidden p-0">
                 <div className="relative w-full pt-[56.25%]">
                   <iframe
                     title="Carte - Reyssac Bois"
@@ -630,7 +576,7 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm ring-1 ring-black/5">
+            <div className="rb-surface p-6">
               <ContactForm />
             </div>
           </div>
@@ -640,19 +586,13 @@ export default async function Home() {
       {/* NOS BOIS, VOS PROJETS (exemples / inspirations) */}
       <section id="projets" className="py-12 sm:py-16 scroll-mt-24">
         <Container>
-          <div className="rounded-3xl border border-white/15 bg-white/35 backdrop-blur p-6 sm:p-7 shadow-sm ring-1 ring-black/5">
-            <div className="flex flex-col items-center text-center">
-              <p className="text-xs font-semibold tracking-wide text-green-800/90">
-                INSPIRATIONS
-              </p>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
-                Nos bois, vos projets
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm sm:text-base text-gray-700">
-                Quelques exemples de réalisations avec nos bois — pour vous
-                inspirer avant de demander un devis.
-              </p>
-            </div>
+          <div className="rb-surface p-6 sm:p-7">
+            <SectionHeading
+              align="center"
+              kicker="Inspirations"
+              title="Nos bois, vos projets"
+              intro="Quelques exemples de réalisations avec nos bois — pour vous inspirer avant de demander un devis."
+            />
 
             <div className="mt-8">
               <ProjectsCarousel
@@ -668,11 +608,7 @@ export default async function Home() {
 }
 
 function Badge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center rounded-full border border-green-700/10 bg-green-50/80 px-3 py-1 text-xs font-semibold text-green-900">
-      {children}
-    </span>
-  );
+  return <span className="rb-badge rb-badge-green">{children}</span>;
 }
 
 function TeaserCard({
@@ -684,68 +620,75 @@ function TeaserCard({
   desc: string;
   href?: string;
 }) {
-  const className =
-    "group rounded-3xl border border-gray-200/70 bg-white/55 p-6 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-[0_18px_45px_-28px_rgba(0,0,0,0.55)] hover:ring-black/10 hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600/30";
-
   const content = (
-    <>
-      <div className="h-11 w-11 rounded-2xl bg-green-50 flex items-center justify-center text-green-800 font-bold ring-1 ring-green-700/10 transition group-hover:scale-[1.02]">
-        ✦
+    <div className="p-6">
+      <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-forest-050 text-forest-800 ring-1 ring-forest-700/15">
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="3.4" />
+          <rect x="3" y="10.3" width="18" height="3.4" />
+          <rect x="3" y="15.6" width="13" height="3.4" />
+        </svg>
       </div>
-      <h3 className="mt-4 text-xl font-bold text-gray-900">{title}</h3>
-      <p className="mt-2 text-gray-700 leading-relaxed">{desc}</p>
-    </>
+      <h3 className="mt-4 font-display text-xl font-bold text-ink">{title}</h3>
+      <p className="mt-2 leading-relaxed text-ink-600">{desc}</p>
+      {href ? (
+        <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-forest-700">
+          Découvrir
+          <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+            →
+          </span>
+        </span>
+      ) : null}
+    </div>
   );
 
   if (href) {
     return (
-      <Link href={href} className={className}>
+      <Link href={href} className="rb-card-interactive group">
         {content}
       </Link>
     );
   }
 
-  return <div className={className}>{content}</div>;
+  return <div className="rb-card">{content}</div>;
 }
 
 function HeroPill({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
+    <div className="rounded border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-sm">
       <p className="text-sm font-semibold text-white">{title}</p>
-      <p className="text-xs text-white/80">{desc}</p>
+      <p className="text-xs text-white/75">{desc}</p>
     </div>
   );
 }
 
 function FaqItem({ q, a, isHtml }: { q: string; a: string; isHtml?: boolean }) {
   return (
-    <details className="group rounded-2xl border border-gray-200/70 bg-white/55 backdrop-blur p-5 shadow-sm ring-1 ring-black/5 open:bg-white/65">
-      <summary className="cursor-pointer list-none">
-        <div className="flex items-start gap-3">
-          <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-800 font-bold ring-1 ring-green-700/10">
-            ?
-          </span>
-          <div className="min-w-0">
-            <p className="text-sm sm:text-base font-semibold text-gray-900 leading-snug">
-              {q}
-            </p>
-            <p className="mt-1 text-xs text-gray-500">
-              Cliquer pour afficher la réponse
-            </p>
-          </div>
-          <span
-            className="ml-auto mt-1 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-gray-200 bg-white/70 text-gray-700 transition group-open:rotate-45"
-            aria-hidden
-          >
-            +
-          </span>
+    <details className="group rounded border border-line bg-surface shadow-sm transition-colors open:border-forest-700/40">
+      <summary className="flex cursor-pointer list-none items-start gap-3 p-5">
+        <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm bg-forest-050 font-bold text-forest-800 ring-1 ring-forest-700/15">
+          ?
+        </span>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold leading-snug text-ink sm:text-base">
+            {q}
+          </p>
+          <p className="mt-1 text-xs text-ink-400">
+            Cliquer pour afficher la réponse
+          </p>
         </div>
+        <span
+          className="ml-auto mt-1 inline-flex h-8 w-8 items-center justify-center rounded-sm border border-line text-ink-600 transition group-open:rotate-45"
+          aria-hidden
+        >
+          +
+        </span>
       </summary>
-      <div className="mt-4 pl-10 pr-2">
+      <div className="px-5 pb-5 pl-[3.75rem]">
         {isHtml ? (
-          <RichText html={a} className="text-sm text-gray-700" />
+          <RichText html={a} className="text-sm text-ink-600" />
         ) : (
-          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+          <p className="whitespace-pre-line text-sm leading-relaxed text-ink-600">
             {a}
           </p>
         )}
