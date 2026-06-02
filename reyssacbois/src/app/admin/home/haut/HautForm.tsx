@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploadField from "@/admin/components/ImageUploadField";
 import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar";
+import AdminTabs from "@/admin/components/AdminTabs";
 import { updateHomeHeaderAction } from "@/admin/actions/siteContentSections";
 import {
   DEFAULT_SITE_FONT_KEY,
@@ -63,6 +64,12 @@ export default function HautForm({
         </div>
       ) : null}
 
+      <AdminTabs
+        tabs={[
+          {
+            id: "identite",
+            label: "Identité visuelle",
+            content: (
       <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <h3 className="text-sm font-semibold text-ink">
           Identité visuelle — Police du site
@@ -104,7 +111,12 @@ export default function HautForm({
           </div>
         </div>
       </section>
-
+            ),
+          },
+          {
+            id: "hero",
+            label: "Hero — photo & titres",
+            content: (
       <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <h3 className="text-sm font-semibold text-ink">
           Home — Hero (1 photo)
@@ -152,7 +164,12 @@ export default function HautForm({
           </label>
         </div>
       </section>
-
+            ),
+          },
+          {
+            id: "badge",
+            label: "Badge & mini-blocs",
+            content: (
       <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <h3 className="text-sm font-semibold text-ink">
           Home — Hero (badge + mini-blocs)
@@ -238,6 +255,10 @@ export default function HautForm({
           })}
         </div>
       </section>
+            ),
+          },
+        ]}
+      />
 
       <AdminStickySaveBar hint="Modifie, puis enregistre (la page confirme quand c’est OK)." />
     </form>
