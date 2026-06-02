@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import Script from "next/script"
+import { Button } from "@/components/ui/Button"
 
 type FormState = {
   name: string
@@ -166,7 +167,7 @@ export default function ContactForm() {
           <input
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            className="rb-input"
             placeholder="Votre nom"
             autoComplete="name"
             required
@@ -177,7 +178,7 @@ export default function ContactForm() {
           <input
             value={form.email}
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            className="rb-input"
             placeholder="vous@exemple.com"
             autoComplete="email"
             inputMode="email"
@@ -191,7 +192,7 @@ export default function ContactForm() {
           <input
             value={form.company}
             onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            className="rb-input"
             placeholder="Optionnel"
             autoComplete="organization"
           />
@@ -201,7 +202,7 @@ export default function ContactForm() {
           <input
             value={form.phone}
             onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            className="rb-input"
             placeholder="Optionnel"
             autoComplete="tel"
             inputMode="tel"
@@ -222,24 +223,24 @@ export default function ContactForm() {
         <textarea
           value={form.message}
           onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-          className="min-h-32 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+          className="rb-input min-h-32"
           placeholder="Décrivez votre besoin (dimensions, quantités, délais…)."
           required
         />
       </Field>
 
-      <button
+      <Button
         type="submit"
         disabled={!canSubmit}
-        className="inline-flex w-full items-center justify-center rounded-lg bg-green-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-green-600/30"
+        className="w-full disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "loading" ? "Envoi en cours…" : "Envoyer"}
-      </button>
+      </Button>
 
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-ink-400">
         En envoyant ce formulaire, vous acceptez d’être recontacté(e) au sujet de votre demande.
       </p>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-ink-400">
         Ce site est protégé par reCAPTCHA et la{" "}
         <a
           href="https://policies.google.com/privacy"
@@ -275,7 +276,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-gray-900">
+      <span className="rb-label">
         {label} {required ? <span className="text-red-600">*</span> : null}
       </span>
       {children}

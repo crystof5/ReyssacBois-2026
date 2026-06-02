@@ -18,6 +18,7 @@ export default function ProjectsCarousel({
   const items = useMemo(() => slides.filter((s) => s.src), [slides])
   const ref = useRef<HTMLDivElement | null>(null)
   const [activePhysical, setActivePhysical] = useState(0)
+  const [paused, setPaused] = useState(false)
   const activeLogical = items.length ? activePhysical % items.length : 0
 
   // On duplique 3 fois pour simuler une boucle infinie “invisible”.
@@ -90,6 +91,7 @@ export default function ProjectsCarousel({
     const el = ref.current
     if (!el) return
     if (items.length <= 1) return
+    if (paused) return
 
     const id = window.setInterval(() => {
       const next = activePhysical + 1
@@ -97,7 +99,7 @@ export default function ProjectsCarousel({
     }, intervalMs)
 
     return () => window.clearInterval(id)
-  }, [activePhysical, intervalMs, items.length])
+  }, [activePhysical, intervalMs, items.length, paused])
 
   // Au montage / quand les slides changent: se positionner au centre (bloc du milieu).
   useEffect(() => {
@@ -113,7 +115,7 @@ export default function ProjectsCarousel({
 
   if (items.length === 0) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="rb-card overflow-hidden">
         <div className="aspect-[16/10] w-full">
           <Media src={null} alt="Projet" className="h-full w-full" />
         </div>
@@ -122,57 +124,85 @@ export default function ProjectsCarousel({
   }
 
   return (
-    <div className="relative">
-      <div
-        ref={ref}
-        className="no-scrollbar flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
-      >
-        {loopItems.map((s, idx) => (
-          <div
-            key={`${s.src}-${idx}`}
-            className={`snap-center shrink-0 transition-transform duration-500 ${
-              (items.length > 1 ? idx % items.length : idx) === activeLogical
-                ? "scale-[1.05]"
-                : "scale-[0.94] opacity-80"
-            }`}
-          >
-            <div className="w-[80vw] sm:w-[70vw] md:w-[55vw] lg:w-[32vw] max-w-[520px]">
-              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-                <div className="aspect-[16/10] w-full">
-                  <Media src={s.src} alt={s.alt} className="h-full w-full" />
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="relative">
+        <div
+          ref={ref}
+          className="no-scrollbar flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2"
+        >
+          {loopItems.map((s, idx) => (
+            <div
+              key={`${s.src}-${idx}`}
+              className={`snap-center shrink-0 transition-all duration-500 ${
+                (items.length > 1 ? idx % items.length : idx) === activeLogical
+                  ? "scale-100 opacity-100"
+                  : "scale-[0.96] opacity-70"
+              }`}
+            >
+              <div className="w-[80vw] sm:w-[70vw] md:w-[55vw] lg:w-[32vw] max-w-[520px]">
+                <div className="rb-card overflow-hidden">
+                  <div className="aspect-[16/10] w-full">
+                    <Media src={s.src} alt={s.alt} className="h-full w-full" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* flèches (desktop) */}
+        {items.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Projet précédent"
+              className="absolute left-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded border border-line bg-surface text-ink shadow-sm transition-colors hover:border-forest-700 hover:text-forest-700 md:flex"
+              onClick={() => scrollToIndex(activePhysical - 1, "smooth")}
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+                <path d="M15 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              aria-label="Projet suivant"
+              className="absolute right-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded border border-line bg-surface text-ink shadow-sm transition-colors hover:border-forest-700 hover:text-forest-700 md:flex"
+              onClick={() => scrollToIndex(activePhysical + 1, "smooth")}
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
+                <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </>
+        )}
       </div>
 
-      {/* flèches (desktop) */}
+      {/* indicateurs (points) */}
       {items.length > 1 && (
-        <>
-          <button
-            type="button"
-            aria-label="Projet précédent"
-            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/80 border border-gray-200 shadow-sm hover:bg-white"
-            onClick={() => {
-              const prev = activePhysical - 1
-              scrollToIndex(prev, "smooth")
-            }}
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            aria-label="Projet suivant"
-            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/80 border border-gray-200 shadow-sm hover:bg-white"
-            onClick={() => {
-              const next = activePhysical + 1
-              scrollToIndex(next, "smooth")
-            }}
-          >
-            ›
-          </button>
-        </>
+        <div className="mt-4 flex items-center justify-center gap-2">
+          {items.map((_, i) => (
+            <button
+              key={`dot-${i}`}
+              type="button"
+              aria-label={`Aller au projet ${i + 1}`}
+              aria-current={i === activeLogical}
+              onClick={() => {
+                const target = centerPhysicalIndex(i)
+                scrollToIndex(target, "smooth")
+                setActivePhysical(target)
+              }}
+              className={`h-1.5 rounded-sm transition-all ${
+                i === activeLogical
+                  ? "w-6 bg-forest-700"
+                  : "w-2.5 bg-line-strong hover:bg-ink-400"
+              }`}
+            />
+          ))}
+        </div>
       )}
     </div>
   )
