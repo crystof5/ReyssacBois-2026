@@ -1,7 +1,7 @@
-import Link from "next/link"
 import { getCategoriesTree } from "@/lib/categories"
 import Breadcrumb from "@/components/Breadcrumb"
 import CategoryCard from "@/components/CategoryCard"
+import { ButtonLink } from "@/components/ui/Button"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -21,24 +21,19 @@ export default async function ProduitsPage() {
         />
       </div>
 
-      <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div className="rb-surface rb-grid-bg p-6 sm:p-7">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold tracking-wide text-green-800/90">CATALOGUE</p>
-            <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+            <p className="rb-kicker">Catalogue</p>
+            <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
               Catalogue
             </h1>
-            <p className="mt-2 text-gray-700">
+            <p className="mt-2 text-ink-600">
               Sélectionnez une catégorie pour découvrir nos produits bois.
             </p>
           </div>
 
-          <Link
-            href="/#contact"
-            className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-          >
-            Demander un devis
-          </Link>
+          <ButtonLink href="/#contact">Demander un devis</ButtonLink>
         </div>
       </div>
 

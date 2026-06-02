@@ -4,7 +4,7 @@ import Breadcrumb from "@/components/Breadcrumb"
 import { getCategoryBreadcrumb } from "@/lib/breadcrumbs"
 import CategoryCard from "@/components/CategoryCard"
 import ProductCard from "@/components/ProductCard"
-import Link from "next/link"
+import { ButtonLink } from "@/components/ui/Button"
 import type { Metadata } from "next"
 import { buildDescription } from "@/lib/meta"
 import { getCategoriesTree } from "@/lib/categories"
@@ -164,13 +164,13 @@ export default async function CategoryPage({
         />
       </div>
 
-      <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
+      <div className="rb-surface rb-grid-bg p-6 sm:p-7">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
             {category.imageUrl ? (
               <div className="w-full sm:w-56">
-                <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 shadow-sm ring-1 ring-black/5">
-                  <div className="aspect-[4/3] w-full bg-gray-50/70 p-4">
+                <div className="overflow-hidden rounded border border-line bg-surface-2">
+                  <div className="aspect-[4/3] w-full p-4">
                     <Media
                       src={category.imageUrl}
                       alt={category.name}
@@ -183,35 +183,31 @@ export default async function CategoryPage({
             ) : null}
 
             <div>
-              <p className="text-xs font-semibold tracking-wide text-green-800/90">CATÉGORIE</p>
-              <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+              <p className="rb-kicker">Catégorie</p>
+              <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
                 {category.name}
               </h1>
 
               {category.descriptionHtml ? (
-                <div className="mt-2 max-w-3xl" title={category.description ?? ""}>
-                  <RichText html={category.descriptionHtml} className="text-gray-700" />
+                <div className="mt-3 max-w-3xl" title={category.description ?? ""}>
+                  <RichText html={category.descriptionHtml} className="text-ink-600" />
                 </div>
               ) : category.description ? (
-                <p className="mt-2 text-gray-700 max-w-3xl whitespace-pre-line" title={category.description}>
+                <p className="mt-3 max-w-3xl whitespace-pre-line text-ink-600" title={category.description}>
                   {category.description}
                 </p>
               ) : null}
             </div>
           </div>
 
-          <Link
-            href="/#contact"
-            className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-          >
-            Nous contacter
-          </Link>
+          <ButtonLink href="/#contact">Nous contacter</ButtonLink>
         </div>
       </div>
 
       {/* SOUS-CATÉGORIES CLIQUABLES */}
       {children.length > 0 && (
-        <div className="mt-10">
+        <section className="mt-10">
+          <h2 className="rb-kicker">Sous-catégories</h2>
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {children.map((child) => (
               <li key={child.id}>
@@ -219,12 +215,13 @@ export default async function CategoryPage({
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
 
       {/* PRODUITS CLIQUABLES */}
       {products.length > 0 && (
-        <div className="mt-10">
+        <section className="mt-10">
+          <h2 className="rb-kicker">Produits</h2>
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {products.map((product) => (
               <li key={product.id}>
@@ -232,6 +229,20 @@ export default async function CategoryPage({
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {/* ÉTAT VIDE */}
+      {children.length === 0 && products.length === 0 && (
+        <div className="rb-surface mt-10 p-8 text-center">
+          <p className="text-ink-600">
+            Cette catégorie ne contient pas encore d’éléments à afficher.
+          </p>
+          <div className="mt-4 flex justify-center">
+            <ButtonLink href="/#contact" variant="secondary">
+              Nous contacter
+            </ButtonLink>
+          </div>
         </div>
       )}
     </div>

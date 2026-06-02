@@ -72,17 +72,17 @@ function CategoryItem({
   return (
     <li>
       <div
-        className={`group flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors ${
+        className={`group flex items-center gap-2 rounded px-2 py-1.5 transition-colors ${
           isActive
-            ? "bg-green-700 text-white shadow-sm ring-1 ring-black/10"
-            : "text-gray-900 hover:bg-white/70"
+            ? "bg-forest-700 text-white shadow-sm"
+            : "text-ink hover:bg-surface-2"
         }`}
         style={{ paddingLeft: level ? `${8 + level * 10}px` : undefined }}
       >
         <Link
           href={`/categories/${category.slug}`}
           className={`min-w-0 flex-1 truncate text-sm font-medium ${
-            isActive ? "text-white" : "text-gray-900"
+            isActive ? "text-white" : "text-ink"
           }`}
           onClick={() => {
             // Si la catégorie a des enfants, on ouvre aussi au clic sur le nom.
@@ -96,10 +96,10 @@ function CategoryItem({
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-600/30 ${
+            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-forest-700/40 ${
               isActive
                 ? "bg-white/15 text-white hover:bg-white/20"
-                : "bg-black/5 text-gray-700 hover:bg-black/10"
+                : "bg-surface-2 text-ink-600 hover:bg-line"
             }`}
             aria-label={open ? "Replier la catégorie" : "Déplier la catégorie"}
             aria-expanded={open}
@@ -271,11 +271,11 @@ export default function SidebarCategories({
     <>
       {/* Mobile: barre sticky (catégories + fil d’Ariane compact) */}
       <div className="md:hidden sticky top-16 z-30">
-        <div className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/75 px-3 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+        <div className="flex items-center gap-2 rounded border border-line bg-surface px-3 py-2 shadow-sm">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-forest-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-forest-700/40"
             aria-label="Ouvrir les catégories"
             title="Catégories"
           >
@@ -290,27 +290,27 @@ export default function SidebarCategories({
           </button>
 
           <nav aria-label="Fil d’Ariane" className="min-w-0 flex-1">
-            <ol className="flex min-w-0 items-center gap-1 text-xs text-gray-700">
+            <ol className="flex min-w-0 items-center gap-1 text-xs text-ink-600">
               <li className="min-w-0">
-                <Link href="/produits" className="font-semibold text-gray-900 hover:underline underline-offset-4">
+                <Link href="/produits" className="font-semibold text-ink hover:underline underline-offset-4">
                   Catalogue
                 </Link>
               </li>
 
               {activePath.length > 2 && (
-                <li className="text-gray-400" aria-hidden>
+                <li className="text-line-strong" aria-hidden>
                   / …
                 </li>
               )}
 
               {compactPath.map((c) => (
                 <li key={`crumb:${c.id}`} className="flex min-w-0 items-center gap-1">
-                  <span className="text-gray-400" aria-hidden>
+                  <span className="text-line-strong" aria-hidden>
                     /
                   </span>
                   <Link
                     href={`/categories/${c.slug}`}
-                    className="rb-clamp-1 max-w-[22ch] font-medium text-gray-700 hover:text-gray-900 hover:underline underline-offset-4"
+                    className="rb-clamp-1 max-w-[22ch] font-medium text-ink-600 hover:text-ink hover:underline underline-offset-4"
                     title={c.name}
                   >
                     {c.name}
@@ -330,12 +330,12 @@ export default function SidebarCategories({
       >
         <div className="md:sticky md:top-24">
           {desktopCollapsed ? (
-            <div className="rounded-2xl border border-white/20 bg-white/70 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="rb-surface p-2">
               <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setDesktopCollapsed(false)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-forest-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-forest-700/40"
                   aria-label="Ouvrir le menu catégories"
                   title="Ouvrir"
                 >
@@ -350,7 +350,7 @@ export default function SidebarCategories({
                 </button>
                 <Link
                   href="/produits"
-                  className="text-[11px] font-medium text-gray-600 hover:text-gray-900"
+                  className="text-[11px] font-medium text-ink-600 hover:text-ink"
                   title="Catalogue"
                 >
                   Catalogue
@@ -358,22 +358,22 @@ export default function SidebarCategories({
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-white/20 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="rb-surface p-4">
               <div className="mb-3 flex items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold tracking-wide text-gray-900">
+                <h2 className="text-sm font-semibold tracking-wide text-ink">
                   Catégories
                 </h2>
                 <div className="flex items-center gap-2">
                   <Link
                     href="/produits"
-                    className="text-xs font-medium text-gray-600 hover:text-gray-900 underline-offset-4 hover:underline"
+                    className="text-xs font-medium text-ink-600 hover:text-ink underline-offset-4 hover:underline"
                   >
                     Catalogue
                   </Link>
                   <button
                     type="button"
                     onClick={() => setDesktopCollapsed(true)}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-gray-900 transition hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-ink transition hover:bg-line focus:outline-none focus:ring-2 focus:ring-forest-700/40"
                     aria-label="Réduire le menu catégories"
                     title="Réduire"
                   >
@@ -416,7 +416,7 @@ export default function SidebarCategories({
           <div
             role="dialog"
             aria-modal="true"
-            className={`absolute left-0 top-0 z-50 flex h-[100dvh] w-[85vw] max-w-sm flex-col bg-white text-gray-900 shadow-xl ring-1 ring-black/5 will-change-transform ${
+            className={`absolute left-0 top-0 z-50 flex h-[100dvh] w-[85vw] max-w-sm flex-col border-r border-line bg-surface text-ink shadow-[var(--shadow-pop)] will-change-transform ${
               dragging ? "" : "transition-transform duration-200"
             }`}
             style={{ transform: `translate3d(${Math.min(0, dragX)}px, 0, 0)` }}
@@ -465,7 +465,7 @@ export default function SidebarCategories({
               dragMode.current = "none"
             }}
           >
-            <div className="flex items-center justify-between border-b border-gray-200 p-4">
+            <div className="flex items-center justify-between border-b border-line p-4">
               <div className="flex items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -478,7 +478,7 @@ export default function SidebarCategories({
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                className="rounded border border-line bg-surface px-3 py-2 text-sm font-medium text-ink hover:bg-surface-2 focus:outline-none focus:ring-2 focus:ring-forest-700/40"
               >
                 Fermer
               </button>

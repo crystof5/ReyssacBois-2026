@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import Breadcrumb from "@/components/Breadcrumb"
 import { getProductBreadcrumb } from "@/lib/breadcrumbs"
 import Media from "@/components/ui/Media"
-import Link from "next/link"
+import { ButtonLink } from "@/components/ui/Button"
 import type { Metadata } from "next"
 import { buildDescription } from "@/lib/meta"
 import { prisma } from "@/lib/prisma"
@@ -180,6 +180,10 @@ export default async function ProduitPage({
   }
 
   const { product, categories } = data
+  const categoryHint = categories.at(-1)?.name
+  const hasSpecs = Boolean(
+    product.section || product.length || product.width || product.type,
+  )
 
   return (
     <div>
@@ -202,8 +206,8 @@ export default async function ProduitPage({
       </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
-          <div className="aspect-[4/3] w-full bg-gray-50 p-5 sm:p-6">
+        <div className="rb-surface overflow-hidden p-0 lg:sticky lg:top-24">
+          <div className="aspect-[4/3] w-full bg-surface-2 p-5 sm:p-6">
             <Media
               src={product.imageUrl}
               alt={product.name}
@@ -214,64 +218,62 @@ export default async function ProduitPage({
         </div>
 
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+          <p className="rb-kicker">{categoryHint ?? "Produit"}</p>
+          <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
             {product.name}
           </h1>
 
           {(product.descriptionHtml || product.description) && (
-            <div className="mt-4 rounded-2xl border border-gray-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur">
-              <h2 className="text-base font-semibold text-gray-900">
-                Description
-              </h2>
+            <div className="rb-surface mt-5 p-5 sm:p-6">
+              <h2 className="rb-eyebrow">Description</h2>
               {product.descriptionHtml ? (
-                <RichText html={product.descriptionHtml} className="mt-3 text-gray-700" />
+                <RichText html={product.descriptionHtml} className="mt-3 text-ink-600" />
               ) : (
-                <p className="mt-3 whitespace-pre-line text-gray-700 leading-relaxed">
+                <p className="mt-3 whitespace-pre-line leading-relaxed text-ink-600">
                   {product.description}
                 </p>
               )}
             </div>
           )}
 
-          <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ring-1 ring-black/5">
-            <h2 className="text-base font-semibold text-gray-900">
-              Caractéristiques
-            </h2>
+          <div className="rb-surface mt-5 p-5 sm:p-6">
+            <h2 className="rb-eyebrow">Caractéristiques</h2>
 
-            <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-              {product.section && (
-                <div>
-                  <dt className="text-gray-500">Section</dt>
-                  <dd className="font-medium text-gray-900">{product.section}</dd>
-                </div>
-              )}
-              {product.length && (
-                <div>
-                  <dt className="text-gray-500">Longueur</dt>
-                  <dd className="font-medium text-gray-900">{product.length}</dd>
-                </div>
-              )}
-              {product.width && (
-                <div>
-                  <dt className="text-gray-500">Largeur</dt>
-                  <dd className="font-medium text-gray-900">{product.width}</dd>
-                </div>
-              )}
-              {product.type && (
-                <div>
-                  <dt className="text-gray-500">Type</dt>
-                  <dd className="font-medium text-gray-900">{product.type}</dd>
-                </div>
-              )}
-            </dl>
+            {hasSpecs ? (
+              <dl className="mt-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+                {product.section && (
+                  <div className="flex items-baseline justify-between gap-3 border-b border-line py-2.5">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-ink-400">Section</dt>
+                    <dd className="text-right font-semibold text-ink">{product.section}</dd>
+                  </div>
+                )}
+                {product.length && (
+                  <div className="flex items-baseline justify-between gap-3 border-b border-line py-2.5">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-ink-400">Longueur</dt>
+                    <dd className="text-right font-semibold text-ink">{product.length}</dd>
+                  </div>
+                )}
+                {product.width && (
+                  <div className="flex items-baseline justify-between gap-3 border-b border-line py-2.5">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-ink-400">Largeur</dt>
+                    <dd className="text-right font-semibold text-ink">{product.width}</dd>
+                  </div>
+                )}
+                {product.type && (
+                  <div className="flex items-baseline justify-between gap-3 border-b border-line py-2.5">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-ink-400">Type</dt>
+                    <dd className="text-right font-semibold text-ink">{product.type}</dd>
+                  </div>
+                )}
+              </dl>
+            ) : (
+              <p className="mt-3 text-sm text-ink-600">
+                Caractéristiques détaillées disponibles sur demande.
+              </p>
+            )}
 
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-              >
-                Demander un devis
-              </Link>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href="/contact">Demander un devis</ButtonLink>
             </div>
           </div>
         </div>

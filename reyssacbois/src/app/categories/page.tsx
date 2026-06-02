@@ -20,12 +20,12 @@ export default async function CategoriesIndexPage() {
         <Breadcrumb items={[{ id: "categories", name: "Catégories", href: "/categories" }]} />
       </div>
 
-      <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
-        <p className="text-xs font-semibold tracking-wide text-green-800/90">CATALOGUE</p>
-        <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+      <div className="rb-surface rb-grid-bg p-6 sm:p-7">
+        <p className="rb-kicker">Catalogue</p>
+        <h1 className="mt-3 font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
           Catégories
         </h1>
-        <p className="mt-2 text-gray-700">
+        <p className="mt-2 text-ink-600">
           Parcourez les familles du catalogue.
         </p>
       </div>
