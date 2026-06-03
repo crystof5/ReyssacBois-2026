@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* build test — commit de vérification (aucun effet visuel/fonctionnel) */
+
 :root {
   /* ===== Surfaces & fond — neutre pierre "Charpente / Industriel-pro" ===== */
   --bg: #f1ebe0;          /* fond de page (papier chaud "bois", sobre — pas de blanc froid) */
