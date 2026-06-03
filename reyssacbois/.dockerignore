@@ -1,0 +1,19 @@
+# Contexte de build minimal => build Docker plus rapide.
+# (Vercel n'utilise PAS ce fichier : il n'impacte que les builds Docker/Coolify.)
+node_modules
+.next
+.git
+.gitignore
+.env
+.env.*
+*.local
+npm-debug.log*
+yarn-error.log*
+.vscode
+.idea
+.DS_Store
+Dockerfile
+.dockerignore
+README*.md
+coverage
+.turbo
