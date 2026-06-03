@@ -6,11 +6,17 @@ import { absoluteUrl } from "@/lib/seo";
 export const revalidate = 86400; // 24h
 
 export default function robots(): MetadataRoute.Robots {
-  const isProd =
-    process.env.VERCEL_ENV === "production" ||
-    process.env.NODE_ENV === "production";
+  // Permet de bloquer l'indexation d'un environnement (ex: preview Coolify) qui tourne
+  // pourtant en NODE_ENV=production. Mettre SITE_NOINDEX=1 sur la preview.
+  const forceNoindex =
+    process.env.SITE_NOINDEX === "1" || process.env.SITE_NOINDEX === "true";
 
-  // En preview/dev, on bloque l'indexation (évite que Google indexe les URLs *.vercel.app).
+  const isProd =
+    !forceNoindex &&
+    (process.env.VERCEL_ENV === "production" ||
+      process.env.NODE_ENV === "production");
+
+  // En preview/dev (ou si SITE_NOINDEX), on bloque l'indexation.
   if (!isProd) {
     return {
       rules: [
