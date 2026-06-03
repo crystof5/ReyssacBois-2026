@@ -39,7 +39,7 @@
 
   /* ===== Ombres réalistes, basses (remplacent le glassmorphisme) ===== */
   --shadow-sm: 0 1px 0 rgba(21, 23, 26, 0.04), 0 1px 2px rgba(21, 23, 26, 0.07);
-  --shadow-card: 0 1px 2px rgba(21, 23, 26, 0.06), 0 14px 34px -18px rgba(21, 23, 26, 0.36);
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 1px 2px rgba(21, 23, 26, 0.06), 0 16px 36px -18px rgba(21, 23, 26, 0.40);
   --shadow-pop: 0 10px 22px -8px rgba(21, 23, 26, 0.22), 0 28px 56px -28px rgba(21, 23, 26, 0.46);
 
   /* Anneau focus accessible (blanc + vert) : visible sur fond clair ET sur photo */
@@ -180,6 +180,7 @@ body {
     position: relative;
     overflow: hidden;
     background-color: var(--surface);
+    background-image: linear-gradient(180deg, #ffffff, #faf7f1);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow-card);
@@ -189,10 +190,16 @@ body {
     display: block;
     overflow: hidden;
     background-color: var(--surface);
+    background-image: linear-gradient(180deg, #ffffff, #faf7f1);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow-card);
     transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  /* Zone packshot produit : surface chaude + spot lumineux doux derrière l'objet */
+  .rb-packshot {
+    background-color: var(--surface-2);
+    background-image: radial-gradient(120% 92% at 50% 36%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 58%);
   }
   /* Liseré vert gauche au survol (signature "fiche technique"), au-dessus du contenu */
   .rb-card-interactive::after {

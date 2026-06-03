@@ -23,12 +23,12 @@ export default function ProductCard({
   return (
     <CardLink href={href} className="h-full self-stretch">
       <div className="flex h-full flex-col">
-        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-surface-2 p-4 sm:p-5">
+        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line rb-packshot p-4 sm:p-5">
           <Media
             src={product.imageUrl}
             alt={product.name}
-            // Packshots: on évite le crop -> on “recule” l’image.
-            className="h-full w-full !object-contain"
+            // Packshots: on évite le crop -> on “recule” l’image. Léger zoom au survol.
+            className="h-full w-full !object-contain transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           />
         </div>
 

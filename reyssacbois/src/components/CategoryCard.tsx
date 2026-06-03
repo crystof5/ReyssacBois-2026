@@ -24,13 +24,27 @@ export default function CategoryCard({
   return (
     <CardLink href={href} className="h-full self-stretch">
       <div className="flex h-full flex-col">
-        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-surface-2 p-4 sm:p-5">
-          <Media
-            src={category.imageUrl}
-            alt={category.name}
-            // Packshots: on évite le crop -> on “recule” l’image.
-            className="h-full w-full !object-contain"
-          />
+        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line bg-surface-2">
+          {category.imageUrl ? (
+            <>
+              {/* Photo d'ambiance en plein cadre + léger zoom au survol */}
+              <Media
+                src={category.imageUrl}
+                alt={category.name}
+                className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+              />
+              {/* Dégradé bas pour la profondeur / lisibilité */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+            </>
+          ) : (
+            <div className="flex h-full w-full items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="h-12 w-12 text-line-strong">
+                <rect x="3" y="5" width="18" height="3.4" />
+                <rect x="3" y="10.3" width="18" height="3.4" />
+                <rect x="3" y="15.6" width="13" height="3.4" />
+              </svg>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-1 flex-col p-5 sm:p-6">
