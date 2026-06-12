@@ -156,6 +156,28 @@ export default async function RootLayout({
                 </span>
               </div>
             </div>
+
+            {/* Crédit réalisation — mobile first : centré, ligne dédiée sous le footer */}
+            <a
+              href="https://lc-development.fr"
+              target="_blank"
+              rel="noopener"
+              aria-label="Site réalisé par LC Development"
+              className="mt-4 flex items-center justify-center gap-2 border-t border-gray-200/70 pt-4 text-xs text-gray-500 transition-colors hover:text-gray-900"
+            >
+              <span>Site réalisé par</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/img/lc-development.webp"
+                alt="LC Development"
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px]"
+                loading="lazy"
+                decoding="async"
+              />
+              <strong className="font-semibold">LC&nbsp;Development</strong>
+            </a>
           </div>
         </footer>
 
