@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 import { slugify } from "@/lib/slugify"
 import { requireAdmin } from "@/lib/adminAuth"
 import sanitizeHtml from "sanitize-html"
-
+//test
 type ActionResult = { ok: true } | { ok: false; message: string }
 
 function sanitizeRichTextHtml(input: string) {
