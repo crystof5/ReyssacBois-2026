@@ -215,6 +215,11 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/conseils" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Conseils
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/#faq" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
                       FAQ
                     </Link>

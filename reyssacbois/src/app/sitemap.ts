@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { absoluteUrl } from "@/lib/seo"
 import { unstable_cache } from "next/cache"
 import { FEATURED_CATEGORY_SLUGS } from "@/lib/featuredCategories"
+import { ARTICLES } from "@/lib/articles"
 
 function imageUrlsOf(src: string | null | undefined): string[] | undefined {
   const v = (src ?? "").trim()
@@ -108,6 +109,13 @@ const buildSitemap = unstable_cache(
     { url: absoluteUrl("/decoupe-panneaux-sur-mesure"), changeFrequency: "monthly", priority: 0.8 },
     { url: absoluteUrl("/qui-sommes-nous"), changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/contact"), changeFrequency: "monthly", priority: 0.7 },
+    { url: absoluteUrl("/conseils"), changeFrequency: "monthly", priority: 0.6 },
+    ...ARTICLES.map((a) => ({
+      url: absoluteUrl(`/conseils/${a.slug}`),
+      lastModified: new Date(a.publishedAt),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
     { url: absoluteUrl("/mentions-legales"), changeFrequency: "yearly", priority: 0.2 },
     { url: absoluteUrl("/politique-de-confidentialite"), changeFrequency: "yearly", priority: 0.2 },
   ]

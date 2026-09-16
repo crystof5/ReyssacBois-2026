@@ -50,6 +50,7 @@ export default async function SiteFooter({ children }: { children?: React.ReactN
                 {[
                   { href: "/livraison-bois", label: "Livraison de bois" },
                   { href: "/decoupe-panneaux-sur-mesure", label: "Découpe de panneaux sur mesure" },
+                  { href: "/conseils", label: "Conseils bois" },
                   { href: "/qui-sommes-nous", label: "Qui sommes-nous" },
                   { href: "/contact", label: "Contact et accès" },
                 ].map((l) => (

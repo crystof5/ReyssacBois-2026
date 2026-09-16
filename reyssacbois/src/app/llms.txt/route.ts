@@ -1,5 +1,6 @@
 import { getCategoriesTree } from "@/lib/categories"
 import { listCustomCategorySeo } from "@/lib/categorySeo"
+import { ARTICLES } from "@/lib/articles"
 import { absoluteUrl } from "@/lib/seo"
 import {
   AGEN_AREA_CITIES,
@@ -50,6 +51,10 @@ ${categories.map((c) => `- [${c.title}](${absoluteUrl(`/categories/${c.slug}`)})
 
 - [Livraison de bois](${absoluteUrl("/livraison-bois")}): zones desservies (agglomération d'Agen, Lot-et-Garonne, Gers, Tarn-et-Garonne, Bordeaux–Toulouse sur devis) et déroulement
 - [Découpe de panneaux sur mesure](${absoluteUrl("/decoupe-panneaux-sur-mesure")}): contreplaqué, OSB, MDF, aggloméré, lamellé-collé découpés à vos cotes
+
+## Conseils
+
+${ARTICLES.map((a) => `- [${a.title}](${absoluteUrl(`/conseils/${a.slug}`)}): ${a.excerpt}`).join("\n")}
 
 ## Entreprise
 

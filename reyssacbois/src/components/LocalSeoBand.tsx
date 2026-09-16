@@ -9,9 +9,12 @@ import { BUSINESS, BUSINESS_ADDRESS_ONE_LINE } from "@/lib/business"
 export default function LocalSeoBand({
   heading,
   paragraphs,
+  guide,
 }: {
   heading: string
   paragraphs: string[]
+  /** Guide de la rubrique Conseils lié à la page. */
+  guide?: { href: string; title: string }
 }) {
   return (
     <section
@@ -33,6 +36,16 @@ export default function LocalSeoBand({
                 <p key={i}>{p}</p>
               ))}
             </div>
+            {guide ? (
+              <Link
+                href={guide.href}
+                className="mt-5 inline-flex items-start gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-semibold text-white hover:bg-white/15"
+              >
+                <span className="text-green-300">Guide :</span>
+                <span>{guide.title}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            ) : null}
           </div>
 
           <div className="rounded-2xl border border-white/15 bg-white/10 p-6 shadow-sm">

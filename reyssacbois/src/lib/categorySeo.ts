@@ -311,6 +311,23 @@ const CATEGORY_SEO: Record<string, Omit<CategorySeo, "paragraphs"> & { paragraph
 
 type Crumb = { name: string; description?: string | null }
 
+function normalizeWords(v: string) {
+  return v
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w.replace(/s$/, ""))
+}
+
+/** true si tous les mots du parent (au singulier, sans accents) figurent dans le nom. */
+function nameMentions(name: string, parentName: string) {
+  const words = new Set(normalizeWords(name))
+  return normalizeWords(parentName).every((w) => words.has(w))
+}
+
 /**
  * @param path chemin complet de la catégorie (racine → feuille)
  */
@@ -323,9 +340,10 @@ export function getCategorySeo(slug: string, path: Crumb[]): CategorySeo {
     return { ...custom, paragraphs: [...custom.paragraphs, LOCAL_SERVICES] }
   }
 
-  // Sous-catégories profondes aux noms génériques ("Panneaux", "Lames", "Structure"…) :
-  // on ajoute le parent pour des titres uniques.
-  const label = path.length >= 3 && parent ? `${category.name} – ${parent.name}` : category.name
+  // Sous-catégories profondes aux noms génériques : on ajoute le parent pour des titres uniques,
+  // sauf si le nom le contient déjà ("Lames de terrasse" sous "Terrasses").
+  const needsParent = path.length >= 3 && parent && !nameMentions(category.name, parent.name)
+  const label = needsParent ? `${category.name} – ${parent.name}` : category.name
   const lower = label.charAt(0).toLowerCase() + label.slice(1)
 
   return {
