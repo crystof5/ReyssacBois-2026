@@ -134,12 +134,13 @@ const CATEGORY_SEO: Record<string, Omit<CategorySeo, "paragraphs"> & { paragraph
     ],
   },
   "debit-sur-liste": {
-    title: "Bois de charpente sur liste à Agen – Douglas, mélèze",
+    title: "Débit de bois sur liste à Agen – Scierie, Douglas, mélèze",
     description:
-      "Débit de bois sur liste à Boé près d'Agen : sections et essences spécifiques (Douglas, mélèze, châtaignier…). Devis sur demande.",
-    heading: "Débit sur liste à Agen",
+      "Débit de bois sur liste à Boé près d'Agen, héritier de la scierie Reyssac : sections et longueurs sur mesure, Douglas, mélèze, châtaignier. Devis sur demande.",
+    heading: "Débit de bois sur liste à Agen",
     paragraphs: [
-      "Pour les sections hors stock ou les essences spécifiques comme le Douglas, le mélèze ou le châtaignier, envoyez-nous votre liste de débit : nous vous établissons un devis.",
+      "Vous cherchez une scierie près d'Agen pour faire débiter votre bois ? Reyssac Bois, scierie familiale jusqu'en 1970 et négoce depuis, fournit des sections et longueurs hors standard sur liste de débit.",
+      "Envoyez-nous votre liste (sections, longueurs, quantités, essence : Douglas, mélèze, châtaignier, chêne…) : nous vous établissons un devis et préparons votre commande pour retrait à Boé ou livraison en Lot-et-Garonne, dans le Gers et le Tarn-et-Garonne.",
     ],
   },
   "bois-de-menuiserie-ebenisterie": {
@@ -288,12 +289,13 @@ const CATEGORY_SEO: Record<string, Omit<CategorySeo, "paragraphs"> & { paragraph
     ],
   },
   "fabrication-sur-mesure": {
-    title: "Fabrication sur mesure et travail du bois à Agen",
+    title: "Travail du bois sur mesure à Agen – Rabotage, découpe",
     description:
-      "Travail à façon à Boé près d'Agen : rabotage, collage, ponçage, découpe de panneaux et petits travaux de menuiserie dans notre atelier. Devis sur place.",
-    heading: "Fabrication bois sur mesure à Agen",
+      "Atelier bois à Boé près d'Agen : rabotage, collage, ponçage, découpe de panneaux, débit sur liste et petits travaux de menuiserie sur mesure. Devis sur place.",
+    heading: "Fabrication et travail du bois sur mesure à Agen",
     paragraphs: [
-      "Dans notre atelier de Boé, nous réalisons rabotage, collage, ponçage, découpe de panneaux et petits travaux de menuiserie sur mesure. Venez nous présenter votre projet : le devis se fait sur place.",
+      "Héritier de la scierie familiale fondée à Boé, notre atelier réalise le travail à façon dont vous avez besoin : rabotage, collage, ponçage, découpe de panneaux à vos cotes, débit sur liste et petits travaux de menuiserie sur mesure.",
+      "Venez nous présenter votre projet au dépôt, aux portes d'Agen : le devis se fait sur place, pour les particuliers comme pour les professionnels.",
     ],
   },
   "lames-a-volets": {

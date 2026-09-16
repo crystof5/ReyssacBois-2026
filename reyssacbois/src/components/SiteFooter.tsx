@@ -24,7 +24,7 @@ export default async function SiteFooter({ children }: { children?: React.ReactN
               <p className="text-sm font-semibold text-gray-900">{BUSINESS.name}</p>
             </div>
             <p className="mt-3 text-sm text-gray-700 leading-relaxed">
-              Négociant en bois depuis {BUSINESS.foundingYear}, à Boé aux portes d&apos;Agen.
+              Négoce et vente de bois depuis {BUSINESS.foundingYear}, à Boé aux portes d&apos;Agen.
             </p>
             <address className="mt-3 not-italic text-sm text-gray-700 leading-relaxed">
               <a
@@ -85,11 +85,11 @@ export default async function SiteFooter({ children }: { children?: React.ReactN
         </div>
 
         <p className="mt-8 text-xs text-gray-600 leading-relaxed">
-          {BUSINESS.name}, négoce de bois à Boé ({BUSINESS.address.postalCode}), accueille
+          {BUSINESS.name}, magasin et négoce de bois à Boé ({BUSINESS.address.postalCode}), ancienne scierie familiale, accueille
           particuliers et professionnels de l&apos;agglomération d&apos;Agen (Le Passage, Bon-Encontre,
           Foulayronnes, Pont-du-Casse, Colayrac, Layrac, Estillac, Brax) : bois de charpente,
           contreplaqués et panneaux, bois de menuiserie, parquet, lambris, bardage, terrasses et
-          quincaillerie. Découpe de panneaux et fabrication sur mesure, livraison dans le
+          quincaillerie. Débit sur liste, découpe de panneaux et fabrication sur mesure, livraison dans le
           Lot-et-Garonne et les départements voisins. Adresse : {BUSINESS_ADDRESS_ONE_LINE}.
         </p>
 

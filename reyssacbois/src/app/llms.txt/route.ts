@@ -27,7 +27,7 @@ export async function GET() {
 
   const body = `# ${BUSINESS.name}
 
-> ${BUSINESS.name} est un négoce de bois familial fondé en ${BUSINESS.foundingYear}, situé à Boé, aux portes d'Agen (Lot-et-Garonne, Nouvelle-Aquitaine). Il vend aux particuliers et aux professionnels du bois de charpente, des contreplaqués et panneaux, du bois de menuiserie, du parquet, du lambris, du bardage, des terrasses bois et de la quincaillerie, avec découpe sur mesure et livraison.
+> ${BUSINESS.name} est un négoce et magasin de bois familial fondé en ${BUSINESS.foundingYear} (scierie jusqu'en 1970), situé à Boé, aux portes d'Agen (Lot-et-Garonne, Nouvelle-Aquitaine). Il vend aux particuliers et aux professionnels du bois de charpente, des contreplaqués et panneaux, du bois de menuiserie, du parquet, du lambris, du bardage, des terrasses bois et de la quincaillerie, avec découpe sur mesure et livraison.
 
 ## Informations pratiques
 
@@ -35,7 +35,7 @@ export async function GET() {
 - Téléphone : ${BUSINESS.phoneDisplay}
 - Horaires : ${BUSINESS.openingHours.display}. Fermé le samedi et le dimanche.
 - Clientèle : particuliers, artisans, entreprises, collectivités
-- Services : conseil, retrait sur place, découpe de panneaux sur mesure, travail à façon (rabotage, collage, ponçage), fabrication sur mesure, livraison
+- Services : conseil, retrait sur place, débit de bois sur liste, découpe de panneaux sur mesure, travail à façon (rabotage, collage, ponçage), fabrication sur mesure, livraison
 - Zone prioritaire : ${AGEN_AREA_CITIES.join(", ")}
 - Livraison : tout le Lot-et-Garonne (47), le Gers (32) et le Tarn-et-Garonne (82) ; plus loin sur devis (${EXTENDED_DELIVERY_CITIES.join(", ")})
 - Devis : ${absoluteUrl("/#contact")}

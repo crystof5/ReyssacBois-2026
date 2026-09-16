@@ -34,7 +34,7 @@ export function LocalBusinessJsonLd() {
     name: BUSINESS.name,
     legalName: BUSINESS.legalName,
     description:
-      "Négoce de bois à Boé, aux portes d'Agen : bois de charpente, contreplaqués et panneaux, bois de menuiserie et d'ébénisterie, bois exotiques, parquet, lambris, bardage, terrasses, quincaillerie. Découpe sur mesure, fabrication sur mesure et livraison en Lot-et-Garonne, Gers et Tarn-et-Garonne.",
+      "Vente et négoce de bois à Boé, aux portes d'Agen (ancienne scierie familiale fondée en 1850) : bois de charpente, contreplaqués et panneaux, bois de menuiserie et d'ébénisterie, bois exotiques, parquet, lambris, bardage, terrasses, quincaillerie. Découpe sur mesure, fabrication sur mesure et livraison en Lot-et-Garonne, Gers et Tarn-et-Garonne.",
     url: absoluteUrl("/"),
     logo: absoluteUrl("/android-chrome-512x512.png"),
     image: absoluteUrl("/android-chrome-512x512.png"),
@@ -87,6 +87,7 @@ export function LocalBusinessJsonLd() {
       "Tasseaux et moulures",
       "Portes et blocs-portes",
       "Quincaillerie",
+      "Débit et sciage du bois sur liste",
       "Découpe de panneaux sur mesure",
       "Fabrication sur mesure",
       "Livraison de bois",

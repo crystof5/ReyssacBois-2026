@@ -51,11 +51,11 @@ export const revalidate = 0
 export const metadata: Metadata = {
   metadataBase: getMetadataBaseUrl(),
   title: {
-    default: "Négoce bois à Agen (Boé) : charpente, contreplaqué | Reyssac Bois",
+    default: "Vente de bois à Agen – Négoce, charpente, contreplaqué | Reyssac Bois",
     template: "%s | Reyssac Bois",
   },
   description:
-    "Reyssac Bois, négociant en bois à Boé près d'Agen depuis 1850 : charpente, contreplaqués, panneaux, menuiserie, parquet, bardage, terrasses. Découpe et livraison en Lot-et-Garonne.",
+    "Vente de bois à Agen : négoce familial et ancienne scierie à Boé depuis 1850. Charpente, contreplaqués, panneaux, bardage, terrasses. Débit, découpe, livraison.",
   alternates: {
     canonical: "/",
   },

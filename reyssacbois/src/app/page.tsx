@@ -228,7 +228,7 @@ export default async function Home() {
             <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
               {heroTitle}
               <span className="mt-3 block text-lg sm:text-2xl font-semibold tracking-normal text-white/85">
-                Négoce de bois à Agen (Boé)
+                Négoce et vente de bois à Agen (Boé)
               </span>
             </h1>
             <p className="mt-5 text-lg sm:text-xl text-white/90 leading-relaxed">

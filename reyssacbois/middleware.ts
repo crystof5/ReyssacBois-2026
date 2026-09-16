@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server"
+import { getLegacyRedirect } from "@/lib/legacyRedirects"
 
 const ADMIN_SESSION_COOKIE = "rb_admin_session"
 
@@ -29,28 +30,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 308)
   }
 
-  // 3) Legacy routes (ancien site) : on ne redirige PAS, on supprime (410 Gone)
-  // => Google les retire plus vite qu’une 404 et ça évite la "reconstruction" de l'ancien site.
-  const isLegacyPath =
-    pathname === "/nos-produits" ||
-    pathname === "/materiel" ||
-    pathname.startsWith("/materiel/") ||
-    pathname === "/categorie" ||
-    pathname.startsWith("/categorie/") ||
-    pathname === "/item" ||
-    pathname.startsWith("/item/")
-
-  if (isLegacyPath) {
-    return new NextResponse("Gone", {
-      status: 410,
-      headers: {
-        "content-type": "text/plain; charset=utf-8",
-        // Défensif: empêche l'indexation même si Google retente.
-        "x-robots-tag": "noindex, nofollow",
-        // Cache court pour permettre d'ajuster si besoin.
-        "cache-control": "public, max-age=300",
-      },
-    })
+  // 3) Legacy routes (ancien site) : 301 vers l'équivalent actuel pour conserver l'historique SEO.
+  const legacyTarget = getLegacyRedirect(pathname)
+  if (legacyTarget) {
+    url.pathname = legacyTarget
+    url.search = ""
+    return NextResponse.redirect(url, 301)
   }
 
   const isAdminPath = pathname.startsWith("/admin")
