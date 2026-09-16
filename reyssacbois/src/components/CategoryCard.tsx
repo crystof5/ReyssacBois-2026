@@ -44,7 +44,7 @@ export default function CategoryCard({
         </h3>
 
         {showDescription && category.description ? (
-          <p className="rb-clamp-2 mt-1.5 text-sm leading-relaxed text-gray-600" title={category.description}>
+          <p className="rb-clamp-2 mt-1.5 text-sm leading-relaxed text-gray-600">
             {category.description.replace(/\s+/g, " ")}
           </p>
         ) : null}

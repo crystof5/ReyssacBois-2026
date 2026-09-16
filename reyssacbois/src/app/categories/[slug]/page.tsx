@@ -175,7 +175,7 @@ export default async function CategoryPage({
           pathSlugs={breadcrumb.map((c) => c.slug)}
         />
       ) : (
-        <div className="rb-depth rounded-2xl border border-black/[0.07] p-6 sm:p-7 backdrop-blur">
+        <div className="rb-depth-shadow rounded-2xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur ring-1 ring-black/5">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
               {category.imageUrl ? (
@@ -195,11 +195,11 @@ export default async function CategoryPage({
                 </h1>
 
                 {category.descriptionHtml ? (
-                  <div className="mt-2 max-w-3xl" title={category.description ?? ""}>
+                  <div className="mt-2 max-w-3xl">
                     <RichText html={category.descriptionHtml} className="text-gray-700" />
                   </div>
                 ) : category.description ? (
-                  <p className="mt-2 text-gray-700 max-w-3xl whitespace-pre-line" title={category.description}>
+                  <p className="mt-2 text-gray-700 max-w-3xl whitespace-pre-line">
                     {category.description}
                   </p>
                 ) : null}

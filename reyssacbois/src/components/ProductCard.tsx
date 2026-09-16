@@ -47,7 +47,7 @@ export default function ProductCard({
         ) : null}
 
         {product.description ? (
-          <p className="rb-clamp-2 mt-2 text-sm leading-relaxed text-gray-600" title={product.description}>
+          <p className="rb-clamp-2 mt-2 text-sm leading-relaxed text-gray-600">
             {product.description.replace(/\s+/g, " ")}
           </p>
         ) : null}
