@@ -9,6 +9,7 @@ import SortableList from "@/admin/components/SortableList"
 import CategoryParentSelector from "@/admin/components/CategoryParentSelector"
 import AdminStickySaveBar from "@/admin/components/AdminStickySaveBar"
 import RichTextEditor from "@/admin/components/RichTextEditor"
+import PublicViewLink from "@/admin/components/PublicViewLink"
 
 export default async function AdminCategoryEditPage({
   params,
@@ -69,6 +70,7 @@ export default async function AdminCategoryEditPage({
             </p>
           </div>
           <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+            <PublicViewLink href={`/categories/${category.slug}`} isVisible={category.isVisible} />
             <Link href="/admin" className="text-sm text-ink-600 hover:underline">
               ← Administration
             </Link>

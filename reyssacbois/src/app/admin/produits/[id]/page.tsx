@@ -1,4 +1,5 @@
 import Link from "next/link"
+import PublicViewLink from "@/admin/components/PublicViewLink"
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { updateProduitAction } from "@/admin/actions/produits"
@@ -83,6 +84,7 @@ export default async function AdminProduitEditPage({
             <p className="mt-1 text-sm text-ink-600">Modifie les champs puis enregistre.</p>
           </div>
           <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+            <PublicViewLink href={`/produits/${product.slug}`} isVisible={product.isVisible} />
             <Link href="/admin" className="text-sm text-ink-600 hover:underline">
               ← Administration
             </Link>
