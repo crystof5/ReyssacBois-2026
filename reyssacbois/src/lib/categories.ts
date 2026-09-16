@@ -14,10 +14,14 @@ type CategoryNode = {
   isTopCategory: boolean
   createdAt: Date
   updatedAt: Date
+  /** Nombre de produits visibles rattachés directement. */
+  productCount: number
   children: CategoryNode[]
 }
 
-type CategoryRow = Omit<CategoryNode, "children">
+type CategoryRow = Omit<CategoryNode, "children" | "productCount"> & {
+  _count: { products: number }
+}
 
 const CATEGORIES_TREE_TAG = "categoriesTree"
 
@@ -35,6 +39,7 @@ const getCategoriesTreeCached = unstable_cache(
       isTopCategory: true,
       createdAt: true,
       updatedAt: true,
+      _count: { select: { products: { where: { product: { isVisible: true } } } } },
     } satisfies Prisma.CategorySelect
 
     const categories = (await prisma.category.findMany({
@@ -45,7 +50,8 @@ const getCategoriesTreeCached = unstable_cache(
     const roots: CategoryNode[] = []
 
     for (const cat of categories) {
-      map.set(cat.id, { ...cat, children: [] })
+      const { _count, ...rest } = cat
+      map.set(cat.id, { ...rest, productCount: _count.products, children: [] })
     }
 
     map.forEach((cat) => {

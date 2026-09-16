@@ -90,7 +90,7 @@ export default function LocalSeoBand({
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-green-900 shadow-sm hover:bg-green-50"
+                className="rb-press inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-green-900 shadow-sm hover:bg-green-50"
               >
                 Demander un devis
               </Link>
@@ -98,7 +98,7 @@ export default function LocalSeoBand({
                 href={BUSINESS.mapsUrl}
                 target="_blank"
                 rel="noopener"
-                className="inline-flex items-center justify-center rounded-xl border border-white/30 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
+                className="rb-press inline-flex items-center justify-center rounded-xl border border-white/30 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10"
               >
                 Itinéraire
               </a>

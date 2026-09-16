@@ -83,7 +83,7 @@ function CategoryItem({
         <Link
           href={`/categories/${category.slug}`}
           aria-current={isActive ? "page" : undefined}
-          className={`min-w-0 flex-1 py-2 pl-3 pr-2 leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 rounded-lg ${
+          className={`min-w-0 flex-1 py-2 pl-3 pr-2 leading-snug transition-transform duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 rounded-lg ${
             level === 0 ? "text-[15px]" : "text-sm"
           } ${isActive || inActivePath ? "font-semibold" : "font-medium"}`}
           onClick={() => {
@@ -97,7 +97,7 @@ function CategoryItem({
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className="flex w-10 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-stone-200/70 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
+            className="flex w-10 shrink-0 items-center justify-center rounded-lg text-gray-500 transition active:scale-90 hover:bg-stone-200/70 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
             aria-label={`${open ? "Replier" : "Déplier"} ${category.name}`}
             aria-expanded={open}
           >
@@ -270,11 +270,11 @@ export default function SidebarCategories({
     <>
       {/* Mobile: barre sticky (catégories + fil d’Ariane compact) */}
       <div className="md:hidden sticky top-16 z-30">
-        <div className="rb-depth flex items-center gap-2 rounded-xl border border-black/[0.07] px-3 py-2 backdrop-blur">
+        <div className="rb-depth rb-lift flex items-center gap-2 rounded-xl border border-black/[0.07] px-3 py-2 backdrop-blur">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+            className="rb-press inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
             aria-label="Ouvrir les catégories"
             title="Catégories"
           >
@@ -329,12 +329,12 @@ export default function SidebarCategories({
       >
         <div className="md:sticky md:top-24">
           {desktopCollapsed ? (
-            <div className="rb-depth rounded-xl border border-black/[0.07] p-2 backdrop-blur">
+            <div className="rb-depth rb-lift rounded-xl border border-black/[0.07] p-2 backdrop-blur">
               <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setDesktopCollapsed(false)}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                  className="rb-press inline-flex h-10 w-10 items-center justify-center rounded-xl bg-green-700 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-600/30"
                   aria-label="Ouvrir le menu catégories"
                   title="Ouvrir"
                 >
@@ -357,7 +357,7 @@ export default function SidebarCategories({
               </div>
             </div>
           ) : (
-            <div className="rb-depth rounded-xl border border-black/[0.07] p-3 backdrop-blur">
+            <div className="rb-depth rb-lift rounded-xl border border-black/[0.07] p-3 backdrop-blur">
               <div className="mb-2 flex items-center justify-between gap-2 border-b border-stone-200 px-1 pb-2">
                 <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-gray-500">
                   Catégories

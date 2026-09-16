@@ -106,7 +106,7 @@ export default async function ItemDetail({
                 href={imageUrl}
                 target="_blank"
                 rel="noopener"
-                className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:bg-white"
+                className="rb-press absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:bg-white"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-3.5 w-3.5">
                   <path d="M3 3h5v2H6.41l3.3 3.29-1.42 1.42L5 6.41V8H3V3Zm14 14h-5v-2h1.59l-3.3-3.29 1.42-1.42L15 13.59V12h2v5Z" />
@@ -160,13 +160,13 @@ export default async function ItemDetail({
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/contact"
-              className="inline-flex flex-1 items-center justify-center rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2"
+              className="rb-press inline-flex flex-1 items-center justify-center rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2"
             >
               Demander un devis
             </Link>
             <a
               href={`tel:${BUSINESS.phoneE164}`}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition hover:border-green-700 hover:text-green-800"
+              className="rb-press inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition hover:border-green-700 hover:text-green-800"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-4 w-4">
                 <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h1.148a1.5 1.5 0 0 1 1.465 1.175l.513 2.31a1.5 1.5 0 0 1-1.02 1.745l-.97.323a11.037 11.037 0 0 0 6.31 6.31l.323-.97a1.5 1.5 0 0 1 1.745-1.02l2.31.513A1.5 1.5 0 0 1 18 15.352V16.5a1.5 1.5 0 0 1-1.5 1.5H15C8.096 18 2 11.904 2 5V3.5Z" />

@@ -40,7 +40,7 @@ export default async function ProduitsPage() {
 
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+            className="rb-press inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-xl bg-green-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
           >
             Demander un devis
           </Link>

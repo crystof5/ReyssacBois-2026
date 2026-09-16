@@ -239,14 +239,14 @@ export default async function Home() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
                 href="/produits"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-gray-900 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] ring-1 ring-white/30 transition hover:-translate-y-0.5 hover:bg-white/95 hover:ring-white/50"
+                className="rb-press inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-semibold text-gray-900 shadow-[0_18px_45px_-28px_rgba(0,0,0,0.85)] ring-1 ring-white/30 transition hover:-translate-y-0.5 hover:bg-white/95 hover:ring-white/50"
               >
                 Aller au catalogue
                 <span aria-hidden="true">→</span>
               </Link>
               <Link
                 href="/#contact"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 hover:border-white/35"
+                className="rb-press inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-7 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 hover:border-white/35"
               >
                 Demander un devis
                 <span aria-hidden="true">✦</span>
@@ -411,7 +411,7 @@ export default async function Home() {
                   <li key={l.slug}>
                     <Link
                       href={l.href}
-                      className="inline-flex rounded-full border border-gray-200/80 bg-white/60 px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-800 backdrop-blur transition hover:bg-white hover:text-green-800"
+                      className="rb-press inline-flex rounded-full border border-gray-200/80 bg-white/60 px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-800 backdrop-blur transition hover:bg-white hover:text-green-800"
                     >
                       {l.label}
                     </Link>
@@ -424,14 +424,14 @@ export default async function Home() {
           <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/produits"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-green-700 text-white px-7 py-3 text-sm font-semibold hover:bg-green-800 transition shadow-lg"
+              className="rb-press inline-flex items-center justify-center gap-2 rounded-full bg-green-700 text-white px-7 py-3 text-sm font-semibold hover:bg-green-800 transition shadow-lg"
             >
               Aller au catalogue
               <span aria-hidden="true">→</span>
             </Link>
             <Link
               href="/#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-200/80 bg-white/55 px-7 py-3 text-sm font-semibold text-gray-900 backdrop-blur transition hover:bg-white/65 hover:border-gray-300"
+              className="rb-press inline-flex items-center justify-center gap-2 rounded-full border border-gray-200/80 bg-white/55 px-7 py-3 text-sm font-semibold text-gray-900 backdrop-blur transition hover:bg-white/65 hover:border-gray-300"
             >
               Poser une question
               <span aria-hidden="true">✦</span>
@@ -706,11 +706,11 @@ function TeaserCard({
   href?: string;
 }) {
   const className =
-    "group rounded-3xl border border-gray-200/70 bg-white/55 p-6 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-[0_18px_45px_-28px_rgba(0,0,0,0.55)] hover:ring-black/10 hover:bg-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600/30";
+    "group rb-depth-shadow rb-depth-hover block rounded-3xl border border-gray-200/70 bg-white/55 p-6 ring-1 ring-black/5 backdrop-blur hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600/30";
 
   const content = (
     <>
-      <div className="h-11 w-11 rounded-2xl bg-green-50 flex items-center justify-center text-green-800 font-bold ring-1 ring-green-700/10 transition group-hover:scale-[1.02]">
+      <div className="h-11 w-11 rounded-2xl bg-green-50 flex items-center justify-center text-green-800 font-bold ring-1 ring-green-700/10 transition duration-300 group-hover:scale-110 group-hover:rotate-12 group-hover:bg-green-700 group-hover:text-white">
         ✦
       </div>
       <h3 className="mt-4 text-xl font-bold text-gray-900">{title}</h3>

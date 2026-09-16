@@ -179,10 +179,10 @@ export default async function CategoryPage({
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
               {category.imageUrl ? (
-                <div className="w-full sm:w-56">
-                  <div className="overflow-hidden rounded-xl shadow-[0_2px_4px_rgba(60,40,15,0.12),0_14px_28px_-12px_rgba(60,40,15,0.45)] ring-1 ring-black/10">
-                    <div className="aspect-[4/3] w-full">
-                      <Media src={category.imageUrl} alt={category.name} className="h-full w-full object-cover" />
+                <div className="group/photo w-full sm:w-56 [perspective:800px]">
+                  <div className="overflow-hidden rounded-xl shadow-[0_2px_4px_rgba(60,40,15,0.12),0_14px_28px_-12px_rgba(60,40,15,0.45)] ring-1 ring-black/10 transition duration-500 ease-out group-hover/photo:[transform:rotateY(-6deg)_rotateX(3deg)_scale(1.05)] group-hover/photo:shadow-[0_6px_10px_rgba(60,40,15,0.15),0_30px_50px_-18px_rgba(60,40,15,0.55)] group-active/photo:scale-[0.98]">
+                    <div className="aspect-[16/9] w-full sm:aspect-[4/3]">
+                      <Media src={category.imageUrl} alt={category.name} className="rb-kenburns h-full w-full object-cover" />
                     </div>
                   </div>
                 </div>
@@ -208,7 +208,7 @@ export default async function CategoryPage({
 
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+              className="rb-press inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-xl bg-green-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
             >
               Nous contacter
             </Link>

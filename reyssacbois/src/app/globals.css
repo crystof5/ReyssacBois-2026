@@ -512,6 +512,7 @@ body {
       box-shadow 0.4s ease;
     will-change: transform;
   }
+  @media (hover: hover) {
   .rb-depth-hover:hover {
     transform: perspective(900px) translateY(-10px) rotateX(5deg) scale(1.01);
     box-shadow:
@@ -521,14 +522,76 @@ body {
       0 22px 34px -12px rgba(60, 40, 15, 0.32),
       0 52px 84px -30px rgba(60, 40, 15, 0.62);
   }
+  }
+  /* Mobile : léger enfoncement au toucher. */
   .rb-depth-hover:active {
-    transform: perspective(900px) translateY(-3px) rotateX(2deg);
+    transform: perspective(900px) translateY(-2px) scale(0.985);
+    transition-duration: 0.12s;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .rb-depth-hover,
     .rb-depth-hover:hover {
       transform: none;
+    }
+  }
+}
+
+/* ===== Micro-interactions ===== */
+@layer components {
+  /* Relief marqué pour les panneaux flottants (menu latéral du catalogue). */
+  .rb-lift {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -2px 0 rgba(60, 40, 15, 0.08),
+      0 2px 4px rgba(60, 40, 15, 0.1),
+      0 16px 30px -10px rgba(60, 40, 15, 0.32),
+      0 44px 80px -30px rgba(60, 40, 15, 0.6),
+      12px 0 40px -24px rgba(60, 40, 15, 0.35);
+  }
+
+  /* Boutons : grossissent au survol (souris), se compriment au toucher (mobile). */
+  .rb-press {
+    transition:
+      transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.22s ease,
+      background-color 0.2s ease,
+      color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (hover: hover) {
+    .rb-press:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 10px 22px -10px rgba(20, 60, 35, 0.45);
+    }
+  }
+  .rb-press:active {
+    transform: scale(0.95);
+    transition-duration: 0.08s;
+  }
+
+  /* Photo vivante : zoom lent en continu. */
+  @keyframes rb-kenburns {
+    from {
+      transform: scale(1) translate(0, 0);
+    }
+    to {
+      transform: scale(1.12) translate(-2%, -1.5%);
+    }
+  }
+  .rb-kenburns {
+    animation: rb-kenburns 12s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rb-press,
+    .rb-press:hover,
+    .rb-press:active {
+      transform: none;
+    }
+    .rb-kenburns {
+      animation: none;
     }
   }
 }

@@ -29,11 +29,11 @@ export default function Breadcrumb({
   return (
     <nav aria-label="Fil d’Ariane" className="mb-5">
       <BreadcrumbJsonLd items={[{ name: "Accueil", href: "/" }, ...items]} />
-      <ol className="inline-flex max-w-full flex-wrap items-center gap-x-1 gap-y-1 rounded-lg bg-white/85 px-3 py-2 text-sm shadow-sm ring-1 ring-black/5 backdrop-blur">
+      <ol className="rb-depth-shadow inline-flex max-w-full flex-wrap items-center gap-x-0.5 gap-y-1 rounded-lg bg-white/85 px-2 py-1.5 text-sm ring-1 ring-black/5 backdrop-blur">
         <li className="flex items-center">
           <Link
             href="/"
-            className="flex items-center gap-1.5 rounded text-gray-600 transition-colors hover:text-green-800"
+            className="flex origin-center items-center gap-1.5 rounded-md px-1.5 py-0.5 text-gray-600 transition duration-200 hover:scale-110 hover:bg-green-50 hover:text-green-800 active:scale-95"
           >
             <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-4 w-4">
               <path d="M10.707 2.293a1 1 0 0 0-1.414 0l-7 7A1 1 0 0 0 3 11h1v6a1 1 0 0 0 1 1h3.5v-4.5h3V18H15a1 1 0 0 0 1-1v-6h1a1 1 0 0 0 .707-1.707l-7-7Z" />
@@ -46,13 +46,13 @@ export default function Breadcrumb({
           <li key={item.id} className="flex min-w-0 items-center gap-1">
             <Separator />
             {i === last ? (
-              <span aria-current="page" className="rb-clamp-1 max-w-[40ch] font-semibold text-gray-900" title={item.name}>
+              <span aria-current="page" className="rb-clamp-1 max-w-[40ch] px-1.5 font-semibold text-gray-900" title={item.name}>
                 {item.name}
               </span>
             ) : (
               <Link
                 href={item.href}
-                className="rb-clamp-1 max-w-[30ch] text-gray-600 transition-colors hover:text-green-800 hover:underline underline-offset-4"
+                className="rb-clamp-1 max-w-[30ch] origin-center rounded-md px-1.5 py-0.5 text-gray-600 transition duration-200 hover:scale-110 hover:bg-green-50 hover:text-green-800 active:scale-95"
                 title={item.name}
               >
                 {item.name}
