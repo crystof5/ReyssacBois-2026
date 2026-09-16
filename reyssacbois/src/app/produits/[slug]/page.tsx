@@ -9,6 +9,8 @@ import { prisma } from "@/lib/prisma"
 import { unstable_cache } from "next/cache"
 import { getCategoriesTree } from "@/lib/categories"
 import RichText from "@/components/ui/RichText"
+import ProductCard from "@/components/ProductCard"
+import { BUSINESS } from "@/lib/business"
 import { productSeoLabel } from "@/lib/productSeo"
 
 function normalizeSeoKeyPart(v: string | null | undefined) {
@@ -111,6 +113,25 @@ const getCanonicalProductSlugCached = unstable_cache(
   }
 )
 
+const getSiblingProductsCached = unstable_cache(
+  async (categoryId: string, excludeId: string) => {
+    return await prisma.product.findMany({
+      where: { isVisible: true, id: { not: excludeId }, categories: { some: { categoryId } } },
+      select: { id: true, name: true, slug: true, description: true, imageUrl: true, section: true, width: true },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
+      take: 3,
+    })
+  },
+  ["productSiblings"],
+  { revalidate: 60 * 30, tags: ["sitemap"] },
+)
+
+const REASSURANCE = [
+  "Conseil au comptoir ou par téléphone",
+  "Retrait au dépôt de Boé, près d'Agen",
+  "Livraison Lot-et-Garonne, Gers, Tarn-et-Garonne",
+]
+
 export async function generateMetadata({
   params,
 }: {
@@ -181,6 +202,15 @@ export default async function ProduitPage({
   }
 
   const { product, categories } = data
+  const category = categories.at(-1)
+  const siblings = category ? await getSiblingProductsCached(category.id, product.id) : []
+
+  const specs = [
+    { label: "Section", value: product.section },
+    { label: "Longueur", value: product.length },
+    { label: "Largeur", value: product.width },
+    { label: "Type", value: product.type },
+  ].filter((s): s is { label: string; value: string } => Boolean(s.value?.trim()))
 
   return (
     <div>
@@ -202,81 +232,108 @@ export default async function ProduitPage({
         />
       </div>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
-          <div className="aspect-[4/3] w-full bg-gray-50 p-5 sm:p-6">
-            <Media
-              src={product.imageUrl}
-              alt={product.name}
-              // Packshots: affiche l’image entière (sans crop).
-              className="h-full w-full !object-contain"
-            />
-          </div>
-        </div>
-
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            {product.name}
-          </h1>
-
-          {(product.descriptionHtml || product.description) && (
-            <div className="mt-4 rounded-xl border border-gray-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur">
-              <h2 className="text-base font-semibold text-gray-900">
-                Description
-              </h2>
-              {product.descriptionHtml ? (
-                <RichText html={product.descriptionHtml} className="mt-3 text-gray-700" />
-              ) : (
-                <p className="mt-3 whitespace-pre-line text-gray-700 leading-relaxed">
-                  {product.description}
-                </p>
-              )}
-            </div>
-          )}
-
-          <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm ring-1 ring-black/5">
-            <h2 className="text-base font-semibold text-gray-900">
-              Caractéristiques
-            </h2>
-
-            <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-              {product.section && (
-                <div>
-                  <dt className="text-gray-500">Section</dt>
-                  <dd className="font-medium text-gray-900">{product.section}</dd>
-                </div>
-              )}
-              {product.length && (
-                <div>
-                  <dt className="text-gray-500">Longueur</dt>
-                  <dd className="font-medium text-gray-900">{product.length}</dd>
-                </div>
-              )}
-              {product.width && (
-                <div>
-                  <dt className="text-gray-500">Largeur</dt>
-                  <dd className="font-medium text-gray-900">{product.width}</dd>
-                </div>
-              )}
-              {product.type && (
-                <div>
-                  <dt className="text-gray-500">Type</dt>
-                  <dd className="font-medium text-gray-900">{product.type}</dd>
-                </div>
-              )}
-            </dl>
-
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-              >
-                Demander un devis
-              </Link>
+      <article className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-10">
+        {/* Visuel */}
+        <div className="lg:sticky lg:top-24">
+          <div className="overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-sm">
+            <div className="relative aspect-[4/3] w-full bg-[radial-gradient(circle_at_50%_40%,#ffffff_0%,#f5f2ec_70%)] p-4 sm:aspect-square sm:p-10">
+              <Media
+                src={product.imageUrl}
+                alt={product.name}
+                // Packshot : image entière, sans recadrage.
+                className="h-full w-full !object-contain mix-blend-multiply"
+              />
             </div>
           </div>
         </div>
-      </div>
+
+        {/* Informations */}
+        <div className="rounded-2xl border border-black/[0.06] bg-white/90 p-5 shadow-sm backdrop-blur sm:p-7">
+          {category ? (
+            <Link
+              href={`/categories/${category.slug}`}
+              className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.14em] text-green-800 hover:underline underline-offset-4"
+            >
+              {category.name}
+            </Link>
+          ) : null}
+          <h1 className="mt-2 text-2xl sm:text-3xl font-bold leading-tight text-gray-900">{product.name}</h1>
+
+          {product.descriptionHtml ? (
+            <RichText html={product.descriptionHtml} className="mt-4 text-base text-gray-700" />
+          ) : product.description ? (
+            <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-gray-700">{product.description}</p>
+          ) : null}
+
+          {specs.length ? (
+            <div className="mt-6">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-gray-500">Caractéristiques</h2>
+              <dl className="mt-2 divide-y divide-stone-200 rounded-xl border border-stone-200">
+                {specs.map((spec) => (
+                  <div key={spec.label} className="grid grid-cols-[7rem_1fr] gap-3 px-4 py-2.5 text-sm">
+                    <dt className="text-gray-500">{spec.label}</dt>
+                    <dd className="font-medium text-gray-900">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ) : null}
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/contact"
+              className="inline-flex flex-1 items-center justify-center rounded-xl bg-green-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2"
+            >
+              Demander un devis
+            </Link>
+            <a
+              href={`tel:${BUSINESS.phoneE164}`}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-stone-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition hover:border-green-700 hover:text-green-800"
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-4 w-4">
+                <path d="M2 3.5A1.5 1.5 0 0 1 3.5 2h1.148a1.5 1.5 0 0 1 1.465 1.175l.513 2.31a1.5 1.5 0 0 1-1.02 1.745l-.97.323a11.037 11.037 0 0 0 6.31 6.31l.323-.97a1.5 1.5 0 0 1 1.745-1.02l2.31.513A1.5 1.5 0 0 1 18 15.352V16.5a1.5 1.5 0 0 1-1.5 1.5H15C8.096 18 2 11.904 2 5V3.5Z" />
+              </svg>
+              {BUSINESS.phoneDisplay}
+            </a>
+          </div>
+
+          <ul className="mt-5 space-y-2 border-t border-stone-200 pt-5 text-sm text-gray-700">
+            {REASSURANCE.map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-green-700">
+                  <path
+                    fillRule="evenodd"
+                    d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+
+      {category && siblings.length ? (
+        <section className="mt-10">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Dans la même catégorie</h2>
+            <Link
+              href={`/categories/${category.slug}`}
+              className="shrink-0 rounded-lg bg-white/90 px-3 py-1.5 text-sm font-semibold text-green-800 shadow-sm ring-1 ring-black/5 transition hover:bg-white"
+            >
+              Tout voir →
+            </Link>
+          </div>
+          <ul className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {siblings.map((p) => (
+              <li key={p.id}>
+                <ProductCard product={p} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   )
 }
