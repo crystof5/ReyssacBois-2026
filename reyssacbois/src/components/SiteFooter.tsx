@@ -45,6 +45,22 @@ export default async function SiteFooter({ children }: { children?: React.ReactN
                 {BUSINESS.phoneDisplay}
               </a>
             </address>
+            <nav aria-label="Services" className="mt-4">
+              <ul className="space-y-1.5 text-sm text-gray-700">
+                {[
+                  { href: "/livraison-bois", label: "Livraison de bois" },
+                  { href: "/decoupe-panneaux-sur-mesure", label: "Découpe de panneaux sur mesure" },
+                  { href: "/qui-sommes-nous", label: "Qui sommes-nous" },
+                  { href: "/contact", label: "Contact et accès" },
+                ].map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href} className="hover:text-gray-900 hover:underline underline-offset-4">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           {/* Horaires + zones */}

@@ -197,7 +197,7 @@ export default async function CategoryPage({
           </div>
 
           <Link
-            href="/#contact"
+            href="/contact"
             className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
           >
             Nous contacter

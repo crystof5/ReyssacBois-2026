@@ -11,6 +11,8 @@ export const BUSINESS = {
   foundingYear: 1850,
   phoneDisplay: "05 53 96 15 97",
   phoneE164: "+33553961597",
+  // Déjà public (mentions légales).
+  email: "reyssacbois@orange.fr",
   address: {
     street: "1250 Avenue du Docteur Jean Noguès",
     postalCode: "47550",

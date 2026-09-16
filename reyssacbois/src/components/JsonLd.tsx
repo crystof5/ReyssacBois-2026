@@ -39,6 +39,7 @@ export function LocalBusinessJsonLd() {
     logo: absoluteUrl("/android-chrome-512x512.png"),
     image: absoluteUrl("/android-chrome-512x512.png"),
     telephone: BUSINESS.phoneE164,
+    email: BUSINESS.email,
     foundingDate: String(BUSINESS.foundingYear),
     priceRange: "€€",
     address: {

@@ -136,8 +136,13 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
               </Link>
             </li>
             <li>
-              <Link href="/#qui-sommes-nous" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
+              <Link href="/qui-sommes-nous" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
                 Qui sommes-nous ?
+              </Link>
+            </li>
+            <li className="hidden lg:list-item">
+              <Link href="/livraison-bois" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
+                Livraison
               </Link>
             </li>
             <li>
@@ -146,7 +151,7 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
               </Link>
             </li>
             <li>
-              <Link href="/#contact" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
+              <Link href="/contact" className="inline-block transition-transform duration-200 hover:scale-105 hover:text-white/90">
                 Contact
               </Link>
             </li>
@@ -195,8 +200,18 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/#qui-sommes-nous" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                    <Link href="/qui-sommes-nous" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
                       Qui sommes-nous ?
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/livraison-bois" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Livraison
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/decoupe-panneaux-sur-mesure" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                      Découpe sur mesure
                     </Link>
                   </li>
                   <li>
@@ -205,7 +220,7 @@ export default function NavbarClient({ isAuthed }: { isAuthed: boolean }) {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/#contact" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
+                    <Link href="/contact" className="block rounded-lg px-3 py-2 hover:bg-white/15" onClick={() => setOpen(false)}>
                       Contact
                     </Link>
                   </li>

@@ -12,6 +12,7 @@ import {
   SITE_KEYS,
 } from "@/admin/queries/siteSettings";
 import ContactForm from "@/components/ContactForm";
+import MapEmbed from "@/components/MapEmbed";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
 import { getFeaturedCategoryLinks } from "@/lib/featuredCategories";
@@ -456,6 +457,12 @@ export default async function Home() {
               Une entreprise familiale, une expertise transmise, et une exigence
               de qualité au quotidien.
             </p>
+            <Link
+              href="/qui-sommes-nous"
+              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-green-800 hover:underline underline-offset-4"
+            >
+              Découvrir notre histoire depuis 1850 <span aria-hidden="true">→</span>
+            </Link>
           </div>
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
@@ -641,19 +648,7 @@ export default async function Home() {
                 </div>
               </div>
 
-              <div className="overflow-hidden rounded-3xl border border-gray-200/70 bg-white/55 shadow-sm ring-1 ring-black/5">
-                <div className="relative w-full pt-[56.25%]">
-                  <iframe
-                    title="Carte - Reyssac Bois"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2861.0054045604797!2d0.6584004767006642!3d44.186355417784526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12abb381555554cf%3A0xa1fac795a72fef80!2sReyssac%20Bois!5e0!3m2!1sfr!2sfr!4v1693635316155!5m2!1sfr!2sfr"
-                    className="absolute inset-0 h-full w-full"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    allowFullScreen
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                </div>
-              </div>
+              <MapEmbed />
             </div>
 
             <div className="rounded-3xl border border-gray-200/70 bg-white/55 backdrop-blur p-6 shadow-sm ring-1 ring-black/5">

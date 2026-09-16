@@ -104,6 +104,10 @@ const buildSitemap = unstable_cache(
     { url: absoluteUrl("/"), lastModified: catalogUpdatedAt, changeFrequency: "weekly", priority: 1 },
     { url: absoluteUrl("/produits"), lastModified: catalogUpdatedAt, changeFrequency: "weekly", priority: 0.9 },
     { url: absoluteUrl("/categories"), lastModified: catalogUpdatedAt, changeFrequency: "weekly", priority: 0.7 },
+    { url: absoluteUrl("/livraison-bois"), changeFrequency: "monthly", priority: 0.8 },
+    { url: absoluteUrl("/decoupe-panneaux-sur-mesure"), changeFrequency: "monthly", priority: 0.8 },
+    { url: absoluteUrl("/qui-sommes-nous"), changeFrequency: "monthly", priority: 0.7 },
+    { url: absoluteUrl("/contact"), changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/mentions-legales"), changeFrequency: "yearly", priority: 0.2 },
     { url: absoluteUrl("/politique-de-confidentialite"), changeFrequency: "yearly", priority: 0.2 },
   ]

@@ -33,21 +33,29 @@ export async function GET() {
 
 - Adresse : ${BUSINESS_ADDRESS_ONE_LINE}, France (agglomération d'Agen)
 - Téléphone : ${BUSINESS.phoneDisplay}
+- E-mail : ${BUSINESS.email}
 - Horaires : ${BUSINESS.openingHours.display}. Fermé le samedi et le dimanche.
 - Clientèle : particuliers, artisans, entreprises, collectivités
 - Services : conseil, retrait sur place, débit de bois sur liste, découpe de panneaux sur mesure, travail à façon (rabotage, collage, ponçage), fabrication sur mesure, livraison
 - Zone prioritaire : ${AGEN_AREA_CITIES.join(", ")}
 - Livraison : tout le Lot-et-Garonne (47), le Gers (32) et le Tarn-et-Garonne (82) ; plus loin sur devis (${EXTENDED_DELIVERY_CITIES.join(", ")})
-- Devis : ${absoluteUrl("/#contact")}
+- Devis : ${absoluteUrl("/contact")}
 
 ## Catalogue
 
 - [Catalogue complet](${absoluteUrl("/produits")}): toutes les familles de produits bois
 ${categories.map((c) => `- [${c.title}](${absoluteUrl(`/categories/${c.slug}`)}): ${c.description}`).join("\n")}
 
+## Services
+
+- [Livraison de bois](${absoluteUrl("/livraison-bois")}): zones desservies (agglomération d'Agen, Lot-et-Garonne, Gers, Tarn-et-Garonne, Bordeaux–Toulouse sur devis) et déroulement
+- [Découpe de panneaux sur mesure](${absoluteUrl("/decoupe-panneaux-sur-mesure")}): contreplaqué, OSB, MDF, aggloméré, lamellé-collé découpés à vos cotes
+
 ## Entreprise
 
-- [Accueil, histoire et FAQ](${absoluteUrl("/")}): entreprise familiale transmise sur cinq générations, plus ancien commerce d'Agen
+- [Qui sommes-nous](${absoluteUrl("/qui-sommes-nous")}): entreprise familiale depuis 1850, scierie jusqu'en 1970 puis négoce de bois, cinq générations
+- [Contact et accès](${absoluteUrl("/contact")}): téléphone, e-mail, adresse, horaires, itinéraire
+- [Accueil et FAQ](${absoluteUrl("/")}): présentation, questions fréquentes
 - [Mentions légales](${absoluteUrl("/mentions-legales")})
 `
 

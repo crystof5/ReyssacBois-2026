@@ -76,7 +76,7 @@ export default function LocalSeoBand({
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                href="/#contact"
+                href="/contact"
                 className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-green-900 shadow-sm hover:bg-green-50"
               >
                 Demander un devis
