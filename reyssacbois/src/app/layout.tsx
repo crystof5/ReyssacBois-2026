@@ -12,6 +12,8 @@ import Analytics from "@/components/Analytics"
 import SocialLinks from "@/components/SocialLinks"
 import HashScroll from "@/components/HashScroll"
 import HashSections from "../components/HashSections"
+import SiteFooter from "@/components/SiteFooter"
+import { LocalBusinessJsonLd } from "@/components/JsonLd"
 import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
 import {
   DM_Sans,
@@ -49,12 +51,18 @@ export const revalidate = 0
 export const metadata: Metadata = {
   metadataBase: getMetadataBaseUrl(),
   title: {
-    default: "Reyssac Bois",
+    default: "Négoce bois à Agen (Boé) : charpente, contreplaqué | Reyssac Bois",
     template: "%s | Reyssac Bois",
   },
-  description: "Bois de construction, menuiserie et quincaillerie. Reyssac Bois — votre expert en bois depuis 1850.",
+  description:
+    "Reyssac Bois, négociant en bois à Boé près d'Agen depuis 1850 : charpente, contreplaqués, panneaux, menuiserie, parquet, bardage, terrasses. Découpe et livraison en Lot-et-Garonne.",
   alternates: {
     canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: "Reyssac Bois",
   },
   manifest: "/manifest.json",
   icons: {
@@ -119,27 +127,10 @@ export default async function RootLayout({
         <HashScroll offsetPx={96} />
         <HashSections ids={["accueil", "catalogue", "qui-sommes-nous", "faq", "contact", "projets"]} offsetPx={96} />
         <PromoModal promo={promo} />
-        <div className="flex-1">{children}</div>
+        <div className="flex flex-1 flex-col">{children}</div>
 
-        <footer className="mt-8 border-t border-gray-200/70 bg-white/60 backdrop-blur">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center justify-center gap-3 sm:justify-start">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/img/android-chrome-192x192.png"
-                  alt="Reyssac Bois"
-                  className="h-8 w-8 rounded-full bg-white shadow-sm ring-1 ring-black/5"
-                />
-                <div className="text-center sm:text-left">
-                  <p className="text-sm font-semibold text-gray-900 leading-tight">Reyssac Bois</p>
-                  <p className="text-xs text-gray-600 leading-tight">
-                    <a className="hover:underline underline-offset-4" href="tel:0553961597">05 53 96 15 97</a>
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-600 sm:justify-end">
+        <SiteFooter>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-600 sm:justify-start">
                 <Link className="hover:text-gray-900 underline-offset-4 hover:underline" href="/mentions-legales">
                   Mentions légales
                 </Link>
@@ -155,15 +146,14 @@ export default async function RootLayout({
                   © {new Date().getFullYear()} Reyssac Bois
                 </span>
               </div>
-            </div>
 
-            {/* Crédit réalisation — mobile first : centré, ligne dédiée sous le footer */}
+            {/* Crédit réalisation */}
             <a
               href="https://lc-development.fr"
               target="_blank"
               rel="noopener"
               aria-label="Site réalisé par LC Development"
-              className="mt-4 flex items-center justify-center gap-2 border-t border-gray-200/70 pt-4 text-xs text-gray-500 transition-colors hover:text-gray-900"
+              className="flex items-center justify-center gap-2 text-xs text-gray-500 transition-colors hover:text-gray-900"
             >
               <span>Site réalisé par</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -178,8 +168,8 @@ export default async function RootLayout({
               />
               <strong className="font-semibold">LC&nbsp;Development</strong>
             </a>
-          </div>
-        </footer>
+        </SiteFooter>
+        <LocalBusinessJsonLd />
 
         {/* Tracking chargé uniquement après consentement. */}
         <Analytics />

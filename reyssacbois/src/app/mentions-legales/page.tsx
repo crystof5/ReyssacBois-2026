@@ -24,7 +24,7 @@ export default function MentionsLegalesPage() {
             <div className="mt-3 space-y-2 text-sm text-gray-700">
               <p><span className="font-semibold">Raison sociale :</span> Reyssac Bois</p>
               <p><span className="font-semibold">Forme juridique :</span> SARL</p>
-              <p><span className="font-semibold">Adresse :</span> 1250 avenue Jean Nogues 47550 Bien</p>
+              <p><span className="font-semibold">Adresse :</span> 1250 Avenue du Docteur Jean Noguès, 47550 Boé</p>
               <p><span className="font-semibold">SIRET :</span> 415 010 016 00012</p>
               <p><span className="font-semibold">RCS :</span> Agen</p>
               <p><span className="font-semibold">TVA intracommunautaire :</span> FR43 415 010 016</p>

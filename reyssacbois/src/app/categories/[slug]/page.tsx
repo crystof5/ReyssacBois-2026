@@ -6,7 +6,7 @@ import CategoryCard from "@/components/CategoryCard"
 import ProductCard from "@/components/ProductCard"
 import Link from "next/link"
 import type { Metadata } from "next"
-import { buildDescription } from "@/lib/meta"
+import { getCategorySeo } from "@/lib/categorySeo"
 import { getCategoriesTree } from "@/lib/categories"
 import { unstable_cache } from "next/cache"
 import RichText from "@/components/ui/RichText"
@@ -101,18 +101,14 @@ export async function generateMetadata({
   }
 
   const category = breadcrumb[breadcrumb.length - 1]
-
-  const description = buildDescription(
-    category.description,
-    `Découvrez nos produits dans la catégorie ${category.name}. Devis et conseils à Reyssac Bois.`,
-  )
+  const { title, description } = getCategorySeo(slug, breadcrumb)
 
   return {
-    title: category.name,
+    title,
     description,
     alternates: { canonical: `/categories/${slug}` },
     openGraph: {
-      title: category.name,
+      title,
       description,
       url: `/categories/${slug}`,
       type: "website",

@@ -4,8 +4,9 @@ import type { Metadata } from "next"
 import { getCategoriesTree } from "@/lib/categories"
 
 export const metadata: Metadata = {
-  title: "Catégories",
-  description: "Parcourez nos familles de produits bois chez Reyssac Bois.",
+  title: "Catégories de bois et panneaux à Agen",
+  description:
+    "Familles de produits Reyssac Bois à Boé près d'Agen : charpente, panneaux et contreplaqués, bois de menuiserie, aménagements extérieurs, parquet, quincaillerie.",
   alternates: { canonical: "/categories" },
 }
 

@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma"
 import { unstable_cache } from "next/cache"
 import { getCategoriesTree } from "@/lib/categories"
 import RichText from "@/components/ui/RichText"
+import { productSeoLabel } from "@/lib/productSeo"
 
 function normalizeSeoKeyPart(v: string | null | undefined) {
   return (v ?? "").trim().toLowerCase().replace(/\s+/g, " ")
@@ -137,23 +138,23 @@ export async function generateMetadata({
     type: product.type,
   })
 
+  const label = productSeoLabel(product.name, categoryHint)
+  const title = `${label} à Agen`
   const description = buildDescription(
-    product.description,
-    categoryHint
-      ? `${product.name} — ${categoryHint}. Caractéristiques, conseils et devis chez Reyssac Bois.`
-      : `${product.name} — Caractéristiques, conseils et devis chez Reyssac Bois.`,
+    `${label} disponible chez Reyssac Bois à Boé, près d'Agen. ${product.description ?? ""} Conseil, découpe et livraison en Lot-et-Garonne.`,
+    "",
   )
 
   const isCanonical = canonicalSlug === product.slug
   const canonicalPath = `/produits/${canonicalSlug}`
 
   return {
-    title: product.name,
+    title,
     description,
     alternates: { canonical: canonicalPath },
     robots: isCanonical ? undefined : { index: false, follow: true },
     openGraph: {
-      title: product.name,
+      title,
       description,
       url: canonicalPath,
       type: "website",

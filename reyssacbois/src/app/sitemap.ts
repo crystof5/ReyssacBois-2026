@@ -2,6 +2,13 @@ import type { MetadataRoute } from "next"
 import { prisma } from "@/lib/prisma"
 import { absoluteUrl } from "@/lib/seo"
 import { unstable_cache } from "next/cache"
+import { FEATURED_CATEGORY_SLUGS } from "@/lib/featuredCategories"
+
+function imageUrlsOf(src: string | null | undefined): string[] | undefined {
+  const v = (src ?? "").trim()
+  if (!v || v.includes("placeholder")) return undefined
+  return [/^https?:\/\//i.test(v) ? v : absoluteUrl(v)]
+}
 
 // Route "SEO" très crawlée: on autorise le cache Next (en plus du `unstable_cache` interne).
 // Note (Next 16 + Turbopack): les exports de config de segment doivent être des littéraux.
@@ -10,6 +17,7 @@ export const revalidate = 21600 // 6h
 type CategoryLite = {
   id: string
   slug: string
+  imageUrl: string | null
   parentId: string | null
   isVisible: boolean
   updatedAt: Date
@@ -51,6 +59,7 @@ const buildSitemap = unstable_cache(
       select: {
         id: true,
         slug: true,
+        imageUrl: true,
         parentId: true,
         isVisible: true,
         updatedAt: true,
@@ -61,6 +70,7 @@ const buildSitemap = unstable_cache(
       select: {
         name: true,
         slug: true,
+        imageUrl: true,
         updatedAt: true,
         createdAt: true,
         sortOrder: true,
@@ -84,21 +94,30 @@ const buildSitemap = unstable_cache(
     }
   }
 
+  // Date de dernière modification du catalogue (pages qui listent les catégories).
+  const catalogUpdatedAt = categories.reduce<Date | undefined>(
+    (max, c) => (!max || c.updatedAt > max ? c.updatedAt : max),
+    undefined,
+  )
+
   const staticPages: MetadataRoute.Sitemap = [
-    { url: absoluteUrl("/"), changeFrequency: "weekly", priority: 1 },
-    { url: absoluteUrl("/produits"), changeFrequency: "weekly", priority: 0.9 },
-    { url: absoluteUrl("/categories"), changeFrequency: "weekly", priority: 0.7 },
+    { url: absoluteUrl("/"), lastModified: catalogUpdatedAt, changeFrequency: "weekly", priority: 1 },
+    { url: absoluteUrl("/produits"), lastModified: catalogUpdatedAt, changeFrequency: "weekly", priority: 0.9 },
+    { url: absoluteUrl("/categories"), lastModified: catalogUpdatedAt, changeFrequency: "weekly", priority: 0.7 },
     { url: absoluteUrl("/mentions-legales"), changeFrequency: "yearly", priority: 0.2 },
     { url: absoluteUrl("/politique-de-confidentialite"), changeFrequency: "yearly", priority: 0.2 },
   ]
 
+  const featured = new Set<string>(FEATURED_CATEGORY_SLUGS)
   const categoryPages: MetadataRoute.Sitemap = categories
     .filter((c) => effectivelyVisibleCategoryIds.has(c.id))
     .map((c) => ({
       url: absoluteUrl(`/categories/${c.slug}`),
       lastModified: c.updatedAt,
       changeFrequency: "weekly",
-      priority: 0.8,
+      // Produits phares (contreplaqué, charpente…) : pages prioritaires pour "<produit> Agen".
+      priority: featured.has(c.slug) ? 0.9 : 0.7,
+      images: imageUrlsOf(c.imageUrl),
     }))
 
   const eligibleProducts = products.filter((p) => {
@@ -153,6 +172,7 @@ const buildSitemap = unstable_cache(
     lastModified: p.updatedAt,
     changeFrequency: "monthly",
     priority: 0.6,
+    images: imageUrlsOf(p.imageUrl),
   }))
 
     return [...staticPages, ...categoryPages, ...productPages]

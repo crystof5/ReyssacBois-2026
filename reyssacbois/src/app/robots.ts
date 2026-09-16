@@ -32,8 +32,8 @@ export default function robots(): MetadataRoute.Robots {
           "/admin/",
           "/login",
           "/login/",
-          "/api/admin",
-          "/api/admin/",
+          // Endpoints techniques (recherche, contact, auth) : aucune valeur dans l'index.
+          "/api/",
         ],
       },
     ],

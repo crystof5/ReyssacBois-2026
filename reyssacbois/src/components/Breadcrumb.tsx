@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { BreadcrumbJsonLd } from "@/components/JsonLd"
 
 type BreadcrumbItem = {
   id: string
@@ -16,6 +17,7 @@ export default function Breadcrumb({
       aria-label="Fil d’Ariane"
       className="mb-6"
     >
+      <BreadcrumbJsonLd items={[{ name: "Accueil", href: "/" }, ...items]} />
       <ol className="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-white/20 bg-white/65 px-3 py-2 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
         <li className="min-w-0">
           <Link href="/" className="font-medium text-gray-900 hover:underline underline-offset-4">

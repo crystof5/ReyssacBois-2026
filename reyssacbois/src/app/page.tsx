@@ -14,6 +14,7 @@ import {
 import ContactForm from "@/components/ContactForm";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
+import { getFeaturedCategoryLinks } from "@/lib/featuredCategories";
 
 export default async function Home() {
   const [
@@ -24,6 +25,7 @@ export default async function Home() {
     aboutTexts,
     faq,
     contactInfo,
+    featuredLinks,
   ] = await Promise.all([
     getSiteImage(SITE_KEYS.homeFamily),
     getSiteImage(SITE_KEYS.aboutHistory),
@@ -32,6 +34,7 @@ export default async function Home() {
     getAboutTexts(),
     getHomeFaqSettings(),
     getContactInfoSettings(),
+    getFeaturedCategoryLinks(),
   ]);
 
   // Fallbacks: utiliser un asset existant dans /public pour éviter des 404 si les settings ne sont pas encore remplis.
@@ -224,6 +227,9 @@ export default async function Home() {
 
             <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
               {heroTitle}
+              <span className="mt-3 block text-lg sm:text-2xl font-semibold tracking-normal text-white/85">
+                Négoce de bois à Agen (Boé)
+              </span>
             </h1>
             <p className="mt-5 text-lg sm:text-xl text-white/90 leading-relaxed">
               {heroSubtitle}
@@ -393,6 +399,26 @@ export default async function Home() {
               </>
             )}
           </div>
+
+          {featuredLinks.length ? (
+            <nav aria-label="Produits phares" className="mt-8 text-center">
+              <h3 className="text-sm font-semibold text-gray-900">
+                Nos produits phares à Agen et en Lot-et-Garonne
+              </h3>
+              <ul className="mt-3 flex flex-wrap justify-center gap-2">
+                {featuredLinks.map((l) => (
+                  <li key={l.slug}>
+                    <Link
+                      href={l.href}
+                      className="inline-flex rounded-full border border-gray-200/80 bg-white/60 px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-800 backdrop-blur transition hover:bg-white hover:text-green-800"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
 
           <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
