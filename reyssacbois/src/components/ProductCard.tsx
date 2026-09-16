@@ -1,4 +1,5 @@
 import { CardLink } from "@/components/ui/Card"
+import CardArrow from "@/components/ui/CardArrow"
 import Media from "@/components/ui/Media"
 
 type ProductLike = {
@@ -18,46 +19,40 @@ export default function ProductCard({
   product: ProductLike
   href?: string
 }) {
-  const meta = [product.section, product.width].filter(Boolean).join(" • ")
+  const specs = [product.section, product.width].filter((v): v is string => Boolean(v?.trim()))
 
   return (
-    <CardLink href={href} className="self-stretch h-full overflow-hidden bg-white/75 hover:bg-white/85">
-      <div className="flex h-full flex-col">
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-black/[0.03] p-4 sm:p-5">
-          <Media
-            src={product.imageUrl}
-            alt={product.name}
-            // Packshots: on évite le crop -> on “recule” l’image.
-            className="h-full w-full !object-contain"
-          />
-        </div>
+    <CardLink href={href}>
+      <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-stone-100">
+        <Media
+          src={product.imageUrl}
+          alt={product.name}
+          className="transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+        />
+      </div>
 
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3
-          className="rb-clamp-2 min-h-[2.6rem] text-base sm:text-lg font-bold text-gray-900 group-hover:text-green-800"
-          title={product.name}
-        >
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <h3 className="rb-clamp-2 text-base sm:text-lg font-bold text-gray-900 transition-colors group-hover:text-green-800" title={product.name}>
           {product.name}
         </h3>
 
-        <p className="rb-clamp-1 mt-1 min-h-[1rem] text-xs font-medium text-gray-600" title={meta}>
-          {meta}
-        </p>
+        {specs.length ? (
+          <ul className="mt-2 flex flex-wrap gap-1.5">
+            {specs.map((spec) => (
+              <li key={spec} className="rb-clamp-1 max-w-full rounded-md bg-stone-100 px-2 py-0.5 text-[11px] font-medium text-gray-700" title={spec}>
+                {spec}
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
-        <p
-          className="rb-clamp-3 mt-2 min-h-[3.75rem] whitespace-pre-line text-sm leading-relaxed text-gray-700"
-          title={product.description ?? ""}
-        >
-          {product.description ?? ""}
-        </p>
+        {product.description ? (
+          <p className="rb-clamp-2 mt-2 text-sm leading-relaxed text-gray-600" title={product.description}>
+            {product.description.replace(/\s+/g, " ")}
+          </p>
+        ) : null}
 
-        <div className="mt-auto pt-4 inline-flex items-center gap-1 text-sm font-semibold text-green-700">
-          <span>Voir la fiche</span>
-          <span className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>
-            →
-          </span>
-        </div>
-      </div>
+        <CardArrow label="Voir la fiche" />
       </div>
     </CardLink>
   )

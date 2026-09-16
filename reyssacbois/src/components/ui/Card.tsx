@@ -31,17 +31,12 @@ export function CardLink({
   return (
     <Link
       href={href}
-      className={`group relative isolate block overflow-hidden rounded-2xl border border-gray-200/70 bg-white/55 shadow-sm ring-1 ring-black/5 backdrop-blur transition-all duration-200
-      hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_-28px_rgba(0,0,0,0.55)] hover:ring-black/10
-      hover:bg-white/65
-      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600/30 active:translate-y-0
-      before:pointer-events-none before:absolute before:inset-0 before:z-0 before:bg-[radial-gradient(900px_circle_at_15%_0%,rgba(255,255,255,0.90),transparent_55%)] before:opacity-60 before:transition-opacity before:duration-200 group-hover:before:opacity-85
-      after:pointer-events-none after:absolute after:inset-0 after:z-0 after:bg-[linear-gradient(180deg,rgba(255,255,255,0.18),transparent_45%,rgba(0,0,0,0.04))] after:opacity-100
+      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] transition duration-300 ease-out
+      hover:-translate-y-1 hover:border-green-800/25 hover:shadow-[0_24px_48px_-26px_rgba(0,0,0,0.45)]
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2 active:translate-y-0
       ${className}`}
     >
-      <div className="relative z-10">{children}</div>
+      {children}
     </Link>
   )
 }
-
-

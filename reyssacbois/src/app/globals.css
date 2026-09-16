@@ -66,6 +66,67 @@ html[data-rb-font="playfair"] {
   --color-gradient-end: #875d11;
 }
 
+/* ===== Design system "Charpente / Industriel-pro" (repris de la branche DEV) =====
+   Utilisé par l'admin (et disponible pour le public). N'altère pas le fond ni les
+   variables historiques du site public. */
+:root {
+  --bg: #f1ebe0;
+  --surface: #ffffff;
+  --surface-2: #f4efe6;
+  --ink: #15171a;
+  --ink-600: #4d5358;
+  --ink-400: #8a8f93;
+  --line: #e2e1dd;
+  --line-strong: #cfcdc7;
+
+  --forest-800: #173d27;
+  --forest-700: #1d5236;
+  --forest-600: #2a6e49;
+  --forest-050: #eef3ef;
+
+  --timber: #a9772f;
+  --timber-050: #f6efe2;
+
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-sm: 0 1px 0 rgba(21, 23, 26, 0.04), 0 1px 2px rgba(21, 23, 26, 0.07);
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 1px 2px rgba(21, 23, 26, 0.06), 0 16px 36px -18px rgba(21, 23, 26, 0.40);
+  --shadow-pop: 0 10px 22px -8px rgba(21, 23, 26, 0.22), 0 28px 56px -28px rgba(21, 23, 26, 0.46);
+  --ring-focus: 0 0 0 2px #ffffff, 0 0 0 4px var(--forest-700);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-600: var(--ink-600);
+  --color-ink-400: var(--ink-400);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-forest-800: var(--forest-800);
+  --color-forest-700: var(--forest-700);
+  --color-forest-600: var(--forest-600);
+  --color-forest-050: var(--forest-050);
+  --color-timber: var(--timber);
+  --color-timber-050: var(--timber-050);
+  --font-heading: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Admin : fond uni et angles aplatis, limités au back-office. */
+.rb-admin {
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius: 3px;
+  --radius-md: 3px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  background-color: var(--bg);
+  color: var(--ink);
+}
+
 html {
   background: var(--background);
   scroll-behavior: smooth;
@@ -164,4 +225,258 @@ body {
 }
 .rb-clamp-3 {
   -webkit-line-clamp: 3;
+}
+
+/* Classes composant du design system (branche DEV). */
+@layer components {
+  /* ---- Surfaces ---- */
+  .rb-surface {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+  }
+  .rb-surface-muted {
+    background-color: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  /* Police des titres (garantie même si l'utilitaire Tailwind n'est pas généré) */
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  /* ---- Cartes ---- */
+  .rb-card {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--surface);
+    background-image: linear-gradient(180deg, #ffffff, #faf7f1);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+  }
+  .rb-card-interactive {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: var(--surface);
+    background-image: linear-gradient(180deg, #ffffff, #faf7f1);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  }
+  /* Zone packshot produit : surface chaude + spot lumineux doux derrière l'objet */
+  .rb-packshot {
+    background-color: var(--surface-2);
+    background-image: radial-gradient(120% 92% at 50% 36%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 58%);
+  }
+  /* Liseré vert gauche au survol (signature "fiche technique"), au-dessus du contenu */
+  .rb-card-interactive::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 3px;
+    background-color: var(--forest-700);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.18s ease;
+    z-index: 30;
+    pointer-events: none;
+  }
+  .rb-card-interactive:hover {
+    border-color: var(--forest-700);
+    box-shadow: var(--shadow-pop);
+    transform: translateY(-3px);
+  }
+  .rb-card-interactive:hover::after {
+    transform: scaleX(1);
+  }
+  .rb-card-interactive:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rb-card-interactive:hover {
+      transform: none;
+    }
+  }
+
+  /* ---- Boutons ---- */
+  .rb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .rb-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+  }
+  .rb-btn-primary {
+    background-color: var(--forest-700);
+    color: #ffffff;
+    box-shadow: var(--shadow-sm);
+  }
+  .rb-btn-primary:hover {
+    background-color: var(--forest-600);
+  }
+  .rb-btn-primary:active {
+    background-color: var(--forest-800);
+  }
+  .rb-btn-secondary {
+    background-color: var(--surface);
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+  .rb-btn-secondary:hover {
+    border-color: var(--forest-700);
+    color: var(--forest-700);
+  }
+  .rb-btn-ghost-dark {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.30);
+  }
+  .rb-btn-ghost-dark:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+  .rb-btn-danger {
+    background-color: #b42318;
+    color: #ffffff;
+  }
+  .rb-btn-danger:hover {
+    background-color: #912018;
+  }
+
+  /* ---- Badges / tags (arête vive 0px = look étiquette) ---- */
+  .rb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--surface-2);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+  }
+  .rb-badge-green {
+    border-color: color-mix(in srgb, var(--forest-700) 25%, transparent);
+    background-color: var(--forest-050);
+    color: var(--forest-800);
+  }
+  .rb-badge-timber {
+    border-color: color-mix(in srgb, var(--timber) 40%, transparent);
+    background-color: var(--timber-050);
+    color: #82591f;
+  }
+
+  /* ---- Kicker (titre de section) + filet bois — "one memorable thing" ---- */
+  .rb-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest-700);
+  }
+  .rb-kicker::before {
+    content: "";
+    width: 28px;
+    height: 2px;
+    flex: none;
+    background-color: var(--timber);
+  }
+  .rb-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest-700);
+  }
+
+  /* ---- Focus utilitaire (remplace les ring verts translucides) ---- */
+  .rb-focus:focus-visible {
+    outline: none;
+    box-shadow: var(--ring-focus);
+  }
+
+  /* ---- Formulaires (admin + public) ---- */
+  .rb-input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--surface);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--ink);
+  }
+  .rb-input::placeholder {
+    color: var(--ink-400);
+  }
+  .rb-input:focus-visible {
+    outline: none;
+    border-color: var(--forest-700);
+    box-shadow: var(--ring-focus);
+  }
+  .rb-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+
+  /* ---- Tableaux admin denses ---- */
+  .rb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .rb-th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+    background-color: var(--surface-2);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .rb-td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .rb-thead-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .rb-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg);
+  }
 }

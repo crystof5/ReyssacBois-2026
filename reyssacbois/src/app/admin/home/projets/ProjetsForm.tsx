@@ -29,7 +29,7 @@ export default function ProjetsForm({
         <div
           className={`rounded-xl border p-3 text-sm ${
             state.ok
-              ? "border-green-200 bg-green-50 text-green-900"
+              ? "border-green-200 bg-forest-050 text-forest-800"
               : "border-red-200 bg-red-50 text-red-900"
           }`}
         >
@@ -37,8 +37,8 @@ export default function ProjetsForm({
         </div>
       ) : null}
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — Nos Projets (carrousel)
         </h3>
         <div className="mt-4">

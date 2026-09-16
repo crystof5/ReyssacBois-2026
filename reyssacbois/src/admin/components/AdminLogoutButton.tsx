@@ -23,7 +23,7 @@ export default function AdminLogoutButton() {
       type="button"
       onClick={logout}
       disabled={loading}
-      className="inline-flex items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-black disabled:opacity-60"
+      className="rb-btn rb-btn-secondary whitespace-nowrap disabled:opacity-60"
     >
       {loading ? "Déconnexion…" : "Se déconnecter"}
     </button>

@@ -54,7 +54,7 @@ export default function SlugField({
 
   return (
     <div ref={rootRef} className="block">
-      <span className="mb-1 block text-sm font-medium text-gray-900">{label}</span>
+      <span className="mb-1 block text-sm font-medium text-ink">{label}</span>
 
       {/* Valeur réellement envoyée au serveur (dédupliquée côté serveur) */}
       <input type="hidden" name={name} value={slug} />
@@ -63,14 +63,14 @@ export default function SlugField({
         <input
           value={pretty}
           readOnly
-          className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700"
+          className="w-full rounded-lg border border-line bg-surface-2 px-3 py-2 text-sm text-ink-600"
         />
-        <span className="shrink-0 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700">
+        <span className="shrink-0 rounded-lg border border-line bg-white px-3 py-2 text-xs font-medium text-ink-600">
           Auto
         </span>
       </div>
 
-      {helpText && <p className="mt-2 text-xs text-gray-500">{helpText}</p>}
+      {helpText && <p className="mt-2 text-xs text-ink-400">{helpText}</p>}
     </div>
   )
 }

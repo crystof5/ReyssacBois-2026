@@ -203,7 +203,7 @@ export default async function ProduitPage({
       </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5">
           <div className="aspect-[4/3] w-full bg-gray-50 p-5 sm:p-6">
             <Media
               src={product.imageUrl}
@@ -220,7 +220,7 @@ export default async function ProduitPage({
           </h1>
 
           {(product.descriptionHtml || product.description) && (
-            <div className="mt-4 rounded-2xl border border-gray-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="mt-4 rounded-xl border border-gray-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 backdrop-blur">
               <h2 className="text-base font-semibold text-gray-900">
                 Description
               </h2>
@@ -234,7 +234,7 @@ export default async function ProduitPage({
             </div>
           )}
 
-          <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ring-1 ring-black/5">
+          <div className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm ring-1 ring-black/5">
             <h2 className="text-base font-semibold text-gray-900">
               Caractéristiques
             </h2>

@@ -76,67 +76,67 @@ export default async function AdminProduitEditPage({
 
   return (
     <div>
-      <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+      <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Éditer le produit</h2>
-            <p className="mt-1 text-sm text-gray-700">Modifie les champs puis enregistre.</p>
+            <h2 className="text-lg font-semibold text-ink">Éditer le produit</h2>
+            <p className="mt-1 text-sm text-ink-600">Modifie les champs puis enregistre.</p>
           </div>
           <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
-            <Link href="/admin" className="text-sm text-gray-700 hover:underline">
+            <Link href="/admin" className="text-sm text-ink-600 hover:underline">
               ← Administration
             </Link>
             {contextCategoryId ? (
               <Link
                 href={`/admin/categories/${contextCategoryId}`}
-                className="text-sm text-gray-700 hover:underline"
+                className="text-sm text-ink-600 hover:underline"
                 title={contextCategory?.name ? `Retour à : ${contextCategory.name}` : "Retour à la catégorie"}
               >
                 ← {contextCategory?.name ? contextCategory.name : "Catégorie"}
               </Link>
             ) : null}
-            <Link href="/admin/produits" className="text-sm text-gray-700 hover:underline">
+            <Link href="/admin/produits" className="text-sm text-ink-600 hover:underline">
               ← Produits
             </Link>
           </div>
         </div>
 
         <nav aria-label="Fil d’Ariane admin" className="mt-4">
-          <ol className="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-white/20 bg-white/65 px-3 py-2 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
+          <ol className="inline-flex max-w-full flex-wrap items-center gap-2 border-b border-line pb-2 text-xs text-ink-600">
             <li className="min-w-0">
-              <Link href="/admin" className="font-medium text-gray-900 hover:underline underline-offset-4">
+              <Link href="/admin" className="font-medium text-ink hover:underline underline-offset-4">
                 Administration
               </Link>
             </li>
             <li className="flex min-w-0 items-center gap-1">
-              <span className="text-gray-400" aria-hidden>
+              <span className="text-line-strong" aria-hidden>
                 /
               </span>
-              <Link href="/admin/produits" className="font-medium text-gray-700 hover:underline underline-offset-4">
+              <Link href="/admin/produits" className="font-medium text-ink-600 hover:underline underline-offset-4">
                 Produits
               </Link>
             </li>
             {contextChain.length ? (
               <>
                 <li className="flex min-w-0 items-center gap-1">
-                  <span className="text-gray-400" aria-hidden>
+                  <span className="text-line-strong" aria-hidden>
                     /
                   </span>
                   <Link
                     href="/admin/categories"
-                    className="font-medium text-gray-700 hover:underline underline-offset-4"
+                    className="font-medium text-ink-600 hover:underline underline-offset-4"
                   >
                     Catégories
                   </Link>
                 </li>
                 {contextChain.map((c) => (
                   <li key={c.id} className="flex min-w-0 items-center gap-1">
-                    <span className="text-gray-400" aria-hidden>
+                    <span className="text-line-strong" aria-hidden>
                       /
                     </span>
                     <Link
                       href={`/admin/categories/${c.id}`}
-                      className="rb-clamp-1 max-w-[40ch] font-medium text-gray-700 hover:text-gray-900 hover:underline underline-offset-4"
+                      className="rb-clamp-1 max-w-[40ch] font-medium text-ink-600 hover:text-ink hover:underline underline-offset-4"
                       title={c.name}
                     >
                       {c.name}
@@ -146,10 +146,10 @@ export default async function AdminProduitEditPage({
               </>
             ) : null}
             <li className="flex min-w-0 items-center gap-1">
-              <span className="text-gray-400" aria-hidden>
+              <span className="text-line-strong" aria-hidden>
                 /
               </span>
-              <span className="rb-clamp-1 max-w-[40ch] font-semibold text-gray-900" title={product.name}>
+              <span className="rb-clamp-1 max-w-[40ch] font-semibold text-ink" title={product.name}>
                 {product.name}
               </span>
             </li>
@@ -158,12 +158,12 @@ export default async function AdminProduitEditPage({
       </div>
 
       {saved ? (
-        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+        <div className="mt-4 rounded-xl border border-green-200 bg-forest-050 px-4 py-3 text-sm text-forest-800">
           Enregistré.
         </div>
       ) : null}
 
-      <form action={updateProduitAction} className="mt-6 space-y-5 rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+      <form action={updateProduitAction} className="mt-6 space-y-5 rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <input type="hidden" name="id" value={product.id} />
         {/* Ordre global non géré ici: on conserve la valeur sans l’afficher. */}
         <input type="hidden" name="sortOrder" value={String(product.sortOrder ?? 0)} />
@@ -173,7 +173,7 @@ export default async function AdminProduitEditPage({
             <input
               name="name"
               defaultValue={product.name}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               required
             />
           </Field>
@@ -186,14 +186,14 @@ export default async function AdminProduitEditPage({
             <select
               name="isVisible"
               defaultValue={product.isVisible ? "1" : "0"}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             >
               <option value="1">Visible</option>
               <option value="0">Caché</option>
             </select>
           </Field>
-          <div className="rounded-2xl border border-white/25 bg-white/60 p-3 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
-            <p className="font-semibold text-gray-900">Ordre d’affichage</p>
+          <div className="rounded-2xl border border-line bg-surface p-3 text-xs text-ink-600 shadow-sm ring-1 ring-black/5">
+            <p className="font-semibold text-ink">Ordre d’affichage</p>
             <p className="mt-1">
               Géré via les catégories (ordre des produits dans une catégorie).
             </p>
@@ -202,8 +202,8 @@ export default async function AdminProduitEditPage({
 
         <div>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">Description</span>
-            <p className="mt-1 text-xs text-gray-500">
+            <span className="mb-1 block text-sm font-medium text-ink">Description</span>
+            <p className="mt-1 text-xs text-ink-400">
               Mise en forme possible (gras, souligné, italique, listes, liens, couleur).
             </p>
           </label>
@@ -228,28 +228,28 @@ export default async function AdminProduitEditPage({
             <input
               name="section"
               defaultValue={product.section ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             />
           </Field>
           <Field label="Longueur">
             <input
               name="length"
               defaultValue={product.length ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             />
           </Field>
           <Field label="Largeur">
             <input
               name="width"
               defaultValue={product.width ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             />
           </Field>
           <Field label="Type">
             <input
               name="type"
               defaultValue={product.type ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             />
           </Field>
         </div>
@@ -259,7 +259,7 @@ export default async function AdminProduitEditPage({
             categories={categories}
             initialSelectedIds={initialSelectedIds}
           />
-          <p className="mt-2 text-xs text-gray-500">
+          <p className="mt-2 text-xs text-ink-400">
             Un produit peut appartenir à plusieurs catégories.
           </p>
         </Field>
@@ -285,7 +285,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-gray-900">
+      <span className="mb-1 block text-sm font-medium text-ink">
         {label} {required ? <span className="text-red-600">*</span> : null}
       </span>
       {children}

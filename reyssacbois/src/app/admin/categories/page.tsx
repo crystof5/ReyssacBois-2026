@@ -56,26 +56,26 @@ export default async function AdminCategoriesPage({
 
   return (
     <div>
-      <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+      <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Catégories</h2>
-            <p className="mt-1 text-sm text-gray-700">
+            <h2 className="text-lg font-semibold text-ink">Catégories</h2>
+            <p className="mt-1 text-sm text-ink-600">
               L’ordre des <span className="font-medium">catégories principales</span> correspond à la sidebar.
             </p>
 
             <nav aria-label="Fil d’Ariane admin" className="mt-3">
-              <ol className="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-white/20 bg-white/65 px-3 py-2 text-xs text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur">
+              <ol className="inline-flex max-w-full flex-wrap items-center gap-2 border-b border-line pb-2 text-xs text-ink-600">
                 <li className="min-w-0">
-                  <Link href="/admin" className="font-medium text-gray-900 hover:underline underline-offset-4">
+                  <Link href="/admin" className="font-medium text-ink hover:underline underline-offset-4">
                     Administration
                   </Link>
                 </li>
                 <li className="flex min-w-0 items-center gap-1">
-                  <span className="text-gray-400" aria-hidden>
+                  <span className="text-line-strong" aria-hidden>
                     /
                   </span>
-                  <span className="font-semibold text-gray-900">Catégories</span>
+                  <span className="font-semibold text-ink">Catégories</span>
                 </li>
               </ol>
             </nav>
@@ -85,7 +85,7 @@ export default async function AdminCategoriesPage({
             <form action={createCategoryAction}>
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-full bg-green-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                className="inline-flex items-center justify-center rounded-full bg-forest-700 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
               >
                 + Nouvelle catégorie
               </button>
@@ -95,11 +95,11 @@ export default async function AdminCategoriesPage({
       </div>
 
       <div className="mt-6 space-y-6">
-        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+        <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Recherche / visibilité</h3>
-              <p className="mt-1 text-xs text-gray-500">
+              <h3 className="text-sm font-semibold text-ink">Recherche / visibilité</h3>
+              <p className="mt-1 text-xs text-ink-400">
                 Retrouvez rapidement une catégorie (nom/slug) et filtrez les catégories cachées.
               </p>
             </div>
@@ -108,12 +108,12 @@ export default async function AdminCategoriesPage({
                 name="q"
                 defaultValue={q}
                 placeholder="Rechercher…"
-                className="w-full sm:w-72 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full sm:w-72 rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               />
               <select
                 name="vis"
                 defaultValue={vis}
-                className="w-full sm:w-44 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full sm:w-44 rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               >
                 <option value="all">Toutes</option>
                 <option value="visible">Visibles</option>
@@ -121,7 +121,7 @@ export default async function AdminCategoriesPage({
               </select>
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                className="inline-flex items-center justify-center rounded-lg bg-forest-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
               >
                 Filtrer
               </button>
@@ -131,26 +131,26 @@ export default async function AdminCategoriesPage({
           <div className="mt-4">
             {q || vis !== "all" ? (
               <>
-                <p className="text-xs text-gray-500">
-                  Résultats: <span className="font-medium text-gray-900">{filtered.length}</span>
+                <p className="text-xs text-ink-400">
+                  Résultats: <span className="font-medium text-ink">{filtered.length}</span>
                 </p>
                 <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {filtered.slice(0, 60).map((c) => (
-                    <div key={c.id} className="rounded-2xl border border-white/25 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
+                    <div key={c.id} className="rounded-2xl border border-line bg-surface p-3 shadow-sm ring-1 ring-black/5">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
-                          <p className="mt-0.5 text-xs text-gray-500 break-all">/{c.slug}</p>
-                          <p className="mt-1 text-xs text-gray-600">
+                          <p className="text-sm font-semibold text-ink truncate">{c.name}</p>
+                          <p className="mt-0.5 text-xs text-ink-400 break-all">/{c.slug}</p>
+                          <p className="mt-1 text-xs text-ink-600">
                             Parent: <span className="font-medium">{c.parent?.name ?? "—"}</span>
                           </p>
-                          <p className="mt-1 text-xs text-gray-600">
+                          <p className="mt-1 text-xs text-ink-600">
                             {c._count.children} sous-cat. • {c._count.products} produits
                           </p>
                         </div>
                         <span
                           className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                            c.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
+                            c.isVisible ? "bg-forest-050 text-forest-800" : "bg-surface-2 text-ink-600"
                           }`}
                         >
                           {c.isVisible ? "Visible" : "Cachée"}
@@ -160,13 +160,13 @@ export default async function AdminCategoriesPage({
                       <div className="mt-3 flex flex-wrap items-center gap-2">
                         <Link
                           href={`/admin/categories/${c.id}`}
-                          className="inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                          className="inline-flex items-center justify-center rounded-full bg-forest-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
                         >
                           Éditer
                         </Link>
                         <Link
                           href={`/categories/${c.slug}`}
-                          className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                          className="inline-flex items-center justify-center rounded border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface-2"
                         >
                           Voir →
                         </Link>
@@ -186,50 +186,50 @@ export default async function AdminCategoriesPage({
                   ))}
                 </div>
                 {filtered.length > 60 ? (
-                  <p className="mt-3 text-xs text-gray-500">
+                  <p className="mt-3 text-xs text-ink-400">
                     Affichage limité à 60 résultats (affine la recherche).
                   </p>
                 ) : null}
               </>
             ) : (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-ink-400">
                 Astuce: sélectionne <span className="font-medium">“Cachées”</span> pour retrouver les catégories non visibles.
               </p>
             )}
           </div>
         </div>
 
-        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
+        <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">Catégories sans parent (hors menu)</h3>
-              <p className="mt-1 text-xs text-gray-500">
+              <h3 className="text-sm font-semibold text-ink">Catégories sans parent (hors menu)</h3>
+              <p className="mt-1 text-xs text-ink-400">
                 Catégories avec <span className="font-medium">aucun parent</span> et non marquées “catégorie principale”.
               </p>
             </div>
-            <span className="text-xs text-gray-500">
-              Total: <span className="font-medium text-gray-900">{orphans.length}</span>
+            <span className="text-xs text-ink-400">
+              Total: <span className="font-medium text-ink">{orphans.length}</span>
             </span>
           </div>
 
           {orphans.length ? (
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {orphans.slice(0, 60).map((c) => (
-                <div key={c.id} className="rounded-2xl border border-white/25 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
+                <div key={c.id} className="rounded-2xl border border-line bg-surface p-3 shadow-sm ring-1 ring-black/5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
-                      <p className="mt-0.5 text-xs text-gray-500 break-all">/{c.slug}</p>
-                      <p className="mt-1 text-xs text-gray-600">
+                      <p className="text-sm font-semibold text-ink truncate">{c.name}</p>
+                      <p className="mt-0.5 text-xs text-ink-400 break-all">/{c.slug}</p>
+                      <p className="mt-1 text-xs text-ink-600">
                         Parent: <span className="font-medium">{c.parent?.name ?? "—"}</span>
                       </p>
-                      <p className="mt-1 text-xs text-gray-600">
+                      <p className="mt-1 text-xs text-ink-600">
                         {c._count.children} sous-cat. • {c._count.products} produits
                       </p>
                     </div>
                     <span
                       className={`shrink-0 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                        c.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
+                        c.isVisible ? "bg-forest-050 text-forest-800" : "bg-surface-2 text-ink-600"
                       }`}
                     >
                       {c.isVisible ? "Visible" : "Cachée"}
@@ -239,13 +239,13 @@ export default async function AdminCategoriesPage({
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <Link
                       href={`/admin/categories/${c.id}`}
-                      className="inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                      className="inline-flex items-center justify-center rounded-full bg-forest-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
                     >
                       Éditer
                     </Link>
                     <Link
                       href={`/categories/${c.slug}`}
-                      className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                      className="inline-flex items-center justify-center rounded border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface-2"
                     >
                       Voir →
                     </Link>
@@ -265,32 +265,32 @@ export default async function AdminCategoriesPage({
               ))}
             </div>
           ) : (
-            <p className="mt-3 text-sm text-gray-600">Aucune catégorie sans parent (hors menu) détectée.</p>
+            <p className="mt-3 text-sm text-ink-600">Aucune catégorie sans parent (hors menu) détectée.</p>
           )}
         </div>
 
         {brokenParents.length ? (
-          <div className="rounded-3xl border border-amber-200 bg-amber-50/40 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.45)] ring-1 ring-black/10 backdrop-blur-xl">
+          <div className="rounded-3xl border border-amber-200 bg-amber-50/40 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.45)] ring-1 ring-black/10">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-gray-900">
+                <h3 className="text-sm font-semibold text-ink">
                   Liens cassés (sous-catégories)
                 </h3>
-                <p className="mt-1 text-xs text-gray-700">
+                <p className="mt-1 text-xs text-ink-600">
                   Sous-catégories avec <span className="font-medium">parentId</span> renseigné mais parent introuvable. Ouvre et choisis un nouveau parent (ou “Aucun”).
                 </p>
               </div>
-              <span className="text-xs text-gray-700">
-                Total: <span className="font-medium text-gray-900">{brokenParents.length}</span>
+              <span className="text-xs text-ink-600">
+                Total: <span className="font-medium text-ink">{brokenParents.length}</span>
               </span>
             </div>
 
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {brokenParents.slice(0, 30).map((c) => (
-                <div key={c.id} className="rounded-2xl border border-amber-200 bg-white/75 p-3 shadow-sm ring-1 ring-black/5 backdrop-blur">
-                  <p className="text-sm font-semibold text-gray-900 truncate">{c.name}</p>
-                  <p className="mt-0.5 text-xs text-gray-600 break-all">/{c.slug}</p>
-                  <p className="mt-1 text-xs text-gray-700">
+                <div key={c.id} className="rounded-2xl border border-amber-200 bg-surface p-3 shadow-sm ring-1 ring-black/5">
+                  <p className="text-sm font-semibold text-ink truncate">{c.name}</p>
+                  <p className="mt-0.5 text-xs text-ink-600 break-all">/{c.slug}</p>
+                  <p className="mt-1 text-xs text-ink-600">
                     Parent: <span className="font-medium">introuvable</span>
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -316,42 +316,42 @@ export default async function AdminCategoriesPage({
               ))}
             </div>
             {brokenParents.length > 30 ? (
-              <p className="mt-3 text-xs text-gray-700">
+              <p className="mt-3 text-xs text-ink-600">
                 Affichage limité à 30 (utilise la recherche si besoin).
               </p>
             ) : null}
           </div>
         ) : null}
 
-        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-          <h3 className="text-sm font-semibold text-gray-900">État</h3>
-          <p className="mt-1 text-xs text-gray-500">
+        <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+          <h3 className="text-sm font-semibold text-ink">État</h3>
+          <p className="mt-1 text-xs text-ink-400">
             Résumé des contenus (catégories / produits).
           </p>
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
-            <div className="rounded-xl bg-gray-50 p-3">
-              <div className="text-xs text-gray-500">Catégories</div>
-              <div className="font-semibold text-gray-900">
+            <div className="rounded-xl bg-surface-2 p-3">
+              <div className="text-xs text-ink-400">Catégories</div>
+              <div className="font-semibold text-ink">
                 {diag.categoriesTotal}{" "}
-                <span className="text-xs font-normal text-gray-500">
+                <span className="text-xs font-normal text-ink-400">
                   ({diag.categoriesParents} parents / {diag.categoriesChildren} enfants)
                 </span>
               </div>
             </div>
-            <div className="rounded-xl bg-gray-50 p-3">
-              <div className="text-xs text-gray-500">Produits</div>
-              <div className="font-semibold text-gray-900">{diag.productsTotal}</div>
+            <div className="rounded-xl bg-surface-2 p-3">
+              <div className="text-xs text-ink-400">Produits</div>
+              <div className="font-semibold text-ink">{diag.productsTotal}</div>
             </div>
           </div>
         </div>
 
-        <div className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-          <h3 className="text-sm font-semibold text-gray-900">Arborescence (tous niveaux)</h3>
-          <p className="mt-1 text-xs text-gray-500">
+        <div className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+          <h3 className="text-sm font-semibold text-ink">Arborescence (tous niveaux)</h3>
+          <p className="mt-1 text-xs text-ink-400">
             Indentation = niveau. Pour réordonner des sous-catégories, ouvre le parent puis glisse-dépose.
           </p>
 
-          <div className="mt-4 rounded-2xl border border-white/25 bg-white/75 shadow-sm ring-1 ring-black/5 backdrop-blur">
+          <div className="mt-4 rounded-2xl border border-line bg-surface shadow-sm ring-1 ring-black/5">
             <ul className="divide-y divide-black/5">
               {rootsAll.map((root) => {
                 const render = (
@@ -372,21 +372,21 @@ export default async function AdminCategoriesPage({
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <p className="font-medium text-gray-900 truncate">{node.name}</p>
+                            <p className="font-medium text-ink truncate">{node.name}</p>
                             <span
                               className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium ${
-                                node.isVisible ? "bg-green-50 text-green-800" : "bg-gray-100 text-gray-700"
+                                node.isVisible ? "bg-forest-050 text-forest-800" : "bg-surface-2 text-ink-600"
                               }`}
                             >
                               {node.isVisible ? "Visible" : "Cachée"}
                             </span>
-                            <span className="text-xs text-gray-600">
+                            <span className="text-xs text-ink-600">
                               {node._count.children} sous-cat. • {node._count.products} produits
                             </span>
                           </div>
-                          <p className="mt-0.5 text-xs text-gray-500 break-all">/{node.slug}</p>
+                          <p className="mt-0.5 text-xs text-ink-400 break-all">/{node.slug}</p>
                           {level > 0 ? (
-                            <p className="mt-1 text-[11px] text-gray-600 rb-clamp-1" title={nextPath.join(" / ")}>
+                            <p className="mt-1 text-[11px] text-ink-600 rb-clamp-1" title={nextPath.join(" / ")}>
                               Chemin: {nextPath.join(" / ")}
                             </p>
                           ) : null}
@@ -395,13 +395,13 @@ export default async function AdminCategoriesPage({
                         <div className="flex flex-wrap items-center gap-2">
                           <Link
                             href={`/admin/categories/${node.id}`}
-                            className="inline-flex items-center justify-center rounded-full bg-green-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                            className="inline-flex items-center justify-center rounded-full bg-forest-700 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-forest-800 focus:outline-none focus:ring-2 focus:ring-forest-700/30"
                           >
                             Éditer
                           </Link>
                           <Link
                             href={`/categories/${node.slug}`}
-                            className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-gray-900 hover:bg-white"
+                            className="inline-flex items-center justify-center rounded border border-line bg-surface px-3 py-1.5 text-xs font-medium text-ink hover:bg-surface-2"
                           >
                             Voir →
                           </Link>

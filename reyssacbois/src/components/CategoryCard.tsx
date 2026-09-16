@@ -1,4 +1,5 @@
 import { CardLink } from "@/components/ui/Card"
+import CardArrow from "@/components/ui/CardArrow"
 import Media from "@/components/ui/Media"
 
 type CategoryLike = {
@@ -22,49 +23,33 @@ export default function CategoryCard({
   const childrenCount = Array.isArray(category.children) ? category.children.length : 0
 
   return (
-    <CardLink href={href} className="self-stretch h-full overflow-hidden bg-white/75 hover:bg-white/85">
-      <div className="flex h-full flex-col">
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-black/[0.03] p-4 sm:p-5">
-          <Media
-            src={category.imageUrl}
-            alt={category.name}
-            // Packshots: on évite le crop -> on “recule” l’image.
-            className="h-full w-full !object-contain"
-          />
-        </div>
+    <CardLink href={href}>
+      <div className="relative aspect-[16/10] sm:aspect-[4/3] w-full overflow-hidden bg-stone-100">
+        <Media
+          src={category.imageUrl}
+          alt={category.name}
+          className="transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
+        {childrenCount > 0 && (
+          <span className="absolute left-3 top-3 rounded-md bg-white/95 px-2 py-1 text-[11px] font-semibold text-green-900 shadow-sm">
+            {childrenCount} sous-catégorie{childrenCount > 1 ? "s" : ""}
+          </span>
+        )}
+      </div>
 
-        <div className="flex flex-1 flex-col p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-3">
-            <h3
-              className="rb-clamp-2 min-h-[2.6rem] text-base sm:text-lg font-bold text-gray-900 group-hover:text-green-800"
-              title={category.name}
-            >
-              {category.name}
-            </h3>
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        <h3 className="rb-clamp-2 text-base sm:text-lg font-bold text-gray-900 transition-colors group-hover:text-green-800" title={category.name}>
+          {category.name}
+        </h3>
 
-            {childrenCount > 0 && (
-              <span className="shrink-0 rounded-full border border-green-100 bg-green-50 px-2.5 py-1 text-[11px] font-semibold text-green-800">
-                {childrenCount} sous-cat.
-              </span>
-            )}
-          </div>
+        {showDescription && category.description ? (
+          <p className="rb-clamp-2 mt-1.5 text-sm leading-relaxed text-gray-600" title={category.description}>
+            {category.description.replace(/\s+/g, " ")}
+          </p>
+        ) : null}
 
-          {showDescription ? (
-            <p
-              className="rb-clamp-3 mt-2 min-h-[3.75rem] whitespace-pre-line text-sm leading-relaxed text-gray-700"
-              title={category.description ?? ""}
-            >
-              {category.description ?? ""}
-            </p>
-          ) : null}
-
-          <div className="mt-auto pt-4 inline-flex items-center gap-1 text-sm font-semibold text-green-700">
-            <span>Découvrir</span>
-            <span className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>
-              →
-            </span>
-          </div>
-        </div>
+        <CardArrow label={childrenCount > 0 ? "Voir la gamme" : "Voir les produits"} />
       </div>
     </CardLink>
   )

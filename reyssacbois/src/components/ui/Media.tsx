@@ -1,5 +1,8 @@
 "use client"
 
+import { useState } from "react"
+import WoodPlaceholder from "@/components/ui/WoodPlaceholder"
+
 type MediaProps = {
   src?: string | null
   alt: string
@@ -7,9 +10,11 @@ type MediaProps = {
 }
 
 export default function Media({ src, alt, className = "" }: MediaProps) {
-  if (!src) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src="/img/placeholder.svg" alt={alt} className={className} />
+  const [failed, setFailed] = useState(false)
+
+  // Pas de photo (ou image cassée) : visuel bois plutôt qu'une icône "image" générique.
+  if (!src || failed || src.includes("placeholder.svg")) {
+    return <WoodPlaceholder label={alt} className={`h-full w-full ${className}`} />
   }
 
   // On utilise <img> (plutôt que next/image) pour éviter toute config de domaines externes.
@@ -20,13 +25,7 @@ export default function Media({ src, alt, className = "" }: MediaProps) {
       alt={alt}
       loading="lazy"
       className={`h-full w-full object-cover ${className}`}
-      onError={(e) => {
-        const img = e.currentTarget
-        img.onerror = null
-        img.src = "/img/placeholder.svg"
-      }}
+      onError={() => setFailed(true)}
     />
   )
 }
-
-

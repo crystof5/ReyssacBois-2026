@@ -196,8 +196,8 @@ function CatalogueItemPicker({
       : null;
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white/70 p-4">
-      <p className="text-xs font-semibold text-gray-700">Carte {slot}</p>
+    <div className="rounded-2xl border border-line bg-surface p-4">
+      <p className="text-xs font-semibold text-ink-600">Carte {slot}</p>
 
       <input
         type="hidden"
@@ -211,14 +211,14 @@ function CatalogueItemPicker({
       />
 
       {selectedKind && selectedId ? (
-        <div className="mt-3 rounded-xl border border-gray-200 bg-white p-3">
+        <div className="mt-3 rounded-xl border border-line bg-white p-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-sm font-semibold text-ink">
                 {resolved?.name || `${selectedKind} • ${selectedId}`}
               </p>
               {resolved ? (
-                <p className="mt-1 text-xs text-gray-600">
+                <p className="mt-1 text-xs text-ink-600">
                   {resolved.isVisible ? "Visible" : "Caché"} • /
                   {resolved.kind === "category" ? "categories" : "produits"}/
                   {resolved.slug}
@@ -238,7 +238,7 @@ function CatalogueItemPicker({
             </button>
           </div>
           {resolved ? (
-            <p className="mt-2 text-xs text-gray-700">
+            <p className="mt-2 text-xs text-ink-600">
               {resolved.description?.trim()
                 ? resolved.description
                 : "Aucune description."}
@@ -246,31 +246,31 @@ function CatalogueItemPicker({
           ) : null}
         </div>
       ) : (
-        <p className="mt-2 text-xs text-gray-600">Aucun élément sélectionné.</p>
+        <p className="mt-2 text-xs text-ink-600">Aucun élément sélectionné.</p>
       )}
 
       <div className="mt-3">
         <label className="block">
-          <span className="mb-1 block text-sm font-medium text-gray-900">
+          <span className="mb-1 block text-sm font-medium text-ink">
             Rechercher (produit ou catégorie)
           </span>
           <input
             value={q}
             onChange={(e) => setQ(e.currentTarget.value)}
             placeholder="Tape 2+ caractères…"
-            className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+            className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
           />
         </label>
 
         {loading ? (
-          <p className="mt-2 text-xs text-gray-500">Recherche…</p>
+          <p className="mt-2 text-xs text-ink-400">Recherche…</p>
         ) : null}
         {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
 
         {hasQuery && !loading && !error ? (
           <div className="mt-3 grid grid-cols-1 lg:grid-cols-2 gap-2">
             <div>
-              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
                 Catégories
               </p>
               <ul className="space-y-1">
@@ -279,7 +279,7 @@ function CatalogueItemPicker({
                     <li key={`c:${c.id}`}>
                       <button
                         type="button"
-                        className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                        className="w-full rounded-lg border border-line bg-white px-3 py-2 text-left text-sm hover:bg-surface-2"
                         onClick={() => {
                           setSelectedKind("category");
                           setSelectedId(c.id);
@@ -295,12 +295,12 @@ function CatalogueItemPicker({
                         }}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="font-semibold text-gray-900 truncate">
+                          <span className="font-semibold text-ink truncate">
                             {c.name}
                           </span>
-                          <span className="text-xs text-gray-400">→</span>
+                          <span className="text-xs text-line-strong">→</span>
                         </div>
-                        <div className="mt-0.5 text-xs text-gray-500 truncate">
+                        <div className="mt-0.5 text-xs text-ink-400 truncate">
                           {c.parent?.name ? `${c.parent.name} · ` : ""}/{c.slug}
                           {!c.isVisible ? " · cachée" : ""}
                         </div>
@@ -308,14 +308,14 @@ function CatalogueItemPicker({
                     </li>
                   ))
                 ) : (
-                  <li className="px-2 py-2 text-xs text-gray-500">
+                  <li className="px-2 py-2 text-xs text-ink-400">
                     Aucune catégorie.
                   </li>
                 )}
               </ul>
             </div>
             <div>
-              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              <p className="px-1 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-400">
                 Produits
               </p>
               <ul className="space-y-1">
@@ -329,7 +329,7 @@ function CatalogueItemPicker({
                       <li key={`p:${p.id}`}>
                         <button
                           type="button"
-                          className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-left text-sm hover:bg-gray-50"
+                          className="w-full rounded-lg border border-line bg-white px-3 py-2 text-left text-sm hover:bg-surface-2"
                           onClick={() => {
                             setSelectedKind("product");
                             setSelectedId(p.id);
@@ -345,12 +345,12 @@ function CatalogueItemPicker({
                           }}
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <span className="font-semibold text-gray-900 truncate">
+                            <span className="font-semibold text-ink truncate">
                               {p.name}
                             </span>
-                            <span className="text-xs text-gray-400">→</span>
+                            <span className="text-xs text-line-strong">→</span>
                           </div>
-                          <div className="mt-0.5 text-xs text-gray-500 truncate">
+                          <div className="mt-0.5 text-xs text-ink-400 truncate">
                             {meta || catHint ? `${meta || catHint} · ` : ""}/
                             {p.slug}
                             {!p.isVisible ? " · caché" : ""}
@@ -360,7 +360,7 @@ function CatalogueItemPicker({
                     );
                   })
                 ) : (
-                  <li className="px-2 py-2 text-xs text-gray-500">
+                  <li className="px-2 py-2 text-xs text-ink-400">
                     Aucun produit.
                   </li>
                 )}
@@ -452,7 +452,7 @@ export default function AdminSiteContentForm({
         <div
           className={`rounded-xl border p-3 text-sm ${
             state.ok
-              ? "border-green-200 bg-green-50 text-green-900"
+              ? "border-green-200 bg-forest-050 text-forest-800"
               : "border-red-200 bg-red-50 text-red-900"
           }`}
         >
@@ -460,11 +460,11 @@ export default function AdminSiteContentForm({
         </div>
       )}
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Identité visuelle — Police du site
         </h3>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-ink-400">
           La prévisualisation ci-dessous ne modifie rien côté clients. La police
           est appliquée au site seulement après
           <span className="font-medium"> Enregistrer</span>.
@@ -472,13 +472,13 @@ export default function AdminSiteContentForm({
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Police
             </span>
             <select
               name="siteFontKey"
               value={fontPreviewKey}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               onChange={(e) => {
                 const v = e.currentTarget.value;
                 setFontPreviewKey(isSiteFontKey(v) ? v : DEFAULT_SITE_FONT_KEY);
@@ -492,22 +492,22 @@ export default function AdminSiteContentForm({
             </select>
           </label>
 
-          <div className="rounded-xl border border-gray-200 bg-[rgba(246,241,231,0.55)] p-4">
-            <p className="text-xs text-gray-500">Aperçu</p>
+          <div className="rounded-xl border border-line bg-[rgba(246,241,231,0.55)] p-4">
+            <p className="text-xs text-ink-400">Aperçu</p>
             <div
-              className="mt-2 rounded-lg border border-gray-200 bg-white p-4"
+              className="mt-2 rounded-lg border border-line bg-white p-4"
               style={{ fontFamily: getFontFamilyStackForKey(fontPreviewKey) }}
             >
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-sm font-semibold text-ink">
                 Reyssac Bois
               </p>
-              <p className="mt-1 text-sm text-gray-700">
+              <p className="mt-1 text-sm text-ink-600">
                 Bois de construction, menuiserie et quincaillerie. Ce texte
                 simule un contenu “en dur” ou venant de la DB.
               </p>
               <button
                 type="button"
-                className="mt-3 inline-flex items-center justify-center rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white hover:bg-green-800"
+                className="mt-3 inline-flex items-center justify-center rounded-lg bg-forest-700 px-3 py-2 text-sm font-medium text-white hover:bg-forest-800"
               >
                 Bouton d’exemple
               </button>
@@ -516,8 +516,8 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — Hero (1 photo)
         </h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -528,13 +528,13 @@ export default function AdminSiteContentForm({
             folder="home/hero"
           />
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte alternatif
             </span>
             <input
               name="heroAlt"
               defaultValue={hero.alt}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Atelier Reyssac Bois"
             />
           </label>
@@ -542,61 +542,61 @@ export default function AdminSiteContentForm({
 
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre
             </span>
             <input
               name="homeHeroTitle"
               defaultValue={homeTexts.heroTitle}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Reyssac Bois"
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Sous-titre
             </span>
             <input
               name="homeHeroSubtitle"
               defaultValue={homeTexts.heroSubtitle}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Votre expert en bois depuis 1850"
             />
           </label>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — Hero (badge + mini-blocs)
         </h3>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-ink-400">
           Configure la pastille (badge) et les 3 mini-sections affichées dans le
           Hero.
         </p>
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Badge visible
             </span>
             <select
               name="homeHeroBadgeVisible"
               defaultValue={homeTexts.heroBadgeVisible ?? true ? "1" : "0"}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             >
               <option value="0">Caché</option>
               <option value="1">Visible</option>
             </select>
           </label>
           <label className="block lg:col-span-2">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte du badge
             </span>
             <input
               name="homeHeroBadgeText"
               defaultValue={homeTexts.heroBadgeText ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Bois • Quincaillerie • Conseil • Stock important"
             />
           </label>
@@ -612,44 +612,44 @@ export default function AdminSiteContentForm({
             return (
               <div
                 key={idx}
-                className="rounded-2xl border border-gray-200 bg-white/70 p-4"
+                className="rounded-2xl border border-line bg-surface p-4"
               >
-                <p className="text-xs font-semibold text-gray-700">
+                <p className="text-xs font-semibold text-ink-600">
                   Mini-section {idx}
                 </p>
                 <div className="mt-3 grid grid-cols-1 lg:grid-cols-4 gap-3">
                   <label className="block">
-                    <span className="mb-1 block text-sm font-medium text-gray-900">
+                    <span className="mb-1 block text-sm font-medium text-ink">
                       Visible
                     </span>
                     <select
                       name={`homeHeroHighlightVisible_${idx}`}
                       defaultValue={it.isVisible ? "1" : "0"}
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                      className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
                     >
                       <option value="0">Cachée</option>
                       <option value="1">Visible</option>
                     </select>
                   </label>
                   <label className="block lg:col-span-1">
-                    <span className="mb-1 block text-sm font-medium text-gray-900">
+                    <span className="mb-1 block text-sm font-medium text-ink">
                       Titre
                     </span>
                     <input
                       name={`homeHeroHighlightTitle_${idx}`}
                       defaultValue={it.title}
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                      className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
                       placeholder="Depuis 1850"
                     />
                   </label>
                   <label className="block lg:col-span-2">
-                    <span className="mb-1 block text-sm font-medium text-gray-900">
+                    <span className="mb-1 block text-sm font-medium text-ink">
                       Description
                     </span>
                     <input
                       name={`homeHeroHighlightDesc_${idx}`}
                       defaultValue={it.desc}
-                      className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                      className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
                       placeholder="Entreprise familiale"
                     />
                   </label>
@@ -660,8 +660,8 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — “Une histoire de famille”
         </h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -672,13 +672,13 @@ export default function AdminSiteContentForm({
             folder="home/family"
           />
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte alternatif
             </span>
             <input
               name="familyAlt"
               defaultValue={family.alt}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Reyssac Bois"
             />
           </label>
@@ -686,18 +686,18 @@ export default function AdminSiteContentForm({
 
         <div className="mt-6 space-y-4">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre
             </span>
             <input
               name="homeFamilyTitle"
               defaultValue={homeTexts.familyTitle}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Une histoire de famille"
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Paragraphe 1
             </span>
           </label>
@@ -708,7 +708,7 @@ export default function AdminSiteContentForm({
           />
 
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Paragraphe 2
             </span>
           </label>
@@ -720,35 +720,35 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — Catalogue
         </h3>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-ink-400">
           Modifie le titre/texte et choisis jusqu’à 3 éléments (produit ou
           catégorie) à afficher avec un vrai lien.
         </p>
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre
             </span>
             <input
               name="homeCatalogueTitle"
               defaultValue={homeTexts.catalogueTitle ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Nos produits"
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte
             </span>
             <input
               name="homeCatalogueIntro"
               defaultValue={homeTexts.catalogueIntro ?? ""}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Construction, bardage, terrasse…"
             />
           </label>
@@ -773,8 +773,8 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Home — Nos Projets (carrousel)
         </h3>
         <div className="mt-4">
@@ -785,8 +785,8 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Qui sommes-nous — “Notre Histoire”
         </h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -797,50 +797,50 @@ export default function AdminSiteContentForm({
             folder="about/history"
           />
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte alternatif
             </span>
             <input
               name="aboutHistoryAlt"
               defaultValue={aboutHistory.alt}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Histoire Reyssac Bois"
             />
           </label>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Qui sommes-nous — Textes
         </h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre de page
             </span>
             <input
               name="aboutPageTitle"
               defaultValue={aboutTexts.pageTitle}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Qui sommes-nous ?"
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre “Notre Histoire”
             </span>
             <input
               name="aboutHistoryTitle"
               defaultValue={aboutTexts.historyTitle}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Notre Histoire"
             />
           </label>
         </div>
         <div className="mt-4 space-y-4">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte “Notre Histoire”
             </span>
           </label>
@@ -853,30 +853,30 @@ export default function AdminSiteContentForm({
           />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-gray-900">
+              <span className="mb-1 block text-sm font-medium text-ink">
                 Titre “Notre Mission”
               </span>
               <input
                 name="aboutMissionTitle"
                 defaultValue={aboutTexts.missionTitle}
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
                 placeholder="Notre Mission"
               />
             </label>
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-gray-900">
+              <span className="mb-1 block text-sm font-medium text-ink">
                 Titre “Localisation & Projets Futurs”
               </span>
               <input
                 name="aboutLocationTitle"
                 defaultValue={aboutTexts.locationTitle}
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+                className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
                 placeholder="Notre Localisation & Projets Futurs"
               />
             </label>
           </div>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte “Notre Mission”
             </span>
           </label>
@@ -888,7 +888,7 @@ export default function AdminSiteContentForm({
             placeholder="Texte…"
           />
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte “Localisation & Projets Futurs”
             </span>
           </label>
@@ -900,7 +900,7 @@ export default function AdminSiteContentForm({
             placeholder="Texte…"
           />
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte de conclusion
             </span>
           </label>
@@ -928,24 +928,24 @@ export default function AdminSiteContentForm({
         }}
       />
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Contact — Informations
         </h3>
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-ink-400">
           Ce bloc est affiché sur la Home dans la section “Contact” (à gauche du
           formulaire).
         </p>
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre
             </span>
             <input
               name="contactInfoTitle"
               defaultValue={contactInfo.title}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Informations"
             />
           </label>
@@ -953,10 +953,10 @@ export default function AdminSiteContentForm({
 
         <div className="mt-4">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte
             </span>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-ink-400">
               Astuce: tu peux ajouter des liens (tel:, mailto:, /page) via le
               bouton “Lien”.
             </p>
@@ -969,26 +969,26 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Bannière — “Site en construction”
         </h3>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Visible
             </span>
             <select
               name="bannerVisible"
               defaultValue={banner.isVisible ? "1" : "0"}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             >
               <option value="0">Cachée</option>
               <option value="1">Visible</option>
             </select>
           </label>
           <label className="block lg:col-span-2">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte
             </span>
           </label>
@@ -1003,18 +1003,18 @@ export default function AdminSiteContentForm({
         </div>
       </section>
 
-      <section className="rounded-3xl border border-white/20 bg-white/70 p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10 backdrop-blur-xl">
-        <h3 className="text-sm font-semibold text-gray-900">
+      <section className="rounded-3xl border border-line bg-surface p-4 sm:p-6 shadow-[0_20px_80px_-60px_rgba(0,0,0,0.55)] ring-1 ring-black/10">
+        <h3 className="text-sm font-semibold text-ink">
           Promo / Événement — Modale
         </h3>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-ink-400">
             Astuce: utilise l’aperçu pour tester la modale sans la rendre
             visible aux clients.
           </p>
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50"
+            className="inline-flex items-center justify-center rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-surface-2"
             onClick={() => {
               const form = formRef.current;
               if (!form) return;
@@ -1056,34 +1056,34 @@ export default function AdminSiteContentForm({
         </div>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Visible
             </span>
             <select
               name="promoVisible"
               defaultValue={promo.isVisible ? "1" : "0"}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
             >
               <option value="0">Cachée</option>
               <option value="1">Visible</option>
             </select>
           </label>
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Titre
             </span>
             <input
               name="promoTitle"
               defaultValue={promo.title}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Promo / événement"
             />
           </label>
           <label className="block lg:col-span-2">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Texte
             </span>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-ink-400">
               Utilise la barre d’outils pour mettre en forme (gras, souligné,
               italique, couleur, liens).
             </p>
@@ -1107,16 +1107,16 @@ export default function AdminSiteContentForm({
             folder="promo"
           />
           <label className="block">
-            <span className="mb-1 block text-sm font-medium text-gray-900">
+            <span className="mb-1 block text-sm font-medium text-ink">
               Légende (texte alternatif)
             </span>
             <input
               name="promoImageAlt"
               defaultValue={promo.image.alt}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-600/20"
+              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-forest-700/20"
               placeholder="Photo promo"
             />
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-ink-400">
               Affiché sous l’image dans la modale (et utilisé aussi pour
               l’accessibilité si l’image ne charge pas).
             </p>

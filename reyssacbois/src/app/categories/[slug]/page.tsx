@@ -160,12 +160,12 @@ export default async function CategoryPage({
         />
       </div>
 
-      <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
+      <div className="rounded-2xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
             {category.imageUrl ? (
               <div className="w-full sm:w-56">
-                <div className="overflow-hidden rounded-2xl border border-gray-200/70 bg-white/50 shadow-sm ring-1 ring-black/5">
+                <div className="overflow-hidden rounded-xl border border-gray-200/70 bg-white/50 shadow-sm ring-1 ring-black/5">
                   <div className="aspect-[4/3] w-full bg-gray-50/70 p-4">
                     <Media
                       src={category.imageUrl}

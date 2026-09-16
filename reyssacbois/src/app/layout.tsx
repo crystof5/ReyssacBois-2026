@@ -16,6 +16,7 @@ import SiteFooter from "@/components/SiteFooter"
 import { LocalBusinessJsonLd } from "@/components/JsonLd"
 import { DEFAULT_SITE_FONT_KEY, isSiteFontKey } from "@/lib/siteFonts"
 import {
+  Archivo,
   DM_Sans,
   Inter,
   Lato,
@@ -41,6 +42,8 @@ const poppins = Poppins({ subsets: ["latin"], display: "swap", variable: "--font
 const montserrat = Montserrat({ subsets: ["latin"], display: "swap", variable: "--font-montserrat", weight: ["400", "500", "600", "700"] })
 const raleway = Raleway({ subsets: ["latin"], display: "swap", variable: "--font-raleway", weight: ["400", "600", "700"] })
 const merriweather = Merriweather({ subsets: ["latin"], display: "swap", variable: "--font-merriweather", weight: ["400", "700"] })
+// Police des titres de l'admin (design system DEV, classe font-heading).
+const archivo = Archivo({ subsets: ["latin"], display: "swap", variable: "--font-archivo", weight: ["600", "700", "800"] })
 const playfair = Playfair_Display({ subsets: ["latin"], display: "swap", variable: "--font-playfair", weight: ["400", "600", "700"] })
 
 // Les réglages (promo/bannière) viennent de la DB et doivent refléter
@@ -117,6 +120,7 @@ export default async function RootLayout({
         raleway.variable,
         merriweather.variable,
         playfair.variable,
+        archivo.variable,
       ].join(" ")}
     >
       <body className="min-h-screen antialiased flex flex-col">

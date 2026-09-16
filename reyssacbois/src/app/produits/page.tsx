@@ -24,7 +24,7 @@ export default async function ProduitsPage() {
         />
       </div>
 
-      <div className="rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
+      <div className="rounded-2xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold tracking-wide text-green-800/90">CATALOGUE</p>
@@ -54,7 +54,7 @@ export default async function ProduitsPage() {
       </div>
 
       {/* Plan du catalogue : liens texte vers toutes les sous-catégories (découverte + maillage). */}
-      <section className="mt-12 rounded-3xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
+      <section className="mt-12 rounded-2xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
         <h2 className="text-lg sm:text-xl font-bold text-gray-900">Toutes nos catégories</h2>
         <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {(categories as unknown as Node[]).map((category) => (

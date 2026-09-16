@@ -131,7 +131,7 @@ export default function ImageUploadField({
   return (
     <div>
       <label className="block">
-        <span className="mb-1 block text-sm font-medium text-gray-900">
+        <span className="mb-1 block text-sm font-medium text-ink">
           {label}
         </span>
 
@@ -139,7 +139,7 @@ export default function ImageUploadField({
         {inputName ? <input type="hidden" name={inputName} value={url} /> : null}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <label className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50">
+          <label className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-surface-2">
             <input
               type="file"
               accept="image/*"
@@ -169,7 +169,7 @@ export default function ImageUploadField({
         </div>
       </label>
 
-      {helpText && <p className="mt-2 text-xs text-gray-500">{helpText}</p>}
+      {helpText && <p className="mt-2 text-xs text-ink-400">{helpText}</p>}
 
       {status === "error" && error && (
         <p className="mt-2 text-sm text-red-700">{error}</p>
@@ -182,13 +182,13 @@ export default function ImageUploadField({
             src={previewUrl}
             alt="Aperçu"
             // Packshots: on évite le crop dans l’aperçu admin.
-            className="h-32 w-48 rounded-xl border border-gray-200 bg-white object-contain p-2"
+            className="h-32 w-48 rounded-xl border border-line bg-white object-contain p-2"
             onError={(e) => {
               e.currentTarget.src = "/img/placeholder.svg"
             }}
           />
         ) : (
-          <div className="h-32 w-48 rounded-xl border border-dashed border-gray-200 bg-gray-50 flex items-center justify-center text-xs text-gray-500">
+          <div className="h-32 w-48 rounded-xl border border-dashed border-line bg-surface-2 flex items-center justify-center text-xs text-ink-400">
             Aperçu
           </div>
         )}

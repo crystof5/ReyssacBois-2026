@@ -55,73 +55,72 @@ function CategoryItem({
   activeSlug?: string
   level?: number
 }) {
-  const shouldBeOpen = activeSlug
-    ? isInTree(category, activeSlug)
-    : false
-
-  const [open, setOpen] = useState(shouldBeOpen)
+  const inActivePath = activeSlug ? isInTree(category, activeSlug) : false
   const children = category.children ?? []
+  const hasChildren = children.length > 0
   const isActive = category.slug === activeSlug
+  const [open, setOpen] = useState(inActivePath)
 
-  // Si on navigue (activeSlug change), on synchronise l’état d’ouverture
-  // pour que l’arbre s’ouvre automatiquement sur la catégorie active.
+  // Quand on navigue, la branche de la catégorie active s'ouvre automatiquement.
   useEffect(() => {
-    setOpen(shouldBeOpen)
-  }, [shouldBeOpen])
+    if (inActivePath) setOpen(true)
+  }, [inActivePath])
 
   return (
     <li>
       <div
-        className={`group flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors ${
+        className={`group relative flex items-stretch rounded-lg transition-colors ${
           isActive
-            ? "bg-green-700 text-white shadow-sm ring-1 ring-black/10"
-            : "text-gray-900 hover:bg-white/70"
+            ? "bg-green-50 text-green-900"
+            : inActivePath
+              ? "text-gray-900"
+              : "text-gray-700 hover:bg-stone-100 hover:text-gray-900"
         }`}
-        style={{ paddingLeft: level ? `${8 + level * 10}px` : undefined }}
       >
+        {isActive && (
+          <span aria-hidden="true" className="absolute inset-y-1 left-0 w-1 rounded-full bg-green-700" />
+        )}
         <Link
           href={`/categories/${category.slug}`}
-          className={`min-w-0 flex-1 truncate text-sm font-medium ${
-            isActive ? "text-white" : "text-gray-900"
-          }`}
+          aria-current={isActive ? "page" : undefined}
+          className={`min-w-0 flex-1 py-2 pl-3 pr-2 leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 rounded-lg ${
+            level === 0 ? "text-[15px]" : "text-sm"
+          } ${isActive || inActivePath ? "font-semibold" : "font-medium"}`}
           onClick={() => {
-            // Si la catégorie a des enfants, on ouvre aussi au clic sur le nom.
-            if (children.length > 0) setOpen(true)
+            if (hasChildren) setOpen(true)
           }}
         >
           {category.name}
         </Link>
 
-        {children.length > 0 && (
+        {hasChildren && (
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-600/30 ${
-              isActive
-                ? "bg-white/15 text-white hover:bg-white/20"
-                : "bg-black/5 text-gray-700 hover:bg-black/10"
-            }`}
-            aria-label={open ? "Replier la catégorie" : "Déplier la catégorie"}
+            className="flex w-10 shrink-0 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-stone-200/70 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
+            aria-label={`${open ? "Replier" : "Déplier"} ${category.name}`}
             aria-expanded={open}
           >
-            <span className="opacity-90 group-hover:opacity-100">
-              <ChevronIcon open={open} />
-            </span>
+            <ChevronIcon open={open} />
           </button>
         )}
       </div>
 
-      {open && children.length > 0 && (
-        <ul className="mt-1 space-y-1 pl-3">
-          {children.map((child) => (
-            <CategoryItem
-              key={child.id}
-              category={child}
-              activeSlug={activeSlug}
-              level={level + 1}
-            />
-          ))}
-        </ul>
+      {hasChildren && (
+        // Sous-catégories toujours présentes dans le HTML (liens explorables), repliées en CSS.
+        <div
+          className="grid transition-[grid-template-rows] duration-200 ease-out"
+          style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+          inert={!open}
+        >
+          <div className="overflow-hidden">
+            <ul className="my-1 ml-3 space-y-0.5 border-l border-stone-200 pl-2">
+              {children.map((child) => (
+                <CategoryItem key={child.id} category={child} activeSlug={activeSlug} level={level + 1} />
+              ))}
+            </ul>
+          </div>
+        </div>
       )}
     </li>
   )
@@ -271,7 +270,7 @@ export default function SidebarCategories({
     <>
       {/* Mobile: barre sticky (catégories + fil d’Ariane compact) */}
       <div className="md:hidden sticky top-16 z-30">
-        <div className="flex items-center gap-2 rounded-2xl border border-white/20 bg-white/75 px-3 py-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+        <div className="flex items-center gap-2 rounded-xl border border-black/[0.06] bg-white/90 px-3 py-2 shadow-sm backdrop-blur">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
@@ -330,7 +329,7 @@ export default function SidebarCategories({
       >
         <div className="md:sticky md:top-24">
           {desktopCollapsed ? (
-            <div className="rounded-2xl border border-white/20 bg-white/70 p-2 shadow-sm ring-1 ring-black/5 backdrop-blur">
+            <div className="rounded-xl border border-black/[0.06] bg-white/90 p-2 shadow-sm backdrop-blur">
               <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
@@ -358,9 +357,9 @@ export default function SidebarCategories({
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border border-white/20 bg-white/70 p-4 shadow-sm ring-1 ring-black/5 backdrop-blur">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold tracking-wide text-gray-900">
+            <div className="rounded-xl border border-black/[0.06] bg-white/90 p-3 shadow-sm backdrop-blur">
+              <div className="mb-2 flex items-center justify-between gap-2 border-b border-stone-200 px-1 pb-2">
+                <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-gray-500">
                   Catégories
                 </h2>
                 <div className="flex items-center gap-2">
@@ -373,7 +372,7 @@ export default function SidebarCategories({
                   <button
                     type="button"
                     onClick={() => setDesktopCollapsed(true)}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/5 text-gray-900 transition hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 transition hover:bg-stone-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-600/30"
                     aria-label="Réduire le menu catégories"
                     title="Réduire"
                   >
@@ -390,7 +389,7 @@ export default function SidebarCategories({
                 </div>
               </div>
 
-              <ul className="space-y-1">
+              <ul className="space-y-0.5">
                 {categories.map((category) => (
                   <CategoryItem
                     key={category.id}
@@ -488,7 +487,7 @@ export default function SidebarCategories({
               className="flex-1 overflow-y-auto overscroll-contain p-4"
               style={{ WebkitOverflowScrolling: "touch" }}
             >
-              <ul className="space-y-4">
+              <ul className="space-y-0.5">
                 {categories.map((category) => (
                   <CategoryItem
                     key={category.id}
