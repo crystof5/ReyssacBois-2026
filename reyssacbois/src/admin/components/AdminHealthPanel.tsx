@@ -44,20 +44,28 @@ function HealthBlock({
 }) {
   const count = items.length
   const ok = count === 0
-  const badge = ok
-    ? "bg-forest-050 text-forest-800 ring-forest-700/20"
-    : tone === "alert"
-      ? "bg-timber-050 text-[#7a5215] ring-timber/40"
-      : "bg-surface-2 text-ink-600 ring-line-strong"
+  // Seuils : les orphelins sont plus graves que les catégories vides.
+  const redFrom = tone === "alert" ? 5 : 15
+  const level = ok ? "ok" : count >= redFrom ? "red" : "orange"
+  const styles = {
+    ok: { box: "border-forest-700/30", num: "bg-forest-050 text-forest-700 ring-forest-700/25" },
+    orange: { box: "border-orange-300", num: "bg-orange-50 text-orange-600 ring-orange-300" },
+    red: { box: "border-red-300", num: "bg-red-50 text-red-600 ring-red-300" },
+  }[level]
 
   return (
-    <section className="flex flex-col rounded border border-line bg-surface p-4">
+    <section className={`flex flex-col rounded border border-t-4 bg-surface p-4 ${styles.box}`}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-heading text-sm font-bold text-ink">{title}</h3>
           <p className="mt-0.5 text-xs leading-relaxed text-ink-600">{description}</p>
         </div>
-        <span className={`shrink-0 rounded px-2 py-0.5 text-sm font-bold ring-1 ${badge}`}>{ok ? "✓" : count}</span>
+        <span
+          className={`flex h-14 min-w-14 shrink-0 items-center justify-center rounded px-3 font-heading text-3xl font-extrabold leading-none tabular-nums ring-1 ${styles.num}`}
+          aria-label={ok ? "Aucun" : `${count} élément${count > 1 ? "s" : ""}`}
+        >
+          {ok ? "✓" : count}
+        </span>
       </div>
 
       {ok ? (

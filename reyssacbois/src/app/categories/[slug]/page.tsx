@@ -11,6 +11,7 @@ import { getCategoriesTree } from "@/lib/categories"
 import { unstable_cache } from "next/cache"
 import RichText from "@/components/ui/RichText"
 import Media from "@/components/ui/Media"
+import ItemDetail from "@/components/catalog/ItemDetail"
 
 type CategoryNode = {
   id: string
@@ -143,6 +144,8 @@ export default async function CategoryPage({
   const categoriesTree = categoriesTreeRaw as unknown as CategoryNode[]
   const currentNode = findCategoryInTree(categoriesTree, category.id)
   const children = currentNode?.children ?? []
+  const isLeafWithoutProducts = children.length === 0 && products.length === 0
+  const parent = breadcrumb.length > 1 ? breadcrumb[breadcrumb.length - 2] : null
 
   return (
     <div>
@@ -160,50 +163,63 @@ export default async function CategoryPage({
         />
       </div>
 
-      <div className="rounded-2xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
-            {category.imageUrl ? (
-              <div className="w-full sm:w-56">
-                <div className="overflow-hidden rounded-xl border border-gray-200/70 bg-white/50 shadow-sm ring-1 ring-black/5">
-                  <div className="aspect-[4/3] w-full bg-gray-50/70 p-4">
-                    <Media
-                      src={category.imageUrl}
-                      alt={category.name}
-                      // Packshot: on affiche l’image entière (sans crop).
-                      className="h-full w-full !object-contain"
-                    />
+      {isLeafWithoutProducts ? (
+        // Catégorie "fiche" (contenu dans la description) : présentée comme un produit.
+        <ItemDetail
+          title={category.name}
+          imageUrl={category.imageUrl}
+          description={category.description}
+          descriptionHtml={category.descriptionHtml}
+          parent={parent ? { name: parent.name, slug: parent.slug } : undefined}
+          backLabel={parent ? `← Retour à « ${parent.name} »` : undefined}
+          pathSlugs={breadcrumb.map((c) => c.slug)}
+        />
+      ) : (
+        <div className="rounded-2xl border border-white/15 bg-white/55 p-6 sm:p-7 backdrop-blur shadow-sm ring-1 ring-black/5">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
+              {category.imageUrl ? (
+                <div className="w-full sm:w-56">
+                  <div className="overflow-hidden rounded-xl border border-gray-200/70 bg-white/50 shadow-sm ring-1 ring-black/5">
+                    <div className="aspect-[4/3] w-full bg-gray-50/70 p-4">
+                      <Media
+                        src={category.imageUrl}
+                        alt={category.name}
+                        // Packshot: on affiche l’image entière (sans crop).
+                        className="h-full w-full !object-contain"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : null}
-
-            <div>
-              <p className="text-xs font-semibold tracking-wide text-green-800/90">CATÉGORIE</p>
-              <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
-                {category.name}
-              </h1>
-
-              {category.descriptionHtml ? (
-                <div className="mt-2 max-w-3xl" title={category.description ?? ""}>
-                  <RichText html={category.descriptionHtml} className="text-gray-700" />
-                </div>
-              ) : category.description ? (
-                <p className="mt-2 text-gray-700 max-w-3xl whitespace-pre-line" title={category.description}>
-                  {category.description}
-                </p>
               ) : null}
-            </div>
-          </div>
 
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
-          >
-            Nous contacter
-          </Link>
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-green-800/90">CATÉGORIE</p>
+                <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-gray-900">
+                  {category.name}
+                </h1>
+
+                {category.descriptionHtml ? (
+                  <div className="mt-2 max-w-3xl" title={category.description ?? ""}>
+                    <RichText html={category.descriptionHtml} className="text-gray-700" />
+                  </div>
+                ) : category.description ? (
+                  <p className="mt-2 text-gray-700 max-w-3xl whitespace-pre-line" title={category.description}>
+                    {category.description}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center rounded-xl bg-green-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-600/30"
+            >
+              Nous contacter
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* SOUS-CATÉGORIES CLIQUABLES */}
       {children.length > 0 && (
