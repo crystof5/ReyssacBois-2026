@@ -71,7 +71,7 @@ function CategoryItem({
       <div
         className={`group relative flex items-stretch rounded-lg transition-colors ${
           isActive
-            ? "bg-green-50 text-green-900"
+            ? "bg-green-50 text-green-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_1px_2px_rgba(20,83,45,0.12)] ring-1 ring-green-700/10"
             : inActivePath
               ? "text-gray-900"
               : "text-gray-700 hover:bg-stone-100 hover:text-gray-900"
@@ -270,7 +270,7 @@ export default function SidebarCategories({
     <>
       {/* Mobile: barre sticky (catégories + fil d’Ariane compact) */}
       <div className="md:hidden sticky top-16 z-30">
-        <div className="flex items-center gap-2 rounded-xl border border-black/[0.06] bg-white/90 px-3 py-2 shadow-sm backdrop-blur">
+        <div className="rb-depth flex items-center gap-2 rounded-xl border border-black/[0.07] px-3 py-2 backdrop-blur">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
@@ -329,7 +329,7 @@ export default function SidebarCategories({
       >
         <div className="md:sticky md:top-24">
           {desktopCollapsed ? (
-            <div className="rounded-xl border border-black/[0.06] bg-white/90 p-2 shadow-sm backdrop-blur">
+            <div className="rb-depth rounded-xl border border-black/[0.07] p-2 backdrop-blur">
               <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
@@ -357,7 +357,7 @@ export default function SidebarCategories({
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-black/[0.06] bg-white/90 p-3 shadow-sm backdrop-blur">
+            <div className="rb-depth rounded-xl border border-black/[0.07] p-3 backdrop-blur">
               <div className="mb-2 flex items-center justify-between gap-2 border-b border-stone-200 px-1 pb-2">
                 <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-gray-500">
                   Catégories

@@ -1,6 +1,6 @@
 /**
- * Rubrique "Conseils" : guides pratiques (SEO de longue traîne + GEO).
- * Contenu statique : les produits cités doivent exister au catalogue.
+ * Contenu PAR DÉFAUT de la rubrique "Conseils" (utilisé tant que l'admin n'a rien enregistré).
+ * Les guides sont ensuite éditables dans l'admin (voir src/lib/editorial.ts).
  */
 
 export type ArticleSection = {
@@ -9,7 +9,7 @@ export type ArticleSection = {
   list?: string[]
 }
 
-export type Article = {
+export type LegacyArticle = {
   slug: string
   title: string
   /** <title> sans le suffixe "| Reyssac Bois" */
@@ -24,7 +24,7 @@ export type Article = {
   related: { slug: string; label: string }[]
 }
 
-export const ARTICLES: Article[] = [
+export const LEGACY_ARTICLES: LegacyArticle[] = [
   {
     slug: "quel-contreplaque-choisir",
     title: "Quel contreplaqué choisir : peuplier, okoumé, bouleau ?",
@@ -341,12 +341,8 @@ export const ARTICLES: Article[] = [
   },
 ]
 
-export function getArticle(slug: string) {
-  return ARTICLES.find((a) => a.slug === slug) ?? null
-}
-
 /** Guide conseillé pour une catégorie du catalogue. */
-const CATEGORY_TO_ARTICLE: Record<string, string> = {
+export const CATEGORY_TO_ARTICLE: Record<string, string> = {
   contreplaques: "quel-contreplaque-choisir",
   panneaux: "quel-contreplaque-choisir",
   charpente: "bastaing-madrier-chevron-solive-differences",
@@ -363,9 +359,4 @@ const CATEGORY_TO_ARTICLE: Record<string, string> = {
   "amenagements-exterieurs": "classes-emploi-bois-traitement",
   "rondins-demi-rondins-piquets-clotures-traverses-paysageres": "classes-emploi-bois-traitement",
   "produits-de-traitement": "classes-emploi-bois-traitement",
-}
-
-export function getArticleForCategory(slug: string) {
-  const articleSlug = CATEGORY_TO_ARTICLE[slug]
-  return articleSlug ? getArticle(articleSlug) : null
 }

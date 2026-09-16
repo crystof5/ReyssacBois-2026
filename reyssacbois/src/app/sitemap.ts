@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma"
 import { absoluteUrl } from "@/lib/seo"
 import { unstable_cache } from "next/cache"
 import { FEATURED_CATEGORY_SLUGS } from "@/lib/featuredCategories"
-import { ARTICLES } from "@/lib/articles"
+import { getPublishedArticles } from "@/lib/editorial"
 
 function imageUrlsOf(src: string | null | undefined): string[] | undefined {
   const v = (src ?? "").trim()
@@ -55,7 +55,7 @@ function isEffectivelyVisibleCategory(
 
 const buildSitemap = unstable_cache(
   async (): Promise<MetadataRoute.Sitemap> => {
-      const [categories, products] = await Promise.all([
+      const [categories, products, articles] = await Promise.all([
     prisma.category.findMany({
       select: {
         id: true,
@@ -82,6 +82,7 @@ const buildSitemap = unstable_cache(
         categories: { select: { categoryId: true } },
       },
     }),
+    getPublishedArticles(),
   ])
 
   const byId = new Map<string, CategoryLite>(categories.map((c) => [c.id, c]))
@@ -110,9 +111,9 @@ const buildSitemap = unstable_cache(
     { url: absoluteUrl("/qui-sommes-nous"), changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/contact"), changeFrequency: "monthly", priority: 0.7 },
     { url: absoluteUrl("/conseils"), changeFrequency: "monthly", priority: 0.6 },
-    ...ARTICLES.map((a) => ({
+    ...articles.map((a) => ({
       url: absoluteUrl(`/conseils/${a.slug}`),
-      lastModified: new Date(a.publishedAt),
+      lastModified: new Date(a.updatedAt || a.publishedAt),
       changeFrequency: "yearly" as const,
       priority: 0.6,
     })),

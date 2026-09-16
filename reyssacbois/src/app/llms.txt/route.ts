@@ -1,6 +1,6 @@
 import { getCategoriesTree } from "@/lib/categories"
 import { listCustomCategorySeo } from "@/lib/categorySeo"
-import { ARTICLES } from "@/lib/articles"
+import { getPublishedArticles } from "@/lib/editorial"
 import { absoluteUrl } from "@/lib/seo"
 import {
   AGEN_AREA_CITIES,
@@ -25,6 +25,7 @@ function collectSlugs(nodes: Node[], out = new Set<string>()): Set<string> {
 export async function GET() {
   const visible = collectSlugs((await getCategoriesTree()) as unknown as Node[])
   const categories = listCustomCategorySeo().filter((c) => visible.has(c.slug))
+  const articles = await getPublishedArticles()
 
   const body = `# ${BUSINESS.name}
 
@@ -54,7 +55,7 @@ ${categories.map((c) => `- [${c.title}](${absoluteUrl(`/categories/${c.slug}`)})
 
 ## Conseils
 
-${ARTICLES.map((a) => `- [${a.title}](${absoluteUrl(`/conseils/${a.slug}`)}): ${a.excerpt}`).join("\n")}
+${articles.map((a) => `- [${a.title}](${absoluteUrl(`/conseils/${a.slug}`)}): ${a.excerpt}`).join("\n")}
 
 ## Entreprise
 

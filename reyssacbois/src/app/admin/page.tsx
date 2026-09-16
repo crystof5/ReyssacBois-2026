@@ -18,6 +18,16 @@ export default async function AdminPage() {
       desc: "Gérer les fiches produits et leurs caractéristiques.",
       href: "/admin/produits",
     },
+    {
+      title: "Conseils (guides)",
+      desc: "Rédiger, publier et organiser les guides pratiques.",
+      href: "/admin/conseils",
+    },
+    {
+      title: "Pages Livraison & Découpe",
+      desc: "Zones, étapes, FAQ et textes des pages de service.",
+      href: "/admin/pages",
+    },
   ]
 
   return (

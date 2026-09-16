@@ -1,7 +1,7 @@
 import LocalSeoBand from "@/components/LocalSeoBand"
 import { getCategoryBreadcrumb } from "@/lib/breadcrumbs"
 import { getCategorySeo } from "@/lib/categorySeo"
-import { getArticleForCategory } from "@/lib/articles"
+import { getArticleForCategoryPath } from "@/lib/editorial"
 
 export default async function CategorySeoSlot({
   params,
@@ -15,7 +15,7 @@ export default async function CategorySeoSlot({
   if (!breadcrumb?.length) return null
 
   const { heading, paragraphs } = getCategorySeo(slug, breadcrumb)
-  const article = getArticleForCategory(slug)
+  const article = await getArticleForCategoryPath(breadcrumb.map((c) => c.slug))
   return (
     <LocalSeoBand
       heading={heading}

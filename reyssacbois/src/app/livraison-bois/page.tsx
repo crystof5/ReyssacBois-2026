@@ -5,100 +5,24 @@ import PageHeader, { PageCard } from "@/components/pages/PageHeader"
 import FaqSection from "@/components/pages/FaqSection"
 import LocalSeoBand from "@/components/LocalSeoBand"
 import { JsonLd, BUSINESS_ID } from "@/components/JsonLd"
-import { AGEN_AREA_CITIES, BUSINESS } from "@/lib/business"
+import { BUSINESS } from "@/lib/business"
+import { getLivraisonPage } from "@/lib/editorial"
+import RichText from "@/components/ui/RichText"
 import { getFeaturedCategoryLinks } from "@/lib/featuredCategories"
 import { absoluteUrl } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Livraison de bois à Agen, Lot-et-Garonne, Gers, Tarn-et-Garonne",
-  description:
-    "Livraison de bois de charpente, panneaux, contreplaqués, bardage et terrasse dans l'agglomération d'Agen, le Lot-et-Garonne, le Gers et le Tarn-et-Garonne.",
-  alternates: { canonical: "/livraison-bois" },
-  openGraph: { title: "Livraison de bois à Agen et dans le Sud-Ouest", url: "/livraison-bois" },
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getLivraisonPage()
+  return {
+    title: page.metaTitle,
+    description: page.description,
+    alternates: { canonical: "/livraison-bois" },
+    openGraph: { title: page.title, description: page.description, url: "/livraison-bois" },
+  }
 }
 
-const ZONES = [
-  {
-    title: "Agen et son agglomération",
-    badge: "Zone prioritaire",
-    text: "Au départ de notre dépôt de Boé, nous livrons en priorité Agen et les communes voisines :",
-    places: AGEN_AREA_CITIES as readonly string[],
-  },
-  {
-    title: "Lot-et-Garonne, Gers et Tarn-et-Garonne",
-    badge: "Livraisons régulières",
-    text: "Nous livrons dans tout le Lot-et-Garonne (47) et les départements voisins du Gers (32) et du Tarn-et-Garonne (82), par exemple :",
-    places: [
-      "Villeneuve-sur-Lot",
-      "Marmande",
-      "Nérac",
-      "Casteljaloux",
-      "Tonneins",
-      "Fumel",
-      "Auch",
-      "Condom",
-      "Lectoure",
-      "Montauban",
-      "Moissac",
-      "Valence d'Agen",
-    ],
-  },
-  {
-    title: "De Bordeaux à Toulouse",
-    badge: "Sur devis",
-    text: "Au-delà, nous étudions chaque demande selon le volume et la distance, le long de l'axe Garonne :",
-    places: ["Bordeaux", "Langon", "Toulouse", "Castelsarrasin"],
-  },
-]
-
-const STEPS = [
-  {
-    title: "Votre demande",
-    text: "Appelez-nous ou envoyez votre liste (produits, sections, longueurs, quantités) et l'adresse de livraison.",
-  },
-  {
-    title: "Votre devis",
-    text: "Nous vérifions la disponibilité et chiffrons la marchandise et la livraison, calculée selon le volume et la distance.",
-  },
-  {
-    title: "La préparation",
-    text: "Votre commande est préparée au dépôt de Boé, avec la découpe sur mesure des panneaux si besoin.",
-  },
-  {
-    title: "La livraison",
-    text: "Nous livrons à l'adresse convenue : chantier, entreprise ou domicile.",
-  },
-]
-
-const FAQ = [
-  {
-    question: "Livrez-vous les particuliers ?",
-    answer:
-      "Oui. Nous livrons aussi bien les particuliers que les artisans, entreprises et collectivités, dans l'agglomération d'Agen, le Lot-et-Garonne, le Gers et le Tarn-et-Garonne.",
-  },
-  {
-    question: "Combien coûte la livraison ?",
-    answer:
-      "Le prix de la livraison dépend du volume, du poids et de la distance. Il est indiqué dans votre devis avant toute commande.",
-  },
-  {
-    question: "Livrez-vous à Bordeaux ou à Toulouse ?",
-    answer:
-      "Oui, sur devis. Pour les livraisons au-delà du Lot-et-Garonne et des départements voisins, nous étudions chaque demande selon le volume et la distance.",
-  },
-  {
-    question: "Puis-je faire découper mes panneaux avant la livraison ?",
-    answer:
-      "Oui. Nous découpons vos panneaux sur mesure dans notre atelier de Boé avant de les livrer.",
-  },
-  {
-    question: "Puis-je venir chercher ma commande au dépôt ?",
-    answer: `Oui. Le retrait se fait à notre dépôt de Boé, aux portes d'Agen. ${BUSINESS.openingHours.display}.`,
-  },
-]
-
 export default async function LivraisonBoisPage() {
-  const featured = await getFeaturedCategoryLinks()
+  const [featured, page] = await Promise.all([getFeaturedCategoryLinks(), getLivraisonPage()])
 
   return (
     <>
@@ -124,19 +48,15 @@ export default async function LivraisonBoisPage() {
         <div className="mx-auto max-w-5xl space-y-6 sm:space-y-8">
           <PageHeader
             eyebrow="SERVICE"
-            title="Livraison de bois à Agen et dans le Sud-Ouest"
+            title={page.title}
             crumb={{ name: "Livraison de bois", href: "/livraison-bois" }}
           >
-            <p>
-              Reyssac Bois livre votre bois depuis son dépôt de Boé, aux portes d&apos;Agen : bois de
-              charpente, contreplaqués et panneaux, bois de menuiserie, bardage, terrasses, parquet et
-              quincaillerie, pour les particuliers comme pour les professionnels.
-            </p>
+            {page.introHtml ? <RichText html={page.introHtml} /> : null}
           </PageHeader>
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {ZONES.map((zone) => (
-              <PageCard key={zone.title}>
+            {page.zones.map((zone) => (
+              <PageCard key={zone.id}>
                 <p className="inline-flex rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-800 ring-1 ring-green-100">
                   {zone.badge}
                 </p>
@@ -158,8 +78,8 @@ export default async function LivraisonBoisPage() {
 
           <PageCard title="Comment se passe une livraison ?">
             <ol className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {STEPS.map((step, i) => (
-                <li key={step.title} className="flex gap-3">
+              {page.steps.map((step, i) => (
+                <li key={step.id} className="flex gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-700 text-sm font-bold text-white">
                     {i + 1}
                   </span>
@@ -210,16 +130,13 @@ export default async function LivraisonBoisPage() {
             </PageCard>
           ) : null}
 
-          <FaqSection title="Livraison : vos questions" items={FAQ} />
+          {page.faq.length ? <FaqSection title="Livraison : vos questions" items={page.faq} /> : null}
         </div>
       </Container>
 
       <LocalSeoBand
-        heading="Livraison de bois depuis Boé, près d'Agen"
-        paragraphs={[
-          "Négoce familial depuis 1850, Reyssac Bois prépare et livre vos commandes de bois et de panneaux dans l'agglomération d'Agen, tout le Lot-et-Garonne, le Gers et le Tarn-et-Garonne.",
-          "Pour les chantiers plus éloignés, de Bordeaux à Toulouse, contactez-nous : nous étudions votre demande sur devis.",
-        ]}
+        heading={page.bandHeading}
+        paragraphs={page.bandText.split(/\n+/).filter(Boolean)}
       />
     </>
   )

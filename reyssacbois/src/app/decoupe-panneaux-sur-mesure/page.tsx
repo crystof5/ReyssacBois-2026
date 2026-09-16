@@ -6,15 +6,19 @@ import FaqSection from "@/components/pages/FaqSection"
 import LocalSeoBand from "@/components/LocalSeoBand"
 import { JsonLd, BUSINESS_ID } from "@/components/JsonLd"
 import { BUSINESS } from "@/lib/business"
+import { getDecoupePage } from "@/lib/editorial"
+import RichText from "@/components/ui/RichText"
 import { getCategoriesTree } from "@/lib/categories"
 import { absoluteUrl } from "@/lib/seo"
 
-export const metadata: Metadata = {
-  title: "Découpe de panneaux bois sur mesure à Agen (Boé)",
-  description:
-    "Découpe sur mesure de contreplaqué, OSB, MDF, aggloméré, mélaminé et lamellé-collé à Boé près d'Agen. Pour particuliers et pros. Retrait ou livraison.",
-  alternates: { canonical: "/decoupe-panneaux-sur-mesure" },
-  openGraph: { title: "Découpe de panneaux bois sur mesure à Agen", url: "/decoupe-panneaux-sur-mesure" },
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getDecoupePage()
+  return {
+    title: page.metaTitle,
+    description: page.description,
+    alternates: { canonical: "/decoupe-panneaux-sur-mesure" },
+    openGraph: { title: page.title, description: page.description, url: "/decoupe-panneaux-sur-mesure" },
+  }
 }
 
 const PANELS = [
@@ -24,36 +28,6 @@ const PANELS = [
   { slug: "agglomere", label: "Aggloméré", text: "Standard, hydrofuge, mélaminé, replaqué." },
   { slug: "lamelle-colles", label: "Lamellé-collés", text: "Chêne, hévéa, pin des landes, plans de travail." },
   { slug: "latte-3-plis", label: "Latté / 3 plis", text: "Panneaux stables pour l'agencement." },
-]
-
-const INFOS = [
-  "les dimensions de chaque pièce (longueur × largeur) et les quantités ;",
-  "le type de panneau et l'épaisseur souhaités ;",
-  "le sens du fil ou du décor, si c'est important pour votre projet ;",
-  "le retrait au dépôt ou l'adresse de livraison.",
-]
-
-const FAQ = [
-  {
-    question: "Faites-vous la découpe pour les particuliers ?",
-    answer:
-      "Oui. La découpe de panneaux sur mesure est proposée aux particuliers comme aux professionnels, dans notre dépôt de Boé près d'Agen.",
-  },
-  {
-    question: "Quelles informations dois-je fournir ?",
-    answer:
-      "Indiquez le type de panneau, l'épaisseur, les dimensions de chaque pièce et les quantités. Une liste de débit, même manuscrite, suffit.",
-  },
-  {
-    question: "Peut-on faire livrer les panneaux découpés ?",
-    answer:
-      "Oui. Les panneaux découpés peuvent être retirés au dépôt ou livrés dans l'agglomération d'Agen, le Lot-et-Garonne, le Gers et le Tarn-et-Garonne.",
-  },
-  {
-    question: "Quel est le délai pour une découpe ?",
-    answer:
-      "Il dépend de la quantité et de la disponibilité des panneaux. Contactez-nous avec votre liste : nous vous indiquons le délai avec le devis.",
-  },
 ]
 
 type Node = { slug: string; children?: Node[] }
@@ -67,7 +41,8 @@ function collectSlugs(nodes: Node[], out = new Set<string>()): Set<string> {
 }
 
 export default async function DecoupePanneauxPage() {
-  const visible = collectSlugs((await getCategoriesTree()) as unknown as Node[])
+  const [tree, page] = await Promise.all([getCategoriesTree(), getDecoupePage()])
+  const visible = collectSlugs(tree as unknown as Node[])
   const panels = PANELS.filter((p) => visible.has(p.slug))
 
   return (
@@ -87,14 +62,10 @@ export default async function DecoupePanneauxPage() {
         <div className="mx-auto max-w-5xl space-y-6 sm:space-y-8">
           <PageHeader
             eyebrow="SERVICE"
-            title="Découpe de panneaux bois sur mesure à Agen"
+            title={page.title}
             crumb={{ name: "Découpe sur mesure", href: "/decoupe-panneaux-sur-mesure" }}
           >
-            <p>
-              Depuis des décennies, Reyssac Bois découpe vos panneaux à vos cotes dans son atelier de
-              Boé, aux portes d&apos;Agen. Vous repartez avec des pièces prêtes à poser, sans chutes à
-              gérer ni grands formats à transporter.
-            </p>
+            {page.introHtml ? <RichText html={page.introHtml} /> : null}
           </PageHeader>
 
           {panels.length ? (
@@ -121,7 +92,7 @@ export default async function DecoupePanneauxPage() {
                 Passez au dépôt ou envoyez-nous votre liste de débit en précisant :
               </p>
               <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm sm:text-base text-gray-700">
-                {INFOS.map((info) => (
+                {page.orderInfos.map((info) => (
                   <li key={info}>{info}</li>
                 ))}
               </ul>
@@ -142,10 +113,7 @@ export default async function DecoupePanneauxPage() {
             </PageCard>
 
             <PageCard title="Autres travaux à façon">
-              <p className="text-sm sm:text-base leading-relaxed text-gray-700">
-                Héritier de la scierie familiale, notre atelier réalise aussi le rabotage, le collage, le
-                ponçage et de petits travaux de menuiserie sur mesure.
-              </p>
+              <RichText html={page.otherWorksHtml} className="text-sm sm:text-base text-gray-700" />
               <ul className="mt-4 space-y-2 text-sm sm:text-base">
                 <li>
                   <Link href="/categories/debit-sur-liste" className="font-semibold text-green-800 hover:underline">
@@ -166,16 +134,13 @@ export default async function DecoupePanneauxPage() {
             </PageCard>
           </div>
 
-          <FaqSection title="Découpe sur mesure : vos questions" items={FAQ} />
+          {page.faq.length ? <FaqSection title="Découpe sur mesure : vos questions" items={page.faq} /> : null}
         </div>
       </Container>
 
       <LocalSeoBand
-        heading="Découpe de panneaux à Boé, aux portes d'Agen"
-        paragraphs={[
-          "Contreplaqué, OSB, médium, aggloméré ou lamellé-collé : choisissez votre panneau dans notre stock et repartez avec des pièces découpées à vos dimensions.",
-          "Service proposé aux particuliers et aux professionnels de l'agglomération d'Agen et du Lot-et-Garonne, avec retrait au dépôt ou livraison.",
-        ]}
+        heading={page.bandHeading}
+        paragraphs={page.bandText.split(/\n+/).filter(Boolean)}
       />
     </>
   )

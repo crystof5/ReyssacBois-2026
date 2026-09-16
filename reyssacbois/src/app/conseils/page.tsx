@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import Container from "@/components/ui/Container"
 import PageHeader from "@/components/pages/PageHeader"
 import LocalSeoBand from "@/components/LocalSeoBand"
-import { ARTICLES } from "@/lib/articles"
+import { getPublishedArticles } from "@/lib/editorial"
 
 export const metadata: Metadata = {
   title: "Conseils bois : contreplaqué, charpente, terrasse, bardage",
@@ -13,7 +13,9 @@ export const metadata: Metadata = {
   openGraph: { title: "Conseils bois – Reyssac Bois", url: "/conseils" },
 }
 
-export default function ConseilsPage() {
+export default async function ConseilsPage() {
+  const articles = await getPublishedArticles()
+
   return (
     <>
       <Container className="flex-1 py-6 sm:py-10">
@@ -26,7 +28,7 @@ export default function ConseilsPage() {
           </PageHeader>
 
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {ARTICLES.map((a) => (
+            {articles.map((a) => (
               <li key={a.slug}>
                 <Link
                   href={`/conseils/${a.slug}`}

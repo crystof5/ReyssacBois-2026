@@ -31,9 +31,9 @@ export function CardLink({
   return (
     <Link
       href={href}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-black/[0.06] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.06)] transition duration-300 ease-out
-      hover:-translate-y-1 hover:border-green-800/25 hover:shadow-[0_24px_48px_-26px_rgba(0,0,0,0.45)]
-      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2 active:translate-y-0
+      className={`rb-depth rb-depth-hover group relative flex h-full flex-col overflow-hidden rounded-xl border border-black/[0.07] bg-white
+      hover:border-green-800/25
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-700 focus-visible:ring-offset-2
       ${className}`}
     >
       {children}

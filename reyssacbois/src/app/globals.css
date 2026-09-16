@@ -480,3 +480,44 @@ body {
     background-color: var(--bg);
   }
 }
+
+/* ===== Profondeur "3D légère" (catalogue public) ===== */
+@layer components {
+  /* Surface en relief : ombres étagées chaudes + reflet interne en haut. */
+  .rb-depth {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 247, 242, 0.92) 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(60, 40, 15, 0.06),
+      0 1px 1px rgba(60, 40, 15, 0.05),
+      0 4px 10px -3px rgba(60, 40, 15, 0.12),
+      0 18px 36px -18px rgba(60, 40, 15, 0.35);
+  }
+
+  /* Carte interactive : se soulève et s'incline très légèrement au survol. */
+  .rb-depth-hover {
+    transform: perspective(900px) translateZ(0);
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.35s ease;
+    will-change: transform;
+  }
+  .rb-depth-hover:hover {
+    transform: perspective(900px) translateY(-6px) rotateX(3deg);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 2px 4px rgba(60, 40, 15, 0.06),
+      0 14px 24px -10px rgba(60, 40, 15, 0.22),
+      0 36px 60px -28px rgba(60, 40, 15, 0.5);
+  }
+  .rb-depth-hover:active {
+    transform: perspective(900px) translateY(-2px) rotateX(1deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rb-depth-hover,
+    .rb-depth-hover:hover {
+      transform: none;
+    }
+  }
+}

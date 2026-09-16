@@ -2,7 +2,7 @@ import Link from "next/link"
 import Media from "@/components/ui/Media"
 import RichText from "@/components/ui/RichText"
 import { BUSINESS } from "@/lib/business"
-import { getArticleForCategory } from "@/lib/articles"
+import { getArticleForCategoryPath } from "@/lib/editorial"
 
 const REASSURANCE = [
   "Conseil au comptoir ou par téléphone",
@@ -16,7 +16,7 @@ export type ItemSpec = { label: string; value: string }
  * Présentation "fiche" (visuel + informations + services), partagée par
  * les fiches produits et les catégories sans produit ni sous-catégorie.
  */
-export default function ItemDetail({
+export default async function ItemDetail({
   title,
   imageUrl,
   description,
@@ -40,7 +40,7 @@ export default function ItemDetail({
   const categories = pathSlugs.map((slug) => ({ slug }))
   const category = parent
   // Guide conseil : celui de la catégorie, sinon celui d'un parent.
-  const guide = [...categories].reverse().map((c) => getArticleForCategory(c.slug)).find(Boolean) ?? null
+  const guide = await getArticleForCategoryPath(pathSlugs)
 
   const services = [
     categories.some((c) => c.slug === "panneaux")
@@ -82,7 +82,7 @@ export default function ItemDetail({
       <article className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-10">
         {/* Visuel */}
         <div className="lg:sticky lg:top-24">
-          <div className="group relative overflow-hidden rounded-2xl border border-black/[0.06] bg-[#f5f2ec] shadow-sm">
+          <div className="group relative overflow-hidden rounded-2xl border border-black/[0.07] bg-[#f5f2ec] shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_4px_10px_-3px_rgba(60,40,15,0.12),0_18px_36px_-18px_rgba(60,40,15,0.35)]">
             {imageUrl ? (
               // Fond : la même image, floutée, pour habiller le cadre quel que soit le format.
               // eslint-disable-next-line @next/next/no-img-element
@@ -126,7 +126,7 @@ export default function ItemDetail({
         </div>
 
         {/* Informations */}
-        <div className="rounded-2xl border border-black/[0.06] bg-white/90 p-5 shadow-sm backdrop-blur sm:p-7">
+        <div className="rb-depth rounded-2xl border border-black/[0.07] p-5 backdrop-blur sm:p-7">
           {category ? (
             <Link
               href={`/categories/${category.slug}`}
@@ -197,7 +197,7 @@ export default function ItemDetail({
           <li key={service.href}>
             <Link
               href={service.href}
-              className="group flex h-full items-start gap-3 rounded-2xl border border-black/[0.06] bg-white/90 p-4 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:border-green-800/25 hover:shadow-md"
+              className="rb-depth rb-depth-hover group flex h-full items-start gap-3 rounded-2xl border border-black/[0.07] p-4 backdrop-blur hover:border-green-800/25"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-800 transition group-hover:bg-green-700 group-hover:text-white">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-5 w-5">

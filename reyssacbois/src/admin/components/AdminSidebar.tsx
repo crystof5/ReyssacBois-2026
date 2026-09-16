@@ -21,6 +21,13 @@ const CONTENT: NavItem[] = [
   { label: "Tout-en-un", href: "/admin/home/complet" },
 ]
 
+const EDITORIAL: NavItem[] = [
+  { label: "Vue d'ensemble", href: "/admin/pages", exact: true },
+  { label: "Conseils (guides)", href: "/admin/conseils" },
+  { label: "Page Livraison", href: "/admin/pages/livraison" },
+  { label: "Page Découpe", href: "/admin/pages/decoupe" },
+]
+
 const CATALOG: NavItem[] = [
   { label: "Catégories", href: "/admin/categories" },
   { label: "Produits", href: "/admin/produits" },
@@ -81,7 +88,18 @@ function NavGroups({
       </div>
 
       <div>
-        <p className="rb-eyebrow px-3">Contenu du site</p>
+        <p className="rb-eyebrow px-3">Pages & conseils</p>
+        <ul className="mt-2 space-y-0.5">
+          {EDITORIAL.map((item) => (
+            <li key={item.href}>
+              <NavLink item={item} pathname={pathname} onNavigate={onNavigate} />
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <p className="rb-eyebrow px-3">Contenu de l&apos;accueil</p>
         <ul className="mt-2 space-y-0.5">
           {CONTENT.map((item) => (
             <li key={item.href}>
