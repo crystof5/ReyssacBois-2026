@@ -1,6 +1,7 @@
 import Link from "next/link"
+import AdminHealthPanel from "@/admin/components/AdminHealthPanel"
 
-export default function AdminPage() {
+export default async function AdminPage() {
   const items = [
     {
       title: "Accueil",
@@ -21,9 +22,9 @@ export default function AdminPage() {
 
   return (
     <div>
-      <h2 className="font-heading text-lg font-bold text-ink">Dashboard</h2>
+      <h2 className="font-heading text-lg font-bold text-ink">Tableau de bord</h2>
       <p className="mt-1 text-sm text-ink-600">
-        Commence en lecture seule, puis on active l’édition étape par étape.
+        Accès rapide aux contenus et points de contrôle du catalogue.
       </p>
 
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -44,6 +45,10 @@ export default function AdminPage() {
             <p className="mt-2 text-sm text-ink-600">{it.desc}</p>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-6">
+        <AdminHealthPanel />
       </div>
     </div>
   )
